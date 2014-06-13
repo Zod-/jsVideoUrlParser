@@ -11,8 +11,8 @@ urlParser.bind({
             return undefined;
         }
         return {
-            'id': id,
-            'mediaType': 'video'
+            'mediaType': 'video',
+            'id': id
         };
     },
     'create': function (videoInfo) {
