@@ -5,14 +5,16 @@ urlParser.bind({
         var match,
             id,
             channel,
+            videoIdPrefix,
             result = {};
 
-        match = url.match(/twitch\.tv\/(\w+)(\/.\/(\d+))?/i);
+        match = url.match(/twitch\.tv\/(\w+)(\/(.)\/(\d+))?/i);
         channel = match ? match[1] : undefined;
-        id = match ? match[3] : undefined;
+        videoIdPrefix = match ? match[3] : undefined;
+        id = match ? match[4] : undefined;
 
         match = url.match(/((\?channel)|(\&utm_content))=(\w+)/i);
-        channel = match ? match[1] : channel;
+        channel = match ? match[4] : channel;
 
         if (!channel) {
             return undefined;
@@ -20,6 +22,7 @@ urlParser.bind({
         if (id) {
             result.mediaType = 'video';
             result.id = id;
+            result.videoIdPrefix = videoIdPrefix;
         } else {
             result.mediaType = 'stream';
         }
@@ -31,9 +34,9 @@ urlParser.bind({
         "use strict";
         var url;
         if (videoInfo.mediaType === 'stream') {
-            url = String.format('http://twitch.tv/{0}', videoInfo.channel);
+            url = 'http://twitch.tv/{0}'.format(videoInfo.channel);
         } else if (videoInfo.mediaType === 'video') {
-            url = String.format('http://twitch.tv/{0}/c/{1}', videoInfo.channel, videoInfo.id);
+            url = 'http://twitch.tv/{0}/{1}/{2}'.format(videoInfo.channel, videoInfo.videoIdPrefix, videoInfo.id);
         }
         return url;
     }

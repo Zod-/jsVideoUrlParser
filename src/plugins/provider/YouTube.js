@@ -42,15 +42,15 @@ urlParser.bind({
         var url;
         if (videoInfo.mediaType === 'video') {
             if (!videoInfo.playlistId) {
-                url = String.format('http://youtu.be/{0}', videoInfo.id);
+                url = 'http://youtu.be/{0}'.format(videoInfo.id);
             } else {
-                url = String.format('https://www.youtube.com/watch?v={0}&list={1}', videoInfo.id, videoInfo.playlistId);
+                url = 'https://www.youtube.com/watch?v={0}&list={1}'.format(videoInfo.id, videoInfo.playlistId);
             }
             if (videoInfo.startTime) {
-                url += String.format('#t={0}', videoInfo.startTime);
+                url += '#t={0}'.format(videoInfo.startTime);
             }
         } else if (videoInfo.mediaType === 'playlist') {
-            url = String.format('https://www.youtube.com/playlist?feature=share&list={0}', videoInfo.playlistId);
+            url = 'https://www.youtube.com/playlist?feature=share&list={0}'.format(videoInfo.playlistId);
         }
         return url;
     }
