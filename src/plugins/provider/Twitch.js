@@ -8,13 +8,13 @@ urlParser.bind({
             videoIdPrefix,
             result = {};
 
-        match = url.match(/twitch\.tv\/(\w+)(\/(.)\/(\d+))?/i);
+        match = url.match(/twitch\.tv\/(\w+)(?:\/(.)\/(\d+))?/i);
         channel = match ? match[1] : undefined;
-        videoIdPrefix = match ? match[3] : undefined;
-        id = match ? match[4] : undefined;
+        videoIdPrefix = match ? match[2] : undefined;
+        id = match ? match[3] : undefined;
 
-        match = url.match(/((\?channel)|(\&utm_content))=(\w+)/i);
-        channel = match ? match[4] : channel;
+        match = url.match(/(?:\?channel|\&utm_content)=(\w+)/i);
+        channel = match ? match[1] : channel;
 
         if (!channel) {
             return undefined;

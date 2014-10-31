@@ -9,14 +9,14 @@ urlParser.bind({
             startTime,
             result = {};
 
-        match = url.match(/(((v|be|videos)\/)|(v=))([\w\-]{11})/i);
-        id = match ? match[5] : undefined;
+        match = url.match(/(?:(?:v|be|videos)\/|v=)([\w\-]{11})/i);
+        id = match ? match[1] : undefined;
 
         match = url.match(/list=([\w\-]+)/i);
         playlistId = match ? match[1] : undefined;
 
-        match = url.match(/[#\?&](star)?t=([A-Za-z0-9]+)/i);
-        startTime = match ? getTime(match[2]) : undefined;
+        match = url.match(/[#\?&](?:star)?t=([A-Za-z0-9]+)/i);
+        startTime = match ? getTime(match[1]) : undefined;
 
 
         if (id) {
