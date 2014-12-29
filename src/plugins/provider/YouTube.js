@@ -6,6 +6,7 @@ urlParser.bind({
     var match,
       videoId,
       playlistId,
+      playlistIndex,
       startTime,
       result = {};
 
@@ -15,15 +16,20 @@ urlParser.bind({
     match = url.match(/list=([\w\-]+)/i);
     playlistId = match ? match[1] : undefined;
 
+    match = url.match(/index=(\d+)/i);
+    playlistIndex = match ? Number(match[1]) : undefined;
+
     match = url.match(/[#\?&](?:star)?t=([A-Za-z0-9]+)/i);
     startTime = match ? getTime(match[1]) : undefined;
-
 
     if (videoId) {
       result.mediaType = 'video';
       result.videoId = videoId;
       if (playlistId) {
         result.playlistId = playlistId;
+        if (playlistIndex) {
+          result.playlistIndex = playlistIndex;
+        }
       }
       if (startTime) {
         result.startTime = startTime;
@@ -47,6 +53,9 @@ urlParser.bind({
 
     if (vi.playlistId) {
       url = 'https://www.youtube.com/watch?v={0}&list={1}'.format(vi.videoId, vi.playlistId);
+      if (vi.playlistIndex) {
+        url += '&index={0}'.format(vi.playlistIndex);
+      }
     } else {
       if (op.format === 'short') {
         url = 'https://youtu.be/{0}'.format(vi.videoId);
