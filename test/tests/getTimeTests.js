@@ -19,9 +19,9 @@ QUnit.test("TimeString Parser", function(assert) {
       '04m30s': 4 * m + 30 * s,
       '1h30m25s': h + 30 * m + 25 * s,
       '1h30m25': h + 30 * m + 25 * s,
-      '1h30m25s25s': h + 30 * m + 25 * s,
-      '1h30m25s25': h + 30 * m + 25 * s,
-      '1h30m25s25s1h1w': h + 30 * m + 25 * s + w
+      '1h30m25s25s': h + 30 * m + 25 * s + 25 * s,
+      '1h30m25s25': h + 30 * m + 25 * s + 25 * s,
+      '1h30m25s25s1h1w': h + 30 * m + 25 * s + 25 * s + h + w
     };
 
   for (var timeString in testPairs) {
