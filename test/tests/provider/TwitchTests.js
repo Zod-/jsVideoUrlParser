@@ -8,7 +8,7 @@ QUnit.test("Twitch Stream URLs", function(assert) {
       'provider': 'twitch',
       'channel': 'tsm_wildturtle',
       'mediaType': 'video',
-      'id': '2724914',
+      'videoId': '2724914',
       "videoIdPrefix": "c"
     },
     testPairs = {

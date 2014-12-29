@@ -3,7 +3,7 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      id,
+      videoId,
       channel,
       videoIdPrefix,
       result = {};
@@ -11,7 +11,7 @@ urlParser.bind({
     match = url.match(/twitch\.tv\/(\w+)(?:\/(.)\/(\d+))?/i);
     channel = match ? match[1] : undefined;
     videoIdPrefix = match ? match[2] : undefined;
-    id = match ? match[3] : undefined;
+    videoId = match ? match[3] : undefined;
 
     match = url.match(/(?:\?channel|\&utm_content)=(\w+)/i);
     channel = match ? match[1] : channel;
@@ -19,9 +19,9 @@ urlParser.bind({
     if (!channel) {
       return undefined;
     }
-    if (id) {
+    if (videoId) {
       result.mediaType = 'video';
-      result.id = id;
+      result.videoId = videoId;
       result.videoIdPrefix = videoIdPrefix;
     } else {
       result.mediaType = 'stream';
@@ -32,12 +32,12 @@ urlParser.bind({
   },
   'create': function(videoInfo) {
     "use strict";
-    var url;
-    if (videoInfo.mediaType === 'stream') {
-      url = 'http://twitch.tv/{0}'.format(videoInfo.channel);
-    } else if (videoInfo.mediaType === 'video') {
-      url = 'http://twitch.tv/{0}/{1}/{2}'.format(videoInfo.channel, videoInfo.videoIdPrefix, videoInfo.id);
+    var url,
+      vi = op.videoInfo;
+    if (vi.mediaType === 'stream') {
+      return 'https://twitch.tv/{0}'.format(vi.channel);
     }
-    return url;
+
+    return 'https://twitch.tv/{0}/{1}/{2}'.format(vi.channel, vi.videoIdPrefix, vi.videoId);
   }
 });

@@ -4,32 +4,37 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      id,
+      videoId,
       startTime,
       result = {};
 
     match = url.match(/(?:\/video|ly)\/([A-Za-z0-9]+)/i);
-    id = match ? match[1] : undefined;
+    videoId = match ? match[1] : undefined;
 
     match = url.match(/[#\?&]start=([A-Za-z0-9]+)/i);
     startTime = match ? getTime(match[1]) : undefined;
 
-    if (!id) {
+    if (!videoId) {
       return undefined;
     }
     result.mediaType = 'video';
-    result.id = id;
+    result.videoId = videoId;
     if (startTime) {
       result.startTime = startTime;
     }
     return result;
   },
-  'create': function(videoInfo) {
+  'create': function(op) {
     "use strict";
-    if (videoInfo.startTime) {
-      return 'http://www.dailymotion.com/video/{0}?start={1}'.format(videoInfo.id, videoInfo.startTime);
+    var vi = op.videoInfo;
+    if (vi.startTime) {
+      return 'https://www.dailymotion.com/video/{0}?start={1}'.format(vi.videoId, vi.startTime);
     }
 
-    return 'http://dai.ly/{0}'.format(videoInfo.id);
+    if (op.format === 'short') {
+      return 'https://dai.ly/{0}'.format(vi.videoId);
+    }
+
+    return 'https://www.dailymotion.com/video/{0}'.format(vi.videoId);
   }
 });

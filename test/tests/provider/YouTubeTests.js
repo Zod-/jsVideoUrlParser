@@ -1,13 +1,13 @@
 QUnit.test("Regular YouTube URLs", function(assert) {
   var expected1 = {
       'provider': 'youtube',
-      'id': 'HRb7B9fPhfA',
+      'videoId': 'HRb7B9fPhfA',
       'mediaType': 'video',
       startTime: 30
     },
     expected2 = {
       'provider': 'youtube',
-      'id': 'HRb7B9fPhfA',
+      'videoId': 'HRb7B9fPhfA',
       'mediaType': 'video'
     },
     testPairs = {
@@ -26,14 +26,14 @@ QUnit.test("Regular YouTube URLs", function(assert) {
 QUnit.test("Playlist YouTube URLs", function(assert) {
   var expected1A = {
       'provider': 'youtube',
-      'id': 'yQaAGmHNn9s',
+      'videoId': 'yQaAGmHNn9s',
       'playlistId': 'PL46F0A159EC02DF82',
       'mediaType': 'video',
       startTime: 100
     },
     expected1B = {
       'provider': 'youtube',
-      'id': 'yQaAGmHNn9s',
+      'videoId': 'yQaAGmHNn9s',
       'playlistId': 'PL46F0A159EC02DF82',
       'mediaType': 'video'
     },
@@ -57,7 +57,7 @@ QUnit.test("Playlist YouTube URLs", function(assert) {
 QUnit.test("Feed YouTube URLs", function(assert) {
   var expected = {
       'provider': 'youtube',
-      'id': 'HRb7B9fPhfA',
+      'videoId': 'HRb7B9fPhfA',
       'mediaType': 'video'
     },
     testPairs = {

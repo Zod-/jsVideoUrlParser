@@ -28,10 +28,12 @@ URLParser.prototype.bind = function(plugin) {
     }
   }
 };
-URLParser.prototype.create = function(videoInfo) {
-  var th = this;
-  if (th.plugins[videoInfo.provider].create) {
-    return th.plugins[videoInfo.provider].create.call(this, videoInfo);
+URLParser.prototype.create = function(op) {
+  var th = this,
+    vi = op.videoInfo;
+  op.format = op.format || 'short';
+  if (th.plugins[vi.provider].create) {
+    return th.plugins[vi.provider].create.call(this, op);
   }
   return undefined;
 };

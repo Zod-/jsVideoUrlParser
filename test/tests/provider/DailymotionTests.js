@@ -1,12 +1,12 @@
 QUnit.test("Dailymotion URLs", function(assert) {
   var expected1 = {
       'provider': 'dailymotion',
-      'id': 'x1e2b95',
+      'videoId': 'x1e2b95',
       'mediaType': 'video'
     },
     expected2 = {
       'provider': 'dailymotion',
-      'id': 'x1e2b95',
+      'videoId': 'x1e2b95',
       'mediaType': 'video',
       startTime: 10
     },

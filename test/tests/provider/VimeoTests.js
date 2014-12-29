@@ -1,22 +1,22 @@
 QUnit.test("Vimeo URLs", function(assert) {
   var expected1 = {
       'provider': 'vimeo',
-      'id': '97276391',
+      'videoId': '97276391',
       'mediaType': 'video'
     },
     expected2 = {
       'provider': 'vimeo',
-      'id': '96186586',
+      'videoId': '96186586',
       'mediaType': 'video'
     },
     expected3 = {
       'provider': 'vimeo',
-      'id': '97688625',
+      'videoId': '97688625',
       'mediaType': 'video'
     },
     expected4 = {
       'provider': 'vimeo',
-      'id': '24069938',
+      'videoId': '24069938',
       'mediaType': 'video'
     },
     testPairs = {

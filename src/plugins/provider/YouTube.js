@@ -4,13 +4,13 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      id,
+      videoId,
       playlistId,
       startTime,
       result = {};
 
     match = url.match(/(?:(?:v|be|videos)\/|v=)([\w\-]{11})/i);
-    id = match ? match[1] : undefined;
+    videoId = match ? match[1] : undefined;
 
     match = url.match(/list=([\w\-]+)/i);
     playlistId = match ? match[1] : undefined;
@@ -19,9 +19,9 @@ urlParser.bind({
     startTime = match ? getTime(match[1]) : undefined;
 
 
-    if (id) {
+    if (videoId) {
       result.mediaType = 'video';
-      result.id = id;
+      result.videoId = videoId;
       if (playlistId) {
         result.playlistId = playlistId;
       }
@@ -37,20 +37,26 @@ urlParser.bind({
 
     return result;
   },
-  'create': function(videoInfo) {
+  'create': function(op) {
     "use strict";
-    var url;
-    if (videoInfo.mediaType === 'video') {
-      if (!videoInfo.playlistId) {
-        url = 'http://youtu.be/{0}'.format(videoInfo.id);
+    var url,
+      vi = op.videoInfo;
+    if (vi.mediaType === 'playlist') {
+      return 'https://www.youtube.com/playlist?feature=share&list={0}'.format(vi.playlistId);
+    }
+
+    if (vi.playlistId) {
+      url = 'https://www.youtube.com/watch?v={0}&list={1}'.format(vi.videoId, vi.playlistId);
+    } else {
+      if (op.format === 'short') {
+        url = 'https://youtu.be/{0}'.format(vi.videoId);
       } else {
-        url = 'https://www.youtube.com/watch?v={0}&list={1}'.format(videoInfo.id, videoInfo.playlistId);
+        url = 'https://www.youtube.com/watch?v={0}'.format(vi.videoId);
       }
-      if (videoInfo.startTime) {
-        url += '#t={0}'.format(videoInfo.startTime);
-      }
-    } else if (videoInfo.mediaType === 'playlist') {
-      url = 'https://www.youtube.com/playlist?feature=share&list={0}'.format(videoInfo.playlistId);
+    }
+
+    if (vi.startTime) {
+      url += '#t={0}'.format(vi.startTime);
     }
     return url;
   }

@@ -5,10 +5,10 @@ function URLParser() {
 URLParser.prototype.parse = function(url) {
   "use strict";
   var th = this,
-    match = url.match(/(?:https?:\/\/)?(?:[^\.]+\.)?(\w+)\./i),
-    provider = match ? match[1] : undefined,
-    result,
-    createdUrl;
+  match = url.match(/(?:https?:\/\/)?(?:[^\.]+\.)?(\w+)\./i),
+  provider = match ? match[1] : undefined,
+  result,
+  createdUrl;
   if (match && provider && th.plugins[provider]) {
     result = th.plugins[provider].parse.call(this, url);
     if (result) {
@@ -28,13 +28,16 @@ URLParser.prototype.bind = function(plugin) {
     }
   }
 };
-URLParser.prototype.create = function(videoInfo) {
-  var th = this;
-  if (th.plugins[videoInfo.provider].create) {
-    return th.plugins[videoInfo.provider].create.call(this, videoInfo);
+URLParser.prototype.create = function(op) {
+  var th = this,
+  vi = op.videoInfo;
+  op.format = op.format || 'short';
+  if (th.plugins[vi.provider].create) {
+    return th.plugins[vi.provider].create.call(this, op);
   }
   return undefined;
 };
+
 var urlParser = new URLParser();
 
 //parses strings like 1h30m20s to seconds
@@ -102,35 +105,41 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      id,
+      videoId,
       startTime,
       result = {};
 
     match = url.match(/(?:\/video|ly)\/([A-Za-z0-9]+)/i);
-    id = match ? match[1] : undefined;
+    videoId = match ? match[1] : undefined;
 
     match = url.match(/[#\?&]start=([A-Za-z0-9]+)/i);
     startTime = match ? getTime(match[1]) : undefined;
 
-    if (!id) {
+    if (!videoId) {
       return undefined;
     }
     result.mediaType = 'video';
-    result.id = id;
+    result.videoId = videoId;
     if (startTime) {
       result.startTime = startTime;
     }
     return result;
   },
-  'create': function(videoInfo) {
+  'create': function(op) {
     "use strict";
-    if (videoInfo.startTime) {
-      return 'http://www.dailymotion.com/video/{0}?start={1}'.format(videoInfo.id, videoInfo.startTime);
+    var vi = op.videoInfo;
+    if (vi.startTime) {
+      return 'https://www.dailymotion.com/video/{0}?start={1}'.format(vi.videoId, vi.startTime);
     }
 
-    return 'http://dai.ly/{0}'.format(videoInfo.id);
+    if (op.format === 'short') {
+      return 'https://dai.ly/{0}'.format(vi.videoId);
+    }
+
+    return 'https://www.dailymotion.com/video/{0}'.format(vi.videoId);
   }
 });
+
 //not finished
 urlParser.bind({
   'provider': 'livestream',
@@ -155,7 +164,7 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      id,
+      videoId,
       channel,
       videoIdPrefix,
       result = {};
@@ -163,7 +172,7 @@ urlParser.bind({
     match = url.match(/twitch\.tv\/(\w+)(?:\/(.)\/(\d+))?/i);
     channel = match ? match[1] : undefined;
     videoIdPrefix = match ? match[2] : undefined;
-    id = match ? match[3] : undefined;
+    videoId = match ? match[3] : undefined;
 
     match = url.match(/(?:\?channel|\&utm_content)=(\w+)/i);
     channel = match ? match[1] : channel;
@@ -171,9 +180,9 @@ urlParser.bind({
     if (!channel) {
       return undefined;
     }
-    if (id) {
+    if (videoId) {
       result.mediaType = 'video';
-      result.id = id;
+      result.videoId = videoId;
       result.videoIdPrefix = videoIdPrefix;
     } else {
       result.mediaType = 'stream';
@@ -184,13 +193,13 @@ urlParser.bind({
   },
   'create': function(videoInfo) {
     "use strict";
-    var url;
-    if (videoInfo.mediaType === 'stream') {
-      url = 'http://twitch.tv/{0}'.format(videoInfo.channel);
-    } else if (videoInfo.mediaType === 'video') {
-      url = 'http://twitch.tv/{0}/{1}/{2}'.format(videoInfo.channel, videoInfo.videoIdPrefix, videoInfo.id);
+    var url,
+      vi = op.videoInfo;
+    if (vi.mediaType === 'stream') {
+      return 'https://twitch.tv/{0}'.format(vi.channel);
     }
-    return url;
+
+    return 'https://twitch.tv/{0}/{1}/{2}'.format(vi.channel, vi.videoIdPrefix, vi.videoId);
   }
 });
 urlParser.bind({
@@ -199,20 +208,20 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      id;
+      videoId;
     match = url.match(/(?:\/(?:channels\/[\w]+|(?:album\/\d+\/)?videos?))?\/(\d+)/i);
-    id = match ? match[1] : undefined;
-    if (!id) {
+    videoId = match ? match[1] : undefined;
+    if (!videoId) {
       return undefined;
     }
     return {
       'mediaType': 'video',
-      'id': id
+      'videoId': videoId
     };
   },
   'create': function(videoInfo) {
     "use strict";
-    return 'http://vimeo.com/{0}'.format(videoInfo.id);
+    return 'https://vimeo.com/{0}'.format(op.videoInfo.videoId);
   }
 });
 urlParser.bind({
@@ -221,13 +230,13 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      id,
+      videoId,
       playlistId,
       startTime,
       result = {};
 
     match = url.match(/(?:(?:v|be|videos)\/|v=)([\w\-]{11})/i);
-    id = match ? match[1] : undefined;
+    videoId = match ? match[1] : undefined;
 
     match = url.match(/list=([\w\-]+)/i);
     playlistId = match ? match[1] : undefined;
@@ -236,9 +245,9 @@ urlParser.bind({
     startTime = match ? getTime(match[1]) : undefined;
 
 
-    if (id) {
+    if (videoId) {
       result.mediaType = 'video';
-      result.id = id;
+      result.videoId = videoId;
       if (playlistId) {
         result.playlistId = playlistId;
       }
@@ -254,20 +263,26 @@ urlParser.bind({
 
     return result;
   },
-  'create': function(videoInfo) {
+  'create': function(op) {
     "use strict";
-    var url;
-    if (videoInfo.mediaType === 'video') {
-      if (!videoInfo.playlistId) {
-        url = 'http://youtu.be/{0}'.format(videoInfo.id);
+    var url,
+      vi = op.videoInfo;
+    if (vi.mediaType === 'playlist') {
+      return 'https://www.youtube.com/playlist?feature=share&list={0}'.format(vi.playlistId);
+    }
+
+    if (vi.playlistId) {
+      url = 'https://www.youtube.com/watch?v={0}&list={1}'.format(vi.videoId, vi.playlistId);
+    } else {
+      if (op.format === 'short') {
+        url = 'https://youtu.be/{0}'.format(vi.videoId);
       } else {
-        url = 'https://www.youtube.com/watch?v={0}&list={1}'.format(videoInfo.id, videoInfo.playlistId);
+        url = 'https://www.youtube.com/watch?v={0}'.format(vi.videoId);
       }
-      if (videoInfo.startTime) {
-        url += '#t={0}'.format(videoInfo.startTime);
-      }
-    } else if (videoInfo.mediaType === 'playlist') {
-      url = 'https://www.youtube.com/playlist?feature=share&list={0}'.format(videoInfo.playlistId);
+    }
+
+    if (vi.startTime) {
+      url += '#t={0}'.format(vi.startTime);
     }
     return url;
   }
