@@ -4,19 +4,19 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      videoId;
+      id;
     match = url.match(/(?:\/(?:channels\/[\w]+|(?:album\/\d+\/)?videos?))?\/(\d+)/i);
-    videoId = match ? match[1] : undefined;
-    if (!videoId) {
+    id = match ? match[1] : undefined;
+    if (!id) {
       return undefined;
     }
     return {
       'mediaType': 'video',
-      'videoId': videoId
+      'id': id
     };
   },
   'create': function(videoInfo) {
     "use strict";
-    return 'https://vimeo.com/{0}'.format(op.videoInfo.videoId);
+    return 'https://vimeo.com/{0}'.format(op.videoInfo.id);
   }
 });

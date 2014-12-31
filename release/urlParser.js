@@ -89,21 +89,21 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      videoId,
+      id,
       startTime,
       result = {};
 
     match = url.match(/(?:\/video|ly)\/([A-Za-z0-9]+)/i);
-    videoId = match ? match[1] : undefined;
+    id = match ? match[1] : undefined;
 
     match = url.match(/[#\?&]start=([A-Za-z0-9]+)/i);
     startTime = match ? getTime(match[1]) : undefined;
 
-    if (!videoId) {
+    if (!id) {
       return undefined;
     }
     result.mediaType = 'video';
-    result.videoId = videoId;
+    result.id = id;
     if (startTime) {
       result.startTime = startTime;
     }
@@ -113,14 +113,14 @@ urlParser.bind({
     "use strict";
     var vi = op.videoInfo;
     if (vi.startTime) {
-      return 'https://www.dailymotion.com/video/{0}?start={1}'.format(vi.videoId, vi.startTime);
+      return 'https://www.dailymotion.com/video/{0}?start={1}'.format(vi.id, vi.startTime);
     }
 
     if (op.format === 'short') {
-      return 'https://dai.ly/{0}'.format(vi.videoId);
+      return 'https://dai.ly/{0}'.format(vi.id);
     }
 
-    return 'https://www.dailymotion.com/video/{0}'.format(vi.videoId);
+    return 'https://www.dailymotion.com/video/{0}'.format(vi.id);
   }
 });
 
@@ -148,15 +148,15 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      videoId,
+      id,
       channel,
-      videoIdPrefix,
+      idPrefix,
       result = {};
 
     match = url.match(/twitch\.tv\/(\w+)(?:\/(.)\/(\d+))?/i);
     channel = match ? match[1] : undefined;
-    videoIdPrefix = match ? match[2] : undefined;
-    videoId = match ? match[3] : undefined;
+    idPrefix = match ? match[2] : undefined;
+    id = match ? match[3] : undefined;
 
     match = url.match(/(?:\?channel|\&utm_content)=(\w+)/i);
     channel = match ? match[1] : channel;
@@ -164,10 +164,10 @@ urlParser.bind({
     if (!channel) {
       return undefined;
     }
-    if (videoId) {
+    if (id) {
       result.mediaType = 'video';
-      result.videoId = videoId;
-      result.videoIdPrefix = videoIdPrefix;
+      result.id = id;
+      result.idPrefix = idPrefix;
     } else {
       result.mediaType = 'stream';
     }
@@ -183,7 +183,7 @@ urlParser.bind({
       return 'https://twitch.tv/{0}'.format(vi.channel);
     }
 
-    return 'https://twitch.tv/{0}/{1}/{2}'.format(vi.channel, vi.videoIdPrefix, vi.videoId);
+    return 'https://twitch.tv/{0}/{1}/{2}'.format(vi.channel, vi.idPrefix, vi.id);
   }
 });
 urlParser.bind({
@@ -192,20 +192,20 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      videoId;
+      id;
     match = url.match(/(?:\/(?:channels\/[\w]+|(?:album\/\d+\/)?videos?))?\/(\d+)/i);
-    videoId = match ? match[1] : undefined;
-    if (!videoId) {
+    id = match ? match[1] : undefined;
+    if (!id) {
       return undefined;
     }
     return {
       'mediaType': 'video',
-      'videoId': videoId
+      'id': id
     };
   },
   'create': function(videoInfo) {
     "use strict";
-    return 'https://vimeo.com/{0}'.format(op.videoInfo.videoId);
+    return 'https://vimeo.com/{0}'.format(op.videoInfo.id);
   }
 });
 urlParser.bind({
@@ -214,14 +214,14 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-    videoId,
+    id,
     playlistId,
     playlistIndex,
     startTime,
     result = {};
 
     match = url.match(/(?:(?:v|be|videos)\/|v=)([\w\-]{11})/i);
-    videoId = match ? match[1] : undefined;
+    id = match ? match[1] : undefined;
 
     match = url.match(/list=([\w\-]+)/i);
     playlistId = match ? match[1] : undefined;
@@ -232,9 +232,9 @@ urlParser.bind({
     match = url.match(/[#\?&](?:star)?t=([A-Za-z0-9]+)/i);
     startTime = match ? getTime(match[1]) : undefined;
 
-    if (videoId) {
+    if (id) {
       result.mediaType = 'video';
-      result.videoId = videoId;
+      result.id = id;
       if (playlistId) {
         result.playlistId = playlistId;
         if (playlistIndex) {
@@ -262,15 +262,15 @@ urlParser.bind({
     }
 
     if (vi.playlistId) {
-      url = 'https://www.youtube.com/watch?v={0}&list={1}'.format(vi.videoId, vi.playlistId);
+      url = 'https://www.youtube.com/watch?v={0}&list={1}'.format(vi.id, vi.playlistId);
       if (vi.playlistIndex) {
         url += '&index={0}'.format(vi.playlistIndex);
       }
     } else {
       if (op.format === 'short') {
-        url = 'https://youtu.be/{0}'.format(vi.videoId);
+        url = 'https://youtu.be/{0}'.format(vi.id);
       } else {
-        url = 'https://www.youtube.com/watch?v={0}'.format(vi.videoId);
+        url = 'https://www.youtube.com/watch?v={0}'.format(vi.id);
       }
     }
 

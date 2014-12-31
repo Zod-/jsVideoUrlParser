@@ -3,15 +3,15 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      videoId,
+      id,
       channel,
-      videoIdPrefix,
+      idPrefix,
       result = {};
 
     match = url.match(/twitch\.tv\/(\w+)(?:\/(.)\/(\d+))?/i);
     channel = match ? match[1] : undefined;
-    videoIdPrefix = match ? match[2] : undefined;
-    videoId = match ? match[3] : undefined;
+    idPrefix = match ? match[2] : undefined;
+    id = match ? match[3] : undefined;
 
     match = url.match(/(?:\?channel|\&utm_content)=(\w+)/i);
     channel = match ? match[1] : channel;
@@ -19,10 +19,10 @@ urlParser.bind({
     if (!channel) {
       return undefined;
     }
-    if (videoId) {
+    if (id) {
       result.mediaType = 'video';
-      result.videoId = videoId;
-      result.videoIdPrefix = videoIdPrefix;
+      result.id = id;
+      result.idPrefix = idPrefix;
     } else {
       result.mediaType = 'stream';
     }
@@ -38,6 +38,6 @@ urlParser.bind({
       return 'https://twitch.tv/{0}'.format(vi.channel);
     }
 
-    return 'https://twitch.tv/{0}/{1}/{2}'.format(vi.channel, vi.videoIdPrefix, vi.videoId);
+    return 'https://twitch.tv/{0}/{1}/{2}'.format(vi.channel, vi.idPrefix, vi.id);
   }
 });

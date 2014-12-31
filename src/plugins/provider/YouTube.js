@@ -4,14 +4,14 @@ urlParser.bind({
   'parse': function(url) {
     "use strict";
     var match,
-      videoId,
+      id,
       playlistId,
       playlistIndex,
       startTime,
       result = {};
 
     match = url.match(/(?:(?:v|be|videos)\/|v=)([\w\-]{11})/i);
-    videoId = match ? match[1] : undefined;
+    id = match ? match[1] : undefined;
 
     match = url.match(/list=([\w\-]+)/i);
     playlistId = match ? match[1] : undefined;
@@ -22,9 +22,9 @@ urlParser.bind({
     match = url.match(/[#\?&](?:star)?t=([A-Za-z0-9]+)/i);
     startTime = match ? getTime(match[1]) : undefined;
 
-    if (videoId) {
+    if (id) {
       result.mediaType = 'video';
-      result.videoId = videoId;
+      result.id = id;
       if (playlistId) {
         result.playlistId = playlistId;
         if (playlistIndex) {
@@ -52,15 +52,15 @@ urlParser.bind({
     }
 
     if (vi.playlistId) {
-      url = 'https://www.youtube.com/watch?v={0}&list={1}'.format(vi.videoId, vi.playlistId);
+      url = 'https://www.youtube.com/watch?v={0}&list={1}'.format(vi.id, vi.playlistId);
       if (vi.playlistIndex) {
         url += '&index={0}'.format(vi.playlistIndex);
       }
     } else {
       if (op.format === 'short') {
-        url = 'https://youtu.be/{0}'.format(vi.videoId);
+        url = 'https://youtu.be/{0}'.format(vi.id);
       } else {
-        url = 'https://www.youtube.com/watch?v={0}'.format(vi.videoId);
+        url = 'https://www.youtube.com/watch?v={0}'.format(vi.id);
       }
     }
 

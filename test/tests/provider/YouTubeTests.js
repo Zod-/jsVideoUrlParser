@@ -1,13 +1,13 @@
 QUnit.test("Regular YouTube URLs", function(assert) {
   var expected1 = {
       'provider': 'youtube',
-      'videoId': 'HRb7B9fPhfA',
+      'id': 'HRb7B9fPhfA',
       'mediaType': 'video',
       startTime: 30
     },
     expected2 = {
       'provider': 'youtube',
-      'videoId': 'HRb7B9fPhfA',
+      'id': 'HRb7B9fPhfA',
       'mediaType': 'video'
     },
     testPairs = {
@@ -27,27 +27,27 @@ QUnit.test("Playlist YouTube URLs", function(assert) {
   //https://www.youtube.com/watch?v=AdQcd3sKGC8&list=PL46F0A159EC02DF82&index=9
   var expected1A = {
       'provider': 'youtube',
-      'videoId': 'yQaAGmHNn9s',
+      'id': 'yQaAGmHNn9s',
       'playlistId': 'PL46F0A159EC02DF82',
       'mediaType': 'video',
       startTime: 100
     },
     expected1B = {
       'provider': 'youtube',
-      'videoId': 'yQaAGmHNn9s',
+      'id': 'yQaAGmHNn9s',
       'playlistId': 'PL46F0A159EC02DF82',
       'mediaType': 'video'
     },
     expected1C = {
       'provider': 'youtube',
-      'videoId': '6xLcSTDeB7A',
+      'id': '6xLcSTDeB7A',
       'playlistId': 'PL46F0A159EC02DF82',
       'playlistIndex': 25,
       'mediaType': 'video'
     },
     expected1D = {
       'provider': 'youtube',
-      'videoId': '6xLcSTDeB7A',
+      'id': '6xLcSTDeB7A',
       'playlistId': 'PL46F0A159EC02DF82',
       'playlistIndex': 25,
       'mediaType': 'video',
@@ -79,7 +79,7 @@ QUnit.test("Playlist YouTube URLs", function(assert) {
 QUnit.test("Feed YouTube URLs", function(assert) {
   var expected = {
       'provider': 'youtube',
-      'videoId': 'HRb7B9fPhfA',
+      'id': 'HRb7B9fPhfA',
       'mediaType': 'video'
     },
     testPairs = {
