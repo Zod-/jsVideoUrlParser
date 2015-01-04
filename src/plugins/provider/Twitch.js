@@ -30,7 +30,7 @@ urlParser.bind({
 
     return result;
   },
-  'create': function(videoInfo) {
+  'create': function(op) {
     "use strict";
     var url,
       vi = op.videoInfo;

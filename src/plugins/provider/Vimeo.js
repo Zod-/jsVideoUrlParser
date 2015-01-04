@@ -15,7 +15,7 @@ urlParser.bind({
       'id': id
     };
   },
-  'create': function(videoInfo) {
+  'create': function(op) {
     "use strict";
     return 'https://vimeo.com/{0}'.format(op.videoInfo.id);
   }
