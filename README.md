@@ -9,8 +9,22 @@ Currently supports
  - Twitch
  - Dailymotion
 
-#Usage
+#grunt
 
+```
+$ grunt
+$ grunt test
+$ grunt dist
+
+#build and test specific plugins
+$ grunt --youtube=1 --vimeo=1
+$ grunt test --youtube=1 --vimeo=1
+$ grunt dist --youtube=1 --vimeo=1
+
+```
+=1 since [gruntjs/grunt#908](https://github.com/gruntjs/grunt/issues/908)
+
+#Usage
 ##Parsing
 
 Parsing a url will return a VideoInfo object with all the information

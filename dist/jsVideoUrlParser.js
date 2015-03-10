@@ -5,10 +5,10 @@ function URLParser() {
 URLParser.prototype.parse = function(url) {
   "use strict";
   var th = this,
-  match = url.match(/(?:https?:\/\/)?(?:[^\.]+\.)?(\w+)\./i),
-  provider = match ? match[1] : undefined,
-  result,
-  createdUrl;
+    match = url.match(/(?:https?:\/\/)?(?:[^\.]+\.)?(\w+)\./i),
+    provider = match ? match[1] : undefined,
+    result,
+    createdUrl;
   if (match && provider && th.plugins[provider]) {
     result = th.plugins[provider].parse.call(this, url);
     if (result) {
@@ -30,7 +30,7 @@ URLParser.prototype.bind = function(plugin) {
 };
 URLParser.prototype.create = function(op) {
   var th = this,
-  vi = op.videoInfo;
+    vi = op.videoInfo;
   op.format = op.format || 'short';
   if (th.plugins[vi.provider].create) {
     return th.plugins[vi.provider].create.call(this, op);
@@ -52,6 +52,7 @@ function getTime(timeString) {
       'w': 1 * 60 * 60 * 24 * 7
     },
     timePairs;
+
   //is the format 1h30m20s etc
   if (!timeString.match(/^(\d+[smhdw]?)+$/)) {
     return 0;
@@ -59,12 +60,14 @@ function getTime(timeString) {
   //expand to "1 h 30 m 20 s" and split
   timeString = timeString.replace(/([smhdw])/g, ' $1 ').trim();
   timePairs = timeString.split(' ');
+
   for (var i = 0; i < timePairs.length; i += 2) {
     totalSeconds += parseInt(timePairs[i], 10) * timeValues[timePairs[i + 1] || 's'];
   }
   return totalSeconds;
 }
-  //http://joquery.com/2012/string-format-for-javascript
+
+//http://joquery.com/2012/string-format-for-javascript
 if (typeof String.prototype.format !== 'function') {
   String.prototype.format = function() {
     // The string containing the format items (e.g. "{0}")
@@ -83,6 +86,7 @@ if (typeof String.prototype.format !== 'function') {
     return theString;
   };
 }
+
 urlParser.bind({
   'provider': 'dailymotion',
   'alternatives': ['dai'],
@@ -124,25 +128,6 @@ urlParser.bind({
   }
 });
 
-//not finished
-urlParser.bind({
-  'provider': 'livestream',
-  'parse': function(url) {
-    "use strict";
-    var match,
-      channel;
-    match = url.match(/livestream\.com\/(\w+)/i);
-    channel = match ? match[1] : undefined;
-    if (!channel) {
-      return undefined;
-    }
-
-    return {
-      'mediaType': 'stream',
-      'channel': channel
-    };
-  }
-});
 urlParser.bind({
   'provider': 'twitch',
   'parse': function(url) {
@@ -186,6 +171,7 @@ urlParser.bind({
     return 'https://twitch.tv/{0}/{1}/{2}'.format(vi.channel, vi.idPrefix, vi.id);
   }
 });
+
 urlParser.bind({
   'provider': 'vimeo',
   'alternatives': ['vimeopro'],
@@ -208,17 +194,18 @@ urlParser.bind({
     return 'https://vimeo.com/{0}'.format(op.videoInfo.id);
   }
 });
+
 urlParser.bind({
   'provider': 'youtube',
   'alternatives': ['youtu'],
   'parse': function(url) {
     "use strict";
     var match,
-    id,
-    playlistId,
-    playlistIndex,
-    startTime,
-    result = {};
+      id,
+      playlistId,
+      playlistIndex,
+      startTime,
+      result = {};
 
     match = url.match(/(?:(?:v|be|videos)\/|v=)([\w\-]{11})/i);
     id = match ? match[1] : undefined;
@@ -256,7 +243,7 @@ urlParser.bind({
   'create': function(op) {
     "use strict";
     var url,
-    vi = op.videoInfo;
+      vi = op.videoInfo;
     if (vi.mediaType === 'playlist') {
       return 'https://www.youtube.com/playlist?feature=share&list={0}'.format(vi.playlistId);
     }
