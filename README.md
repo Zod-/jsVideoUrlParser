@@ -1,4 +1,4 @@
-jsVideoUrlParser
+jsVideoUrlParser [![Build Status](https://travis-ci.org/Zod-/jsVideoUrlParser.svg)](https://travis-ci.org/Zod-/jsVideoUrlParser)
 ================
 
 A javascript parser to extract informations like provider, video id, start time from video urls
