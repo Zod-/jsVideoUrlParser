@@ -1,4 +1,7 @@
+/*jshint unused:false */
 function assertURLTestPairs(assert, testPairs) {
+/*jshint unused:true */
+  "use strict";
   for (var url in testPairs) {
     if (testPairs.hasOwnProperty(url)) {
       assert.deepEqual(urlParser.parse(url), testPairs[url], url);
@@ -6,7 +9,8 @@ function assertURLTestPairs(assert, testPairs) {
   }
 }
 
-QUnit.test("TimeString Parser", function(assert) {
+QUnit.test("TimeString Parser", function (assert) {
+  "use strict";
   var s = 1,
     m = 60 * s,
     h = 60 * m,
@@ -35,12 +39,13 @@ QUnit.test("TimeString Parser", function(assert) {
   for (var timeString in testPairs) {
     if (testPairs.hasOwnProperty(timeString)) {
       assert.equal(getTime(timeString), testPairs[timeString],
-        '{0} === {1}'.format(timeString, testPairs[timeString]));
+        timeString + ' === ' + testPairs[timeString]);
     }
   }
 });
 
 QUnit.test("Dailymotion URLs", function(assert) {
+  "use strict";
   var expected1 = {
       'provider': 'dailymotion',
       'id': 'x1e2b95',
@@ -66,6 +71,7 @@ QUnit.test("Dailymotion URLs", function(assert) {
 });
 
 QUnit.test("Twitch Stream URLs", function(assert) {
+  "use strict";
   var expected1 = {
       'provider': 'twitch',
       'channel': 'tsm_wildturtle',
@@ -89,6 +95,7 @@ QUnit.test("Twitch Stream URLs", function(assert) {
 });
 
 QUnit.test("Vimeo URLs", function(assert) {
+  "use strict";
   var expected1 = {
       'provider': 'vimeo',
       'id': '97276391',
@@ -121,6 +128,7 @@ QUnit.test("Vimeo URLs", function(assert) {
 });
 
 QUnit.test("Regular YouTube URLs", function(assert) {
+  "use strict";
   var expected1 = {
       'provider': 'youtube',
       'id': 'HRb7B9fPhfA',
@@ -146,6 +154,7 @@ QUnit.test("Regular YouTube URLs", function(assert) {
   assertURLTestPairs(assert, testPairs);
 });
 QUnit.test("Playlist YouTube URLs", function(assert) {
+  "use strict";
   //https://www.youtube.com/watch?v=AdQcd3sKGC8&list=PL46F0A159EC02DF82&index=9
   var expected1A = {
       'provider': 'youtube',
@@ -199,6 +208,7 @@ QUnit.test("Playlist YouTube URLs", function(assert) {
 });
 
 QUnit.test("Feed YouTube URLs", function(assert) {
+  "use strict";
   var expected = {
       'provider': 'youtube',
       'id': 'HRb7B9fPhfA',

@@ -1,7 +1,7 @@
 urlParser.bind({
   'provider': 'youtube',
   'alternatives': ['youtu'],
-  'parse': function(url) {
+  'parse': function (url) {
     "use strict";
     var match,
       id,
@@ -43,29 +43,29 @@ urlParser.bind({
 
     return result;
   },
-  'create': function(op) {
+  'create': function (op) {
     "use strict";
     var url,
       vi = op.videoInfo;
     if (vi.mediaType === 'playlist') {
-      return 'https://www.youtube.com/playlist?feature=share&list={0}'.format(vi.playlistId);
+      return 'https://www.youtube.com/playlist?feature=share&list=' + vi.playlistId;
     }
 
     if (vi.playlistId) {
-      url = 'https://www.youtube.com/watch?v={0}&list={1}'.format(vi.id, vi.playlistId);
+      url = 'https://www.youtube.com/watch?v=' + vi.id + '&list=' + vi.playlistId;
       if (vi.playlistIndex) {
         url += '&index={0}'.format(vi.playlistIndex);
       }
     } else {
       if (op.format === 'short') {
-        url = 'https://youtu.be/{0}'.format(vi.id);
+        url = 'https://youtu.be/' + vi.id;
       } else {
-        url = 'https://www.youtube.com/watch?v={0}'.format(vi.id);
+        url = 'https://www.youtube.com/watch?v=' + vi.id;
       }
     }
 
     if (vi.startTime) {
-      url += '#t={0}'.format(vi.startTime);
+      url += '#t=' + vi.startTime;
     }
     return url;
   }

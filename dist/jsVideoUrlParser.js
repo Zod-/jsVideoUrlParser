@@ -7,8 +7,7 @@ URLParser.prototype.parse = function(url) {
   var th = this,
     match = url.match(/(?:https?:\/\/)?(?:[^\.]+\.)?(\w+)\./i),
     provider = match ? match[1] : undefined,
-    result,
-    createdUrl;
+    result;
   if (match && provider && th.plugins[provider]) {
     result = th.plugins[provider].parse.call(this, url);
     if (result) {
@@ -19,6 +18,7 @@ URLParser.prototype.parse = function(url) {
   return undefined;
 };
 URLParser.prototype.bind = function(plugin) {
+  "use strict";
   var th = this;
   th.plugins[plugin.provider] = plugin;
   if (plugin.alternatives) {
@@ -29,6 +29,7 @@ URLParser.prototype.bind = function(plugin) {
   }
 };
 URLParser.prototype.create = function(op) {
+  "use strict";
   var th = this,
     vi = op.videoInfo;
   op.format = op.format || 'short';
@@ -37,11 +38,14 @@ URLParser.prototype.create = function(op) {
   }
   return undefined;
 };
-
+/*jshint unused:true */
 var urlParser = new URLParser();
+/*jshint unused:false */
 
 //parses strings like 1h30m20s to seconds
+/*jshint unused:false */
 function getTime(timeString) {
+/*jshint unused:true */
   "use strict";
   var totalSeconds = 0,
     timeValues = {
@@ -67,30 +71,10 @@ function getTime(timeString) {
   return totalSeconds;
 }
 
-//http://joquery.com/2012/string-format-for-javascript
-if (typeof String.prototype.format !== 'function') {
-  String.prototype.format = function() {
-    // The string containing the format items (e.g. "{0}")
-    // will and always has to be the first argument.
-    var theString = this,
-      i,
-      regEx;
-
-    // start with the second argument (i = 1)
-    for (i = 0; i < arguments.length; i += 1) {
-      // "gm" = RegEx options for Global search (more than one instance)
-      // and for Multiline search
-      regEx = new RegExp("\\{" + (i) + "\\}", "gm");
-      theString = theString.replace(regEx, arguments[i]);
-    }
-    return theString;
-  };
-}
-
 urlParser.bind({
   'provider': 'dailymotion',
   'alternatives': ['dai'],
-  'parse': function(url) {
+  'parse': function (url) {
     "use strict";
     var match,
       id,
@@ -113,24 +97,24 @@ urlParser.bind({
     }
     return result;
   },
-  'create': function(op) {
+  'create': function (op) {
     "use strict";
     var vi = op.videoInfo;
     if (vi.startTime) {
-      return 'https://www.dailymotion.com/video/{0}?start={1}'.format(vi.id, vi.startTime);
+      return 'https://www.dailymotion.com/video/' + vi.id + '?start=' + vi.startTime;
     }
 
     if (op.format === 'short') {
-      return 'https://dai.ly/{0}'.format(vi.id);
+      return 'https://dai.ly/' + vi.id;
     }
 
-    return 'https://www.dailymotion.com/video/{0}'.format(vi.id);
+    return 'https://www.dailymotion.com/video/' + vi.id;
   }
 });
 
 urlParser.bind({
   'provider': 'twitch',
-  'parse': function(url) {
+  'parse': function (url) {
     "use strict";
     var match,
       id,
@@ -160,22 +144,21 @@ urlParser.bind({
 
     return result;
   },
-  'create': function(op) {
+  'create': function (op) {
     "use strict";
-    var url,
-      vi = op.videoInfo;
+    var vi = op.videoInfo;
     if (vi.mediaType === 'stream') {
-      return 'https://twitch.tv/{0}'.format(vi.channel);
+      return 'https://twitch.tv/' + vi.channel;
     }
 
-    return 'https://twitch.tv/{0}/{1}/{2}'.format(vi.channel, vi.idPrefix, vi.id);
+    return 'https://twitch.tv/' + vi.channel + '/' + vi.idPrefix + '/' + vi.id;
   }
 });
 
 urlParser.bind({
   'provider': 'vimeo',
   'alternatives': ['vimeopro'],
-  'parse': function(url) {
+  'parse': function (url) {
     "use strict";
     var match,
       id;
@@ -189,16 +172,16 @@ urlParser.bind({
       'id': id
     };
   },
-  'create': function(op) {
+  'create': function (op) {
     "use strict";
-    return 'https://vimeo.com/{0}'.format(op.videoInfo.id);
+    return 'https://vimeo.com/' + op.videoInfo.id;
   }
 });
 
 urlParser.bind({
   'provider': 'youtube',
   'alternatives': ['youtu'],
-  'parse': function(url) {
+  'parse': function (url) {
     "use strict";
     var match,
       id,
@@ -240,29 +223,29 @@ urlParser.bind({
 
     return result;
   },
-  'create': function(op) {
+  'create': function (op) {
     "use strict";
     var url,
       vi = op.videoInfo;
     if (vi.mediaType === 'playlist') {
-      return 'https://www.youtube.com/playlist?feature=share&list={0}'.format(vi.playlistId);
+      return 'https://www.youtube.com/playlist?feature=share&list=' + vi.playlistId;
     }
 
     if (vi.playlistId) {
-      url = 'https://www.youtube.com/watch?v={0}&list={1}'.format(vi.id, vi.playlistId);
+      url = 'https://www.youtube.com/watch?v=' + vi.id + '&list=' + vi.playlistId;
       if (vi.playlistIndex) {
         url += '&index={0}'.format(vi.playlistIndex);
       }
     } else {
       if (op.format === 'short') {
-        url = 'https://youtu.be/{0}'.format(vi.id);
+        url = 'https://youtu.be/' + vi.id;
       } else {
-        url = 'https://www.youtube.com/watch?v={0}'.format(vi.id);
+        url = 'https://www.youtube.com/watch?v=' + vi.id;
       }
     }
 
     if (vi.startTime) {
-      url += '#t={0}'.format(vi.startTime);
+      url += '#t=' + vi.startTime;
     }
     return url;
   }

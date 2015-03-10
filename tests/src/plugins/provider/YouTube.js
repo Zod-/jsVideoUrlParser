@@ -1,4 +1,5 @@
 QUnit.test("Regular YouTube URLs", function(assert) {
+  "use strict";
   var expected1 = {
       'provider': 'youtube',
       'id': 'HRb7B9fPhfA',
@@ -24,6 +25,7 @@ QUnit.test("Regular YouTube URLs", function(assert) {
   assertURLTestPairs(assert, testPairs);
 });
 QUnit.test("Playlist YouTube URLs", function(assert) {
+  "use strict";
   //https://www.youtube.com/watch?v=AdQcd3sKGC8&list=PL46F0A159EC02DF82&index=9
   var expected1A = {
       'provider': 'youtube',
@@ -77,6 +79,7 @@ QUnit.test("Playlist YouTube URLs", function(assert) {
 });
 
 QUnit.test("Feed YouTube URLs", function(assert) {
+  "use strict";
   var expected = {
       'provider': 'youtube',
       'id': 'HRb7B9fPhfA',

@@ -1,4 +1,5 @@
-QUnit.test("TimeString Parser", function(assert) {
+QUnit.test("TimeString Parser", function (assert) {
+  "use strict";
   var s = 1,
     m = 60 * s,
     h = 60 * m,
@@ -27,7 +28,7 @@ QUnit.test("TimeString Parser", function(assert) {
   for (var timeString in testPairs) {
     if (testPairs.hasOwnProperty(timeString)) {
       assert.equal(getTime(timeString), testPairs[timeString],
-        '{0} === {1}'.format(timeString, testPairs[timeString]));
+        timeString + ' === ' + testPairs[timeString]);
     }
   }
 });

@@ -1,4 +1,5 @@
 QUnit.test("Dailymotion URLs", function(assert) {
+  "use strict";
   var expected1 = {
       'provider': 'dailymotion',
       'id': 'x1e2b95',

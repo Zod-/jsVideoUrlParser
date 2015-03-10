@@ -1,7 +1,7 @@
 urlParser.bind({
   'provider': 'dailymotion',
   'alternatives': ['dai'],
-  'parse': function(url) {
+  'parse': function (url) {
     "use strict";
     var match,
       id,
@@ -24,17 +24,17 @@ urlParser.bind({
     }
     return result;
   },
-  'create': function(op) {
+  'create': function (op) {
     "use strict";
     var vi = op.videoInfo;
     if (vi.startTime) {
-      return 'https://www.dailymotion.com/video/{0}?start={1}'.format(vi.id, vi.startTime);
+      return 'https://www.dailymotion.com/video/' + vi.id + '?start=' + vi.startTime;
     }
 
     if (op.format === 'short') {
-      return 'https://dai.ly/{0}'.format(vi.id);
+      return 'https://dai.ly/' + vi.id;
     }
 
-    return 'https://www.dailymotion.com/video/{0}'.format(vi.id);
+    return 'https://www.dailymotion.com/video/' + vi.id;
   }
 });

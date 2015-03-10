@@ -1,4 +1,5 @@
 QUnit.test("Twitch Stream URLs", function(assert) {
+  "use strict";
   var expected1 = {
       'provider': 'twitch',
       'channel': 'tsm_wildturtle',

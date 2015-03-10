@@ -7,8 +7,7 @@ URLParser.prototype.parse = function(url) {
   var th = this,
     match = url.match(/(?:https?:\/\/)?(?:[^\.]+\.)?(\w+)\./i),
     provider = match ? match[1] : undefined,
-    result,
-    createdUrl;
+    result;
   if (match && provider && th.plugins[provider]) {
     result = th.plugins[provider].parse.call(this, url);
     if (result) {
@@ -19,6 +18,7 @@ URLParser.prototype.parse = function(url) {
   return undefined;
 };
 URLParser.prototype.bind = function(plugin) {
+  "use strict";
   var th = this;
   th.plugins[plugin.provider] = plugin;
   if (plugin.alternatives) {
@@ -29,6 +29,7 @@ URLParser.prototype.bind = function(plugin) {
   }
 };
 URLParser.prototype.create = function(op) {
+  "use strict";
   var th = this,
     vi = op.videoInfo;
   op.format = op.format || 'short';
@@ -37,5 +38,6 @@ URLParser.prototype.create = function(op) {
   }
   return undefined;
 };
-
+/*jshint unused:true */
 var urlParser = new URLParser();
+/*jshint unused:false */

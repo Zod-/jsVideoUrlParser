@@ -1,6 +1,6 @@
 urlParser.bind({
   'provider': 'twitch',
-  'parse': function(url) {
+  'parse': function (url) {
     "use strict";
     var match,
       id,
@@ -30,14 +30,13 @@ urlParser.bind({
 
     return result;
   },
-  'create': function(op) {
+  'create': function (op) {
     "use strict";
-    var url,
-      vi = op.videoInfo;
+    var vi = op.videoInfo;
     if (vi.mediaType === 'stream') {
-      return 'https://twitch.tv/{0}'.format(vi.channel);
+      return 'https://twitch.tv/' + vi.channel;
     }
 
-    return 'https://twitch.tv/{0}/{1}/{2}'.format(vi.channel, vi.idPrefix, vi.id);
+    return 'https://twitch.tv/' + vi.channel + '/' + vi.idPrefix + '/' + vi.id;
   }
 });

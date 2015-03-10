@@ -1,4 +1,5 @@
 QUnit.test("Vimeo URLs", function(assert) {
+  "use strict";
   var expected1 = {
       'provider': 'vimeo',
       'id': '97276391',

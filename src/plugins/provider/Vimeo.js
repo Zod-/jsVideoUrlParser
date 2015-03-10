@@ -1,7 +1,7 @@
 urlParser.bind({
   'provider': 'vimeo',
   'alternatives': ['vimeopro'],
-  'parse': function(url) {
+  'parse': function (url) {
     "use strict";
     var match,
       id;
@@ -15,8 +15,8 @@ urlParser.bind({
       'id': id
     };
   },
-  'create': function(op) {
+  'create': function (op) {
     "use strict";
-    return 'https://vimeo.com/{0}'.format(op.videoInfo.id);
+    return 'https://vimeo.com/' + op.videoInfo.id;
   }
 });

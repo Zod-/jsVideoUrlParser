@@ -1,5 +1,7 @@
 //parses strings like 1h30m20s to seconds
+/*jshint unused:false */
 function getTime(timeString) {
+/*jshint unused:true */
   "use strict";
   var totalSeconds = 0,
     timeValues = {
