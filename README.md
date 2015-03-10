@@ -13,11 +13,13 @@ Currently supports
 
 ```
 $ grunt
+$ grunt build
 $ grunt test
 $ grunt dist
 
 #build and test specific plugins
 $ grunt --youtube=1 --vimeo=1
+$ grunt build --youtube=1 --vimeo=1
 $ grunt test --youtube=1 --vimeo=1
 $ grunt dist --youtube=1 --vimeo=1
 
