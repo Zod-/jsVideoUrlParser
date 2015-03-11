@@ -22,7 +22,7 @@ function assertUrlTest(assert, tests) {
     test.urls.forEach(function (url) {
       assert.deepEqual(urlParser.parse(url), test.videoInfo, url);
     });
-    
+
     assert.equal(urlParser.create({
       videoInfo: test.videoInfo,
       format: 'long'
