@@ -48,19 +48,19 @@ urlParser.bind({
     var url,
       vi = op.videoInfo;
     if (vi.mediaType === 'playlist') {
-      return 'https://www.youtube.com/playlist?feature=share&list=' + vi.playlistId;
+      return 'https://youtube.com/playlist?feature=share&list=' + vi.playlistId;
     }
 
     if (vi.playlistId) {
-      url = 'https://www.youtube.com/watch?v=' + vi.id + '&list=' + vi.playlistId;
+      url = 'https://youtube.com/watch?v=' + vi.id + '&list=' + vi.playlistId;
       if (vi.playlistIndex) {
-        url += '&index={0}'.format(vi.playlistIndex);
+        url += '&index=' + vi.playlistIndex;
       }
     } else {
       if (op.format === 'short') {
         url = 'https://youtu.be/' + vi.id;
       } else {
-        url = 'https://www.youtube.com/watch?v=' + vi.id;
+        url = 'https://youtube.com/watch?v=' + vi.id;
       }
     }
 

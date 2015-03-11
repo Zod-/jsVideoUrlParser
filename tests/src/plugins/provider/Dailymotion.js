@@ -1,25 +1,28 @@
-QUnit.test("Dailymotion URLs", function(assert) {
+QUnit.test("Dailymotion URLs", function (assert) {
   "use strict";
-  var expected1 = {
+  var vi = {
       'provider': 'dailymotion',
       'id': 'x1e2b95',
       'mediaType': 'video'
     },
-    expected2 = {
-      'provider': 'dailymotion',
-      'id': 'x1e2b95',
-      'mediaType': 'video',
-      startTime: 10
-    },
-    testPairs = {
-      'http://www.dailymotion.com/video/x1e2b95_bruce-lee-nin-kayip-kedisi_animals': expected1,
-      'http://www.dailymotion.com/video/x1e2b95_bruce-lee-nin-kayip-kedisi_animals?start=10': expected2,
-      'http://www.dailymotion.com/video/x1e2b95': expected1,
-      'http://www.dailymotion.com/video/x1e2b95?start=10': expected2,
-      'http://dai.ly/x1e2b95': expected1,
-      'http://www.dailymotion.com/embed/video/x1e2b95': expected1,
-      'http://www.dailymotion.com/embed/video/x1e2b95?start=10': expected2
-    };
+    tests = [{
+      videoInfo: cloneObject(vi),
+      createdUrl: 'https://dailymotion.com/video/x1e2b95',
+      createdShortUrl: 'https://dai.ly/x1e2b95',
+      urls: ['http://www.dailymotion.com/video/x1e2b95_bruce-lee-nin-kayip-kedisi_animals',
+        'http://www.dailymotion.com/video/x1e2b95',
+        'http://dai.ly/x1e2b95',
+        'http://www.dailymotion.com/embed/video/x1e2b95'
+      ]
+    }, {
+      videoInfo: cloneObject(vi),
+      createdUrl: 'https://dailymotion.com/video/x1e2b95?start=10',
+      urls: ['http://www.dailymotion.com/video/x1e2b95?start=10',
+        'http://www.dailymotion.com/video/x1e2b95_bruce-lee-nin-kayip-kedisi_animals?start=10',
+        'http://www.dailymotion.com/embed/video/x1e2b95?start=10'
+      ]
+    }];
+  tests[1].videoInfo.startTime = 10;
 
-  assertURLTestPairs(assert, testPairs);
+  assertUrlTest(assert, tests);
 });

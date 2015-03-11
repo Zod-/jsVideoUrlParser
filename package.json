@@ -1,6 +1,6 @@
 {
   "name": "videoUrlParser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A parser to extract provider, video id, starttime and others from YouTube, Vimeo, ... urls",
   "main": "Gruntfile.js",
   "repository": {

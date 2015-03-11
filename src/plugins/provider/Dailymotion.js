@@ -28,13 +28,13 @@ urlParser.bind({
     "use strict";
     var vi = op.videoInfo;
     if (vi.startTime) {
-      return 'https://www.dailymotion.com/video/' + vi.id + '?start=' + vi.startTime;
+      return 'https://dailymotion.com/video/' + vi.id + '?start=' + vi.startTime;
     }
 
     if (op.format === 'short') {
       return 'https://dai.ly/' + vi.id;
     }
 
-    return 'https://www.dailymotion.com/video/' + vi.id;
+    return 'https://dailymotion.com/video/' + vi.id;
   }
 });

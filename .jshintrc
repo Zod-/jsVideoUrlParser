@@ -1,14 +1,15 @@
 {
   "globals": {
-    "urlParser": true,
-    "getTime": true,
-    "assertURLTestPairs": true,
-    "QUnit": true
+    "urlParser":     true,
+    "getTime":       true,
+    "assertUrlTest": true,
+    "QUnit":         true,
+    "cloneObject":   true
   },
+  "newcap":    false,
   "boss":      true,
   "node":      true,
   "strict":    true,
-  "newcap":    false,
   "undef":     true,
   "unused":    true,
   "onecase":   true,
