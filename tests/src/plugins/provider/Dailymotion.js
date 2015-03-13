@@ -22,7 +22,7 @@ QUnit.test("Dailymotion URLs", function (assert) {
         'http://www.dailymotion.com/embed/video/x1e2b95?start=10'
       ]
     }];
-  tests[1].videoInfo.startTime = 10;
+  tests[1].videoInfo.params = {start: 10};
 
   assertUrlTest(assert, tests);
 });

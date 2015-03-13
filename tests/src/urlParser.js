@@ -31,7 +31,8 @@ QUnit.test("urlParser Object", function (assert) {
     createObj2 = {
       videoInfo: {
         'provider': 'foo'
-      }
+      },
+      format: 'short'
     },
     createObj3 = {
       videoInfo: {

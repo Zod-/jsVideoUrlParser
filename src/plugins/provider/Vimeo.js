@@ -17,6 +17,6 @@ urlParser.bind({
   },
   'create': function (op) {
     "use strict";
-    return 'https://vimeo.com/' + op.videoInfo.id;
+    return 'https://vimeo.com/' + op.videoInfo.id + combineParams({params: op.params});
   }
 });

@@ -1,42 +1,40 @@
 urlParser.bind({
   'provider': 'youtube',
   'alternatives': ['youtu'],
-  'parse': function (url) {
+  'parse': function (url, params) {
     "use strict";
     var match,
       id,
-      playlistId,
-      playlistIndex,
-      startTime,
-      result = {};
+      list,
+      result = {
+        params: params
+      };
 
     match = url.match(/(?:(?:v|be|videos)\/|v=)([\w\-]{11})/i);
     id = match ? match[1] : undefined;
+    if (params.v === id) {
+      delete params.v;
+    }
 
-    match = url.match(/list=([\w\-]+)/i);
-    playlistId = match ? match[1] : undefined;
+    list = params.list;
 
-    match = url.match(/index=(\d+)/i);
-    playlistIndex = match ? Number(match[1]) : undefined;
-
-    match = url.match(/[#\?&](?:star)?t=([A-Za-z0-9]+)/i);
-    startTime = match ? getTime(match[1]) : undefined;
+    if (params.hasOwnProperty('start')) {
+      params.start = getTime(params.start);
+    }
+    if (params.hasOwnProperty('t')) {
+      params.start = getTime(params.t);
+      delete params.t;
+    }
 
     if (id) {
       result.mediaType = 'video';
       result.id = id;
-      if (playlistId) {
-        result.playlistId = playlistId;
-        if (playlistIndex) {
-          result.playlistIndex = playlistIndex;
-        }
+      if (list) {
+        result.list = list;
       }
-      if (startTime) {
-        result.startTime = startTime;
-      }
-    } else if (playlistId) {
+    } else if (list) {
       result.mediaType = 'playlist';
-      result.playlistId = playlistId;
+      result.list = list;
     } else {
       return undefined;
     }
@@ -46,26 +44,24 @@ urlParser.bind({
   'create': function (op) {
     "use strict";
     var url,
-      vi = op.videoInfo;
+      vi = op.videoInfo,
+      params = cloneObject(op.params),
+      startTime = params.start;
+    delete params.start;
+
     if (vi.mediaType === 'playlist') {
-      return 'https://youtube.com/playlist?feature=share&list=' + vi.playlistId;
+      return 'https://youtube.com/playlist?feature=share&list=' + vi.list;
     }
 
-    if (vi.playlistId) {
-      url = 'https://youtube.com/watch?v=' + vi.id + '&list=' + vi.playlistId;
-      if (vi.playlistIndex) {
-        url += '&index=' + vi.playlistIndex;
-      }
+    if (op.format === 'short') {
+      url = 'https://youtu.be/' + vi.id;
     } else {
-      if (op.format === 'short') {
-        url = 'https://youtu.be/' + vi.id;
-      } else {
-        url = 'https://youtube.com/watch?v=' + vi.id;
-      }
+      url = 'https://youtube.com/watch?v=' + vi.id;
+      url += combineParams({hasParams:true, params: params});
     }
 
-    if (vi.startTime) {
-      url += '#t=' + vi.startTime;
+    if (startTime) {
+      url += '#t=' + startTime;
     }
     return url;
   }
