@@ -7,14 +7,20 @@ QUnit.test("Twitch Stream URLs", function (assert) {
     },
     tests = [{
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://twitch.tv/tsm_wildturtle',
+      formats: {
+        long: 'https://twitch.tv/tsm_wildturtle',
+        embed: '//www.twitch.tv/tsm_wildturtle/embed'
+      },
       urls: ['http://www.twitch.tv/tsm_wildturtle',
         'http://www.twitch.tv/widgets/live_embed_player.swf?channel=tsm_wildturtle',
-        'http://twitch.tv/tsm_wildturtle/chat?popout='
+        'http://twitch.tv/tsm_wildturtle/chat?popout=',
+        '//www.twitch.tv/tsm_wildturtle/embed'
       ]
     }, {
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://twitch.tv/tsm_wildturtle/c/2724914',
+      formats: {
+        long: 'https://twitch.tv/tsm_wildturtle/c/2724914',
+      },
       urls: ['http://www.twitch.tv/tsm_wildturtle/c/2724914']
     }];
   tests[1].videoInfo.id = '2724914';

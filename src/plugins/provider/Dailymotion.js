@@ -1,40 +1,51 @@
 urlParser.bind({
   'provider': 'dailymotion',
   'alternatives': ['dai'],
-  'parse': function (url) {
+  'parse': function (url, params) {
     "use strict";
     var match,
       id,
-      startTime,
-      result = {};
+      result = {
+        params: params
+      };
 
     match = url.match(/(?:\/video|ly)\/([A-Za-z0-9]+)/i);
     id = match ? match[1] : undefined;
 
-    match = url.match(/[#\?&]start=([A-Za-z0-9]+)/i);
-    startTime = match ? getTime(match[1]) : undefined;
+    if (params.hasOwnProperty('start')) {
+      params.start = getTime(params.start);
+    }
 
     if (!id) {
       return undefined;
     }
     result.mediaType = 'video';
     result.id = id;
-    if (startTime) {
-      result.startTime = startTime;
-    }
+
     return result;
   },
-  'create': function (op) {
-    "use strict";
-    var vi = op.videoInfo;
-    if (vi.startTime) {
-      return 'https://dailymotion.com/video/' + vi.id + '?start=' + vi.startTime;
-    }
-
-    if (op.format === 'short') {
+  defaultFormat: 'long',
+  formats: {
+    short: function (vi) {
+      "use strict";
       return 'https://dai.ly/' + vi.id;
+    },
+    long: function (vi, params) {
+      "use strict";
+      return 'https://dailymotion.com/video/' +
+        vi.id +
+        combineParams({
+          params: params
+        });
+    },
+    embed: function (vi, params) {
+      "use strict";
+      return '//www.dailymotion.com/embed/video/' +
+        vi.id +
+        combineParams({
+          params: params
+        });
     }
-
-    return 'https://dailymotion.com/video/' + vi.id;
   }
+  //
 });

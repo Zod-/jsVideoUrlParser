@@ -1,6 +1,6 @@
 urlParser.bind({
   'provider': 'twitch',
-  'parse': function (url) {
+  'parse': function (url, params) {
     "use strict";
     var match,
       id,
@@ -13,8 +13,7 @@ urlParser.bind({
     idPrefix = match ? match[2] : undefined;
     id = match ? match[3] : undefined;
 
-    match = url.match(/(?:\?channel|\&utm_content)=(\w+)/i);
-    channel = match ? match[1] : channel;
+    channel = params.channel || params.utm_content || channel;
 
     if (!channel) {
       return undefined;
@@ -30,13 +29,30 @@ urlParser.bind({
 
     return result;
   },
-  'create': function (op) {
-    "use strict";
-    var vi = op.videoInfo;
-    if (vi.mediaType === 'stream') {
-      return 'https://twitch.tv/' + vi.channel;
-    }
+  defaultFormat: 'long',
+  formats: {
+    long: function (vi, params) {
+      "use strict";
+      var url = '';
+      if (vi.mediaType === 'stream') {
+        url = 'https://twitch.tv/' + vi.channel;
+      } else if (vi.mediaType === 'video') {
+        url = 'https://twitch.tv/' + vi.channel + '/' + vi.idPrefix + '/' + vi.id;
+      }
+      url += combineParams({
+        params: params
+      });
 
-    return 'https://twitch.tv/' + vi.channel + '/' + vi.idPrefix + '/' + vi.id;
+      return url;
+    },
+    embed: function (vi, params) {
+      "use strict";
+      return '//www.twitch.tv/' +
+        vi.channel +
+        '/embed' +
+        combineParams({
+          params: params
+        });
+    },
   }
 });

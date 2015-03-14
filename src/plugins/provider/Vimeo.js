@@ -1,7 +1,7 @@
 urlParser.bind({
-  'provider': 'vimeo',
-  'alternatives': ['vimeopro'],
-  'parse': function (url) {
+  provider: 'vimeo',
+  alternatives: ['vimeopro'],
+  parse: function (url) {
     "use strict";
     var match,
       id;
@@ -15,8 +15,15 @@ urlParser.bind({
       'id': id
     };
   },
-  'create': function (op) {
-    "use strict";
-    return 'https://vimeo.com/' + op.videoInfo.id;
+  defaultFormat: 'long',
+  formats:{
+    long: function(vi, params){
+      "use strict";
+      return 'https://vimeo.com/' + vi.id + combineParams({params: params});
+    },
+    embed: function(vi, params){
+      "use strict";
+      return '//player.vimeo.com/video/' + vi.id + combineParams({params: params});
+    }
   }
 });

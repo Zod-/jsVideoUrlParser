@@ -1,72 +1,103 @@
 urlParser.bind({
   'provider': 'youtube',
   'alternatives': ['youtu'],
-  'parse': function (url) {
+  'parse': function (url, params) {
     "use strict";
     var match,
       id,
-      playlistId,
-      playlistIndex,
-      startTime,
-      result = {};
+      list,
+      result = {
+        params: params
+      };
 
-    match = url.match(/(?:(?:v|be|videos)\/|v=)([\w\-]{11})/i);
+    match = url.match(/(?:(?:v|be|videos|embed)\/(?!videoseries)|v=)([\w\-]{11})/i);
     id = match ? match[1] : undefined;
+    if (params.v === id) {
+      delete params.v;
+    }
 
-    match = url.match(/list=([\w\-]+)/i);
-    playlistId = match ? match[1] : undefined;
+    if (params.list === id) {
+      delete params.list;
+    } else {
+      list = params.list;
+    }
 
-    match = url.match(/index=(\d+)/i);
-    playlistIndex = match ? Number(match[1]) : undefined;
-
-    match = url.match(/[#\?&](?:star)?t=([A-Za-z0-9]+)/i);
-    startTime = match ? getTime(match[1]) : undefined;
+    if (params.hasOwnProperty('start')) {
+      params.start = getTime(params.start);
+    }
+    if (params.hasOwnProperty('t')) {
+      params.start = getTime(params.t);
+      delete params.t;
+    }
 
     if (id) {
       result.mediaType = 'video';
       result.id = id;
-      if (playlistId) {
-        result.playlistId = playlistId;
-        if (playlistIndex) {
-          result.playlistIndex = playlistIndex;
-        }
+      if (list) {
+        result.list = list;
       }
-      if (startTime) {
-        result.startTime = startTime;
-      }
-    } else if (playlistId) {
+    } else if (list) {
       result.mediaType = 'playlist';
-      result.playlistId = playlistId;
+      result.list = list;
     } else {
       return undefined;
     }
 
     return result;
   },
-  'create': function (op) {
-    "use strict";
-    var url,
-      vi = op.videoInfo;
-    if (vi.mediaType === 'playlist') {
-      return 'https://youtube.com/playlist?feature=share&list=' + vi.playlistId;
-    }
-
-    if (vi.playlistId) {
-      url = 'https://youtube.com/watch?v=' + vi.id + '&list=' + vi.playlistId;
-      if (vi.playlistIndex) {
-        url += '&index=' + vi.playlistIndex;
+  defaultFormat: 'long',
+  formats: {
+    short: function (vi, params) {
+      "use strict";
+      var url = 'https://youtu.be/' + vi.id;
+      if (params.start) {
+        url += '#t=' + params.start;
       }
-    } else {
-      if (op.format === 'short') {
-        url = 'https://youtu.be/' + vi.id;
+      return url;
+    },
+    embed: function (vi, params) {
+      "use strict";
+      var url = '//youtube.com/embed';
+
+      if (vi.mediaType === 'playlist') {
+        params.listType = 'playlist';
       } else {
-        url = 'https://youtube.com/watch?v=' + vi.id;
+        url += '/' + vi.id;
+        //loop hack
+        if (params.loop == 1) {
+          params.playlist = vi.id;
+        }
       }
-    }
 
-    if (vi.startTime) {
-      url += '#t=' + vi.startTime;
-    }
-    return url;
+      url += combineParams({
+        params: params
+      });
+
+      return url;
+    },
+    long: function (vi, params) {
+      "use strict";
+      var url = '',
+        startTime = params.start;
+      delete params.start;
+
+      if (vi.mediaType === 'playlist') {
+        params.feature = 'share';
+        url += 'https://youtube.com/playlist';
+      } else {
+        params.v = vi.id;
+        url += 'https://youtube.com/watch';
+      }
+
+      url += combineParams({
+        params: params
+      });
+
+      if (vi.mediaType !== 'playlist' && startTime) {
+        url += '#t=' + startTime;
+      }
+      return url;
+    },
+    'default': 'long'
   }
 });

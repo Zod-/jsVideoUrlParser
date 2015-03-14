@@ -1,11 +1,13 @@
 {
   "globals": {
-    "urlParser":     true,
-    "getTime":       true,
-    "assertUrlTest": true,
-    "QUnit":         true,
-    "cloneObject":   true,
-    "URLParser":     true
+    "urlParser":      true,
+    "getTime":        true,
+    "assertUrlTest":  true,
+    "QUnit":          true,
+    "cloneObject":    true,
+    "URLParser":      true,
+    "getQueryParams": true,
+    "combineParams":  true
   },
   "newcap":    false,
   "boss":      true,

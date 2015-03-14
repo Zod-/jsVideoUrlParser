@@ -10,8 +10,11 @@ QUnit.test("urlParser Object", function (assert) {
         url: url
       };
     },
-    create: function (op) {
-      return op;
+    defaultFormat: 'long',
+    formats: {
+      long: function (vi, params) {
+        return {videoInfo: vi, params: params};
+      }
     }
   });
 
@@ -21,29 +24,42 @@ QUnit.test("urlParser Object", function (assert) {
   assert.strictEqual(parser.parse('abc.def'), undefined, 'Undefined parse');
   assert.strictEqual(parser.parse('http://bar.def').provider, 'foo', 'Alternative parse');
   assert.strictEqual(parser.parse('https://abc.foo.def/ghi').provider, 'foo', 'Parse');
+  assert.strictEqual(parser.parse('//abc.foo.def/ghi').provider, 'foo', 'Parse');
 
   var createObj1 = {
       videoInfo: {
-        'provider': 'foo'
+        provider: 'foo'
       },
       format: 'long'
     },
     createObj2 = {
       videoInfo: {
-        'provider': 'foo'
-      }
+        provider: 'foo'
+      },
+      format: 'abc'
     },
     createObj3 = {
       videoInfo: {
-        'provider': 'abc'
+        provider: 'abc'
       }
+    },
+    createObj4 = {
+      videoInfo: {
+        provider: 'foo',
+        params: {
+          foo: 'bar'
+        }
+      },
+      params: 'internal'
     };
-  assert.deepEqual(parser.create(createObj1), createObj1, 'Create');
-  assert.strictEqual(parser.create(createObj2).format, 'short', 'Create short');
-  assert.strictEqual(parser.create(createObj3), undefined, 'Undefined create');
+  assert.deepEqual(parser.create(createObj1).videoInfo, createObj1.videoInfo, 'Create');
+  assert.strictEqual(parser.create(createObj2), undefined, 'Create not existing format');
+  assert.strictEqual(parser.create(createObj3), undefined, 'Create not existing provider');
+  assert.deepEqual(parser.create(createObj4).params, createObj4.videoInfo.params, 'Create with internal params');
 
   parser.bind({
-    provider: 'abc'
+    provider: 'abc',
+    formats: {}
   });
 
   assert.strictEqual(parser.parse('http://abc.com'), undefined, 'No .parse');

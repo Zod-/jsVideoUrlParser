@@ -33,10 +33,10 @@ bower install js-video-url-parser
 #Usage
 ##Parsing
 
-Parsing a url will return a VideoInfo object with all the information
+Parsing a url will return a videoInfo object with all the information
 
-```js
-> urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA')
+```javascript
+> urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA')
 { mediaType: 'video',
   id: 'HRb7B9fPhfA',
   provider: 'youtube' }
@@ -56,49 +56,109 @@ Parsing a url will return a VideoInfo object with all the information
   id: 'x1e2b95',
   provider: 'dailymotion' }
 ```
+
+Any url but the id parameter will be saved in the params object
+
+```javascript
+> urlParser.parse('https://www.youtube.com/watch?v=6xLcSTDeB7A&index=25&list=PL46F0A159EC02DF82&t=1m40')
+{
+  provider: 'youtube',
+  id: 'yQaAGmHNn9s',
+  list: 'PL46F0A159EC02DF82',
+  mediaType: 'video',
+  params: {
+    start: 100,
+    list: 'PL46F0A159EC02DF82',
+    index: '25'
+  }
+}
+```
+
 ##URL Creation
 
-The VideoInfo objects can be turned back into a url. If possible it uses a short version.
+The VideoInfo objects can be turned back into a `'short'`, `'embed'` or `'long'` url where `'long'` is the default.
+Embedded links will be protocol relative.
 
-```js
+```javascript
 > urlParser.create({
     videoInfo: urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA'),
     format: 'short'
   })
+'https://youtu.be/HRb7B9fPhfA'
 > urlParser.create({
     videoInfo: urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA')
   })
-'https://youtu.be/HRb7B9fPhfA'
-> urlParser.create({
-    videoInfo: urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA'),
-    format: 'long'
-  })
 'https://www.youtube.com/watch?v=HRb7B9fPhfA'
-
+> urlParser.create({
+  videoInfo: urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA'),
+  format: 'embed'
+})
+'//youtube.com/embed/HRb7B9fPhfA'
 
 > urlParser.create({
     videoInfo: urlParser.parse('https://vimeo.com/97276391')
   })
 'https://vimeo.com/97276391'
+> urlParser.create({
+  videoInfo: urlParser.parse('https://vimeo.com/97276391'),
+  format: 'embed'
+})
+'//player.vimeo.com/video/97276391'
 
 > urlParser.create({
     videoInfo: urlParser.parse('http://www.twitch.tv/tsm_wildturtle')
   })
 'https://twitch.tv/tsm_wildturtle'
+> urlParser.create({
+  videoInfo: urlParser.parse('http://www.twitch.tv/tsm_wildturtle'),
+  format: 'embed'
+})
+'//www.twitch.tv/tsm_wildturtle/embed'
 
 > urlParser.create({
     videoInfo: urlParser.parse('http://www.dailymotion.com/video/x1e2b95'),
     format: 'short'
   })
+'https://dai.ly/x1e2b95'
 > urlParser.create({
     videoInfo: urlParser.parse('http://www.dailymotion.com/video/x1e2b95')
   })
-'https://dai.ly/x1e2b95'
-> urlParser.create({
-    videoInfo: urlParser.parse('http://www.dailymotion.com/video/x1e2b95'),
-    format: 'long'
-  })
 'https://www.dailymotion.com/video/x1e2b95'
+> urlParser.create({
+  videoInfo: urlParser.parse('http://www.dailymotion.com/video/x1e2b95'),
+  format: 'embed'
+})
+'//www.dailymotion.com/embed/video/x1e2b95'
+```
+
+Url parameters can be added by adding a params object
+```javascript
+> urlParser.create({
+  videoInfo: urlParser.parse('http://www.youtube.com/watch?v=yQaAGmHNn9s'),
+  params:{
+    start: 100,
+    list: 'PL46F0A159EC02DF82',
+    index: '25',
+    foo: 'bar'
+  }
+})
+'https://youtube.com/watch?foo=bar&index=25&list=PL46F0A159EC02DF82&v=yQaAGmHNn9s#t=100'
+```
+
+To the reuse the params in the videoInfo object without having to save it in a temp variable use the keyword `'internal'` as params
+
+```javascript
+> urlParser.create({
+  videoInfo: urlParser.parse('https://youtube.com/watch?foo=bar&index=25&list=PL46F0A159EC02DF82&v=yQaAGmHNn9s#t=100'),
+  params: 'internal'
+})
+'https://youtube.com/watch?foo=bar&index=25&list=PL46F0A159EC02DF82&v=yQaAGmHNn9s#t=100'
+> urlParser.create({
+  videoInfo: urlParser.parse('https://youtube.com/watch?foo=bar&index=25&list=PL46F0A159EC02DF82&v=yQaAGmHNn9s#t=100'),
+  params: 'internal',
+  format: 'embed'
+})
+'//youtube.com/embed/yQaAGmHNn9s?foo=bar&index=25&list=PL46F0A159EC02DF82&start=100'
 ```
 
 #Plugins
@@ -106,11 +166,11 @@ The VideoInfo objects can be turned back into a url. If possible it uses a short
 ##YouTube
 
 It can extract the id from shortened, mobile and feed urls.
-```js
-> urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA');
+```javascript
+> urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA');
 > urlParser.parse('http://youtu.be/HRb7B9fPhfA');
 > urlParser.parse('https://m.youtube.com/details?v=HRb7B9fPhfA');
-> urlParser.parse('https://gdata.youtube.com/feeds/api/videos/HRb7B9fPhfA/related?v=2');
+> urlParser.parse('https://gdata.youtube.com/feeds/api/videos/HRb7B9fPhfA/related');
 { mediaType: 'video',
   id: 'HRb7B9fPhfA',
   provider: 'youtube' }
@@ -118,41 +178,56 @@ It can extract the id from shortened, mobile and feed urls.
 
 Also supports the start time parameter and playlist urls.
 
-```js
+```javascript
 > urlParser.parse('http://www.youtube.com/embed/videoseries?list=PL46F0A159EC02DF82');
 > urlParser.parse('http://www.youtube.com/playlist?list=PL46F0A159EC02DF82');
 { mediaType: 'playlist',
-  playlistId: 'PL46F0A159EC02DF82',
-  provider: 'youtube' }
+  list: 'PL46F0A159EC02DF82',
+  provider: 'youtube',
+  params: {
+    list: 'PL46F0A159EC02DF82'
+  }
+}
 
 > urlParser.parse('http://www.youtube.com/watch?v=yQaAGmHNn9s&list=PL46F0A159EC02DF82');
 { mediaType: 'video',
   id: 'yQaAGmHNn9s',
-  playlistId: 'PL46F0A159EC02DF82',
-  provider: 'youtube' }
+  list: 'PL46F0A159EC02DF82',
+  provider: 'youtube',
+  params: {
+    list: 'PL46F0A159EC02DF82'
+  }
+}
 
-> urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA#t=30s');
-> urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA&t=30s');
+> urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA#t=30s');
+> urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA&t=30s');
 > urlParser.parse('http://youtu.be/HRb7B9fPhfA?t=30s');
 > urlParser.parse('http://youtu.be/HRb7B9fPhfA#t=30s');
 > urlParser.parse('https://m.youtube.com/details?v=HRb7B9fPhfA#t=30s');
 { mediaType: 'video',
   id: 'HRb7B9fPhfA',
-  startTime: 30,
-  provider: 'youtube' }
+  provider: 'youtube'
+  params: {
+    start: 30
+  }
+}
 
 > urlParser.parse('http://www.youtube.com/watch?v=yQaAGmHNn9s&list=PL46F0A159EC02DF82#t=1m40');
 { mediaType: 'video',
   id: 'yQaAGmHNn9s',
-  playlistId: 'PL46F0A159EC02DF82',
-  startTime: 100,
-  provider: 'youtube' }
+  list: 'PL46F0A159EC02DF82',
+  provider: 'youtube'
+  params: {
+    start: 100,
+    list: 'PL46F0A159EC02DF82',
+  }
+}
 ```
 
 ##Vimeo
 Supports urls from channels, albums, groups and frames.
 
-```js
+```javascript
 > urlParser.parse('https://vimeo.com/97276391');
 > urlParser.parse('https://vimeo.com/channels/staffpicks/97276391');
 { id: '97276391',
@@ -178,10 +253,10 @@ Supports urls from channels, albums, groups and frames.
 ##Twitch
 Supports embedded, stream and video urls
 
-```js
+```javascript
 > urlParser.parse('http://www.twitch.tv/tsm_wildturtle');
 > urlParser.parse('http://www.twitch.tv/widgets/live_embed_player.swf?channel=tsm_wildturtle');
-> urlParser.parse('http://twitch.tv/tsm_wildturtle/chat?popout=');
+> urlParser.parse('http://twitch.tv/tsm_wildturtle/chat');
 { mediaType: 'stream',
   channel: 'tsm_wildturtle',
   provider: 'twitch' }
@@ -196,8 +271,8 @@ Supports embedded, stream and video urls
 
 ##Dailymotion
 
-Supports embedded and shortened urls. Can also extract the start time parameter
-```js
+Supports embedded and shortened urls.
+```javascript
 > urlParser.parse('http://www.dailymotion.com/video/x1e2b95_bruce-lee-nin-kayip-kedisi_animals');
 > urlParser.parse('http://www.dailymotion.com/video/x1e2b95');
 > urlParser.parse('http://dai.ly/x1e2b95');
@@ -211,6 +286,9 @@ Supports embedded and shortened urls. Can also extract the start time parameter
 > urlParser.parse('http://www.dailymotion.com/video/x1e2b95?start=10');
 { mediaType: 'video',
   id: 'x1e2b95',
-  startTime: 10,
-  provider: 'dailymotion' }
+  provider: 'dailymotion',
+  params: {
+    start: 10
+  }
+}
 ```
