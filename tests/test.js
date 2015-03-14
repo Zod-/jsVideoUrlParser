@@ -1,20 +1,4 @@
 /*jshint unused:false */
-function cloneObject(obj) {
-  /*jshint unused:true */
-  "use strict";
-  if (obj === null || typeof obj !== 'object') {
-    return obj;
-  }
-
-  var temp = obj.constructor(); // give temp the original obj's constructor
-  for (var key in obj) {
-    temp[key] = cloneObject(obj[key]);
-  }
-
-  return temp;
-}
-
-/*jshint unused:false */
 function assertUrlTest(assert, tests) {
   /*jshint unused:true */
   "use strict";
@@ -22,17 +6,14 @@ function assertUrlTest(assert, tests) {
     test.urls.forEach(function (url) {
       assert.deepEqual(urlParser.parse(url), test.videoInfo, url);
     });
-
-    assert.equal(urlParser.create({
-      videoInfo: test.videoInfo,
-      format: 'long'
-    }), test.createdUrl, JSON.stringify(test.videoInfo));
-
-    if (test.hasOwnProperty('createdShortUrl')) {
-      assert.equal(urlParser.create({
-        videoInfo: test.videoInfo,
-        format: 'short'
-      }), test.createdShortUrl, JSON.stringify(test.videoInfo));
+    for(var format in test.formats){
+      if(test.formats.hasOwnProperty(format)){
+        assert.equal(urlParser.create({
+          videoInfo: test.videoInfo,
+          format: format,
+          params: test.videoInfo.params
+        }), test.formats[format], JSON.stringify(test.videoInfo));
+      }
     }
   });
 }
@@ -49,8 +30,11 @@ QUnit.test("urlParser Object", function (assert) {
         url: url
       };
     },
-    create: function (op) {
-      return op;
+    defaultFormat: 'long',
+    formats: {
+      long: function (vi, params) {
+        return {videoInfo: vi, params: params};
+      }
     }
   });
 
@@ -60,29 +44,42 @@ QUnit.test("urlParser Object", function (assert) {
   assert.strictEqual(parser.parse('abc.def'), undefined, 'Undefined parse');
   assert.strictEqual(parser.parse('http://bar.def').provider, 'foo', 'Alternative parse');
   assert.strictEqual(parser.parse('https://abc.foo.def/ghi').provider, 'foo', 'Parse');
+  assert.strictEqual(parser.parse('//abc.foo.def/ghi').provider, 'foo', 'Parse');
 
   var createObj1 = {
       videoInfo: {
-        'provider': 'foo'
+        provider: 'foo'
       },
       format: 'long'
     },
     createObj2 = {
       videoInfo: {
-        'provider': 'foo'
-      }
+        provider: 'foo'
+      },
+      format: 'abc'
     },
     createObj3 = {
       videoInfo: {
-        'provider': 'abc'
+        provider: 'abc'
       }
+    },
+    createObj4 = {
+      videoInfo: {
+        provider: 'foo',
+        params: {
+          foo: 'bar'
+        }
+      },
+      params: 'internal'
     };
-  assert.deepEqual(parser.create(createObj1), createObj1, 'Create');
-  assert.strictEqual(parser.create(createObj2).format, 'short', 'Create short');
-  assert.strictEqual(parser.create(createObj3), undefined, 'Undefined create');
+  assert.deepEqual(parser.create(createObj1).videoInfo, createObj1.videoInfo, 'Create');
+  assert.strictEqual(parser.create(createObj2), undefined, 'Create not existing format');
+  assert.strictEqual(parser.create(createObj3), undefined, 'Create not existing provider');
+  assert.deepEqual(parser.create(createObj4).params, createObj4.videoInfo.params, 'Create with internal params');
 
   parser.bind({
-    provider: 'abc'
+    provider: 'abc',
+    formats: {}
   });
 
   assert.strictEqual(parser.parse('http://abc.com'), undefined, 'No .parse');
@@ -133,8 +130,11 @@ QUnit.test("Dailymotion URLs", function (assert) {
     },
     tests = [{
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://dailymotion.com/video/x1e2b95',
-      createdShortUrl: 'https://dai.ly/x1e2b95',
+      formats: {
+        long: 'https://dailymotion.com/video/x1e2b95',
+        short: 'https://dai.ly/x1e2b95',
+        embed: '//www.dailymotion.com/embed/video/x1e2b95'
+      },
       urls: ['http://www.dailymotion.com/video/x1e2b95_bruce-lee-nin-kayip-kedisi_animals',
         'http://www.dailymotion.com/video/x1e2b95',
         'http://dai.ly/x1e2b95',
@@ -142,13 +142,18 @@ QUnit.test("Dailymotion URLs", function (assert) {
       ]
     }, {
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://dailymotion.com/video/x1e2b95?start=10',
+      formats: {
+        long: 'https://dailymotion.com/video/x1e2b95?start=10',
+        embed: '//www.dailymotion.com/embed/video/x1e2b95?start=10'
+      },
       urls: ['http://www.dailymotion.com/video/x1e2b95?start=10',
         'http://www.dailymotion.com/video/x1e2b95_bruce-lee-nin-kayip-kedisi_animals?start=10',
         'http://www.dailymotion.com/embed/video/x1e2b95?start=10'
       ]
     }];
-  tests[1].videoInfo.startTime = 10;
+  tests[1].videoInfo.params = {
+    start: 10
+  };
 
   assertUrlTest(assert, tests);
 });
@@ -162,14 +167,20 @@ QUnit.test("Twitch Stream URLs", function (assert) {
     },
     tests = [{
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://twitch.tv/tsm_wildturtle',
+      formats: {
+        long: 'https://twitch.tv/tsm_wildturtle',
+        embed: '//www.twitch.tv/tsm_wildturtle/embed'
+      },
       urls: ['http://www.twitch.tv/tsm_wildturtle',
         'http://www.twitch.tv/widgets/live_embed_player.swf?channel=tsm_wildturtle',
-        'http://twitch.tv/tsm_wildturtle/chat?popout='
+        'http://twitch.tv/tsm_wildturtle/chat?popout=',
+        '//www.twitch.tv/tsm_wildturtle/embed'
       ]
     }, {
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://twitch.tv/tsm_wildturtle/c/2724914',
+      formats: {
+        long: 'https://twitch.tv/tsm_wildturtle/c/2724914',
+      },
       urls: ['http://www.twitch.tv/tsm_wildturtle/c/2724914']
     }];
   tests[1].videoInfo.id = '2724914';
@@ -187,22 +198,41 @@ QUnit.test("Vimeo URLs", function (assert) {
     },
     tests = [{
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://vimeo.com/97276391',
+      formats: {
+        long: 'https://vimeo.com/97276391',
+        embed: '//player.vimeo.com/video/97276391'
+      },
       urls: ['https://vimeo.com/97276391',
-        'https://vimeo.com/channels/staffpicks/97276391'
+        'https://vimeo.com/channels/staffpicks/97276391',
+        '//player.vimeo.com/video/97276391'
       ]
     }, {
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://vimeo.com/96186586',
-      urls: ['https://vimeo.com/album/2903155/video/96186586']
+      formats: {
+        long: 'https://vimeo.com/96186586',
+        embed: '//player.vimeo.com/video/96186586'
+      },
+      urls: ['https://vimeo.com/album/2903155/video/96186586',
+        '//player.vimeo.com/video/96186586'
+      ]
     }, {
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://vimeo.com/97688625',
-      urls: ['https://vimeo.com/groups/shortfilms/videos/97688625']
+      formats: {
+        long: 'https://vimeo.com/97688625',
+        embed: '//player.vimeo.com/video/97688625'
+      },
+      urls: ['https://vimeo.com/groups/shortfilms/videos/97688625',
+        '//player.vimeo.com/video/97688625'
+      ]
     }, {
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://vimeo.com/24069938',
-      urls: ['http://vimeopro.com/staff/frame/video/24069938']
+      formats: {
+        long: 'https://vimeo.com/24069938',
+        embed: '//player.vimeo.com/video/24069938'
+      },
+      urls: ['http://vimeopro.com/staff/frame/video/24069938',
+        '//player.vimeo.com/video/24069938'
+      ]
     }];
 
   tests[1].videoInfo.id = '96186586';
@@ -217,28 +247,44 @@ QUnit.test("Regular YouTube URLs", function (assert) {
       provider: 'youtube',
       id: 'HRb7B9fPhfA',
       mediaType: 'video',
-      startTime: 30
+      params: {
+        start: 30
+      }
     },
     tests = [{
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://youtube.com/watch?v=HRb7B9fPhfA#t=30',
-      createdShortUrl: 'https://youtu.be/HRb7B9fPhfA#t=30',
-      urls: ['http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA#t=30s',
-        'http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA&t=30s',
+      formats: {
+        long: 'https://youtube.com/watch?v=HRb7B9fPhfA#t=30',
+        embed: '//youtube.com/embed/HRb7B9fPhfA?start=30',
+        short: 'https://youtu.be/HRb7B9fPhfA#t=30'
+      },
+      urls: ['http://www.youtube.com/watch?v=HRb7B9fPhfA#t=30s',
+        'http://www.youtube.com/watch?v=HRb7B9fPhfA&t=30s',
         'https://m.youtube.com/details?v=HRb7B9fPhfA#t=30s',
         'http://youtu.be/HRb7B9fPhfA?t=30s',
-        'http://youtu.be/HRb7B9fPhfA#t=30s'
+        'http://youtu.be/HRb7B9fPhfA#t=30s',
+        '//youtube.com/embed/HRb7B9fPhfA?start=30',
       ]
     }, {
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://youtube.com/watch?v=HRb7B9fPhfA',
-      createdShortUrl: 'https://youtu.be/HRb7B9fPhfA',
-      urls: ['http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA',
+      formats: {
+        long: 'https://youtube.com/watch?v=HRb7B9fPhfA',
+        embed: '//youtube.com/embed/HRb7B9fPhfA',
+        short: 'https://youtu.be/HRb7B9fPhfA'
+      },
+      urls: ['http://www.youtube.com/watch?v=HRb7B9fPhfA',
         'http://youtu.be/HRb7B9fPhfA',
         'https://m.youtube.com/details?v=HRb7B9fPhfA'
       ]
+    }, {
+      videoInfo: cloneObject(vi),
+      formats: {
+        embed: '//youtube.com/embed/HRb7B9fPhfA?loop=1&playlist=HRb7B9fPhfA&start=30'
+      },
+      urls: ['//youtube.com/embed/HRb7B9fPhfA?loop=1&list=HRb7B9fPhfA&start=30']
     }];
-  delete tests[1].videoInfo.startTime;
+  delete tests[1].videoInfo.params;
+  tests[2].videoInfo.params.loop = '1';
 
   assertUrlTest(assert, tests);
 });
@@ -247,49 +293,89 @@ QUnit.test("Playlist YouTube URLs", function (assert) {
   var vi = {
       provider: 'youtube',
       id: 'yQaAGmHNn9s',
-      playlistId: 'PL46F0A159EC02DF82',
+      list: 'PL46F0A159EC02DF82',
       mediaType: 'video',
-      startTime: 100
+      params: {
+        start: 100,
+        list: 'PL46F0A159EC02DF82',
+      }
     },
     tests = [{
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://youtube.com/watch?v=yQaAGmHNn9s&list=PL46F0A159EC02DF82#t=100',
+      formats: {
+        long: 'https://youtube.com/watch?list=PL46F0A159EC02DF82&v=yQaAGmHNn9s#t=100',
+        embed: '//youtube.com/embed/yQaAGmHNn9s?list=PL46F0A159EC02DF82&start=100',
+      },
       urls: ['http://www.youtube.com/watch?v=yQaAGmHNn9s&list=PL46F0A159EC02DF82#t=1m40',
         'http://www.youtube.com/watch?v=yQaAGmHNn9s&list=PL46F0A159EC02DF82&t=1m40',
+        '//youtube.com/embed/yQaAGmHNn9s?list=PL46F0A159EC02DF82&start=100'
       ]
     }, {
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://youtube.com/watch?v=yQaAGmHNn9s&list=PL46F0A159EC02DF82',
-      urls: ['http://www.youtube.com/watch?v=yQaAGmHNn9s&list=PL46F0A159EC02DF82']
+      formats: {
+        long: 'https://youtube.com/watch?list=PL46F0A159EC02DF82&v=yQaAGmHNn9s',
+        embed: '//youtube.com/embed/yQaAGmHNn9s?list=PL46F0A159EC02DF82',
+      },
+      urls: ['http://www.youtube.com/watch?v=yQaAGmHNn9s&list=PL46F0A159EC02DF82',
+        '//youtube.com/embed/yQaAGmHNn9s?list=PL46F0A159EC02DF82'
+      ]
     }, {
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://youtube.com/watch?v=6xLcSTDeB7A&list=PL46F0A159EC02DF82&index=25',
+      formats: {
+        long: 'https://youtube.com/watch?index=25&list=PL46F0A159EC02DF82&v=6xLcSTDeB7A',
+        embed: '//youtube.com/embed/6xLcSTDeB7A?index=25&list=PL46F0A159EC02DF82',
+      },
       urls: ['https://www.youtube.com/watch?v=6xLcSTDeB7A&list=PL46F0A159EC02DF82&index=25',
-        'https://www.youtube.com/watch?v=6xLcSTDeB7A&index=25&list=PL46F0A159EC02DF82'
+        'https://www.youtube.com/watch?v=6xLcSTDeB7A&index=25&list=PL46F0A159EC02DF82',
+        '//youtube.com/embed/6xLcSTDeB7A?index=25&list=PL46F0A159EC02DF82'
       ]
     }, {
       videoInfo: cloneObject(vi),
-      createdUrl: 'https://youtube.com/watch?v=6xLcSTDeB7A&list=PL46F0A159EC02DF82&index=25#t=100',
+      formats: {
+        long: 'https://youtube.com/watch?index=25&list=PL46F0A159EC02DF82&v=6xLcSTDeB7A#t=100',
+        embed: '//youtube.com/embed/6xLcSTDeB7A?index=25&list=PL46F0A159EC02DF82&start=100',
+      },
       urls: ['https://www.youtube.com/watch?v=6xLcSTDeB7A&list=PL46F0A159EC02DF82&index=25#t=1m40',
         'https://www.youtube.com/watch?v=6xLcSTDeB7A&list=PL46F0A159EC02DF82&index=25&t=1m40',
         'https://www.youtube.com/watch?v=6xLcSTDeB7A&index=25&list=PL46F0A159EC02DF82&t=1m40',
-        'https://www.youtube.com/watch?v=6xLcSTDeB7A&index=25&list=PL46F0A159EC02DF82#t=1m40'
+        'https://www.youtube.com/watch?v=6xLcSTDeB7A&index=25&list=PL46F0A159EC02DF82#t=1m40',
+        '//youtube.com/embed/6xLcSTDeB7A?index=25&list=PL46F0A159EC02DF82&start=100'
       ]
     }, {
       videoInfo: {
         provider: 'youtube',
-        playlistId: 'PL46F0A159EC02DF82',
-        mediaType: 'playlist'
+        list: 'PL46F0A159EC02DF82',
+        mediaType: 'playlist',
+        params: {
+          list: 'PL46F0A159EC02DF82'
+        }
       },
-      createdUrl: 'https://youtube.com/playlist?feature=share&list=PL46F0A159EC02DF82',
+      formats: {
+        long: 'https://youtube.com/playlist?feature=share&list=PL46F0A159EC02DF82',
+        embed: '//youtube.com/embed?list=PL46F0A159EC02DF82&listType=playlist',
+      },
       urls: ['http://www.youtube.com/embed/videoseries?list=PL46F0A159EC02DF82',
         'http://www.youtube.com/playlist?list=PL46F0A159EC02DF82'
       ]
+    }, {
+      videoInfo: {
+        provider: 'youtube',
+        list: 'PL46F0A159EC02DF82',
+        mediaType: 'playlist',
+        params: {
+          list: 'PL46F0A159EC02DF82',
+          listType: 'playlist'
+        }
+      },
+      formats: {
+        embed: '//youtube.com/embed?list=PL46F0A159EC02DF82&listType=playlist',
+      },
+      urls: ['//youtube.com/embed?list=PL46F0A159EC02DF82&listType=playlist']
     }];
 
-  delete tests[1].videoInfo.startTime;
-  delete tests[2].videoInfo.startTime;
-  tests[2].videoInfo.playlistIndex = tests[3].videoInfo.playlistIndex = 25;
+  delete tests[1].videoInfo.params.start;
+  delete tests[2].videoInfo.params.start;
+  tests[2].videoInfo.params.index = tests[3].videoInfo.params.index = '25';
   tests[2].videoInfo.id = tests[3].videoInfo.id = '6xLcSTDeB7A';
   assertUrlTest(assert, tests);
 });
@@ -302,11 +388,14 @@ QUnit.test("Feed YouTube URLs", function (assert) {
       'id': 'HRb7B9fPhfA',
       'mediaType': 'video'
     },
-    createdUrl: 'https://youtube.com/watch?v=HRb7B9fPhfA',
-    createdShortUrl: 'https://youtu.be/HRb7B9fPhfA',
-    urls: ['https://gdata.youtube.com/feeds/api/videos/HRb7B9fPhfA/related?v=2',
-      'https://gdata.youtube.com/feeds/api/videos/HRb7B9fPhfA?v=2',
-      'https://www.youtube.com/v/HRb7B9fPhfA?version=3&f=videos&app=youtube_gdata'
+    formats: {
+      long: 'https://youtube.com/watch?v=HRb7B9fPhfA',
+      short: 'https://youtu.be/HRb7B9fPhfA',
+      embed: '//youtube.com/embed/HRb7B9fPhfA',
+    },
+    urls: ['https://gdata.youtube.com/feeds/api/videos/HRb7B9fPhfA/related',
+      'https://gdata.youtube.com/feeds/api/videos/HRb7B9fPhfA',
+      'https://www.youtube.com/v/HRb7B9fPhfA'
     ]
   }];
   assertUrlTest(assert, tests);

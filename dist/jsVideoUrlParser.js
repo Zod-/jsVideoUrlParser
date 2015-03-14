@@ -2,22 +2,25 @@ function URLParser() {
   "use strict";
   this.plugins = {};
 }
-URLParser.prototype.parse = function(url) {
+URLParser.prototype.parse = function (url) {
   "use strict";
   var th = this,
-    match = url.match(/(?:https?:\/\/)?(?:[^\.]+\.)?(\w+)\./i),
+    match = url.match(/(?:(?:https?:)?\/\/)?(?:[^\.]+\.)?(\w+)\./i),
     provider = match ? match[1] : undefined,
     result;
   if (match && provider && th.plugins[provider] && th.plugins[provider].parse) {
-    result = th.plugins[provider].parse.call(this, url);
+    result = th.plugins[provider].parse.call(this, url, getQueryParams(url));
     if (result) {
+      if (result.params && Object.keys(result.params).length === 0) {
+        delete result.params;
+      }
       result.provider = th.plugins[provider].provider;
       return result;
     }
   }
   return undefined;
 };
-URLParser.prototype.bind = function(plugin) {
+URLParser.prototype.bind = function (plugin) {
   "use strict";
   var th = this;
   th.plugins[plugin.provider] = plugin;
@@ -27,13 +30,20 @@ URLParser.prototype.bind = function(plugin) {
     }
   }
 };
-URLParser.prototype.create = function(op) {
+URLParser.prototype.create = function (op) {
   "use strict";
   var th = this,
-    vi = op.videoInfo;
-  op.format = op.format || 'short';
-  if (th.plugins[vi.provider] && th.plugins[vi.provider].create) {
-    return th.plugins[vi.provider].create.call(this, op);
+    vi = op.videoInfo,
+    params = op.params,
+    plugin = th.plugins[vi.provider];
+
+  params = (params === 'internal') ? vi.params : params || {};
+
+  if (plugin) {
+    op.format = op.format || plugin.defaultFormat;
+    if (plugin.formats.hasOwnProperty(op.format)) {
+      return plugin.formats[op.format](vi, cloneObject(params));
+    }
   }
   return undefined;
 };
@@ -41,10 +51,70 @@ URLParser.prototype.create = function(op) {
 var urlParser = new URLParser();
 /*jshint unused:false */
 
+/*jshint unused:false */
+function cloneObject(obj) {
+  /*jshint unused:true */
+  "use strict";
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+
+  var temp = obj.constructor(); // give temp the original obj's constructor
+  for (var key in obj) {
+    temp[key] = cloneObject(obj[key]);
+  }
+
+  return temp;
+}
+
+//http://stackoverflow.com/a/1099670
+/*jshint unused:false */
+function getQueryParams(qs) {
+  /*jshint unused:true */
+  "use strict";
+  qs = qs.split("+").join(" ");
+
+  var params = {},
+    tokens,
+    re = /[\?#&]([^=]+)=([^&#]*)/g;
+
+  while (tokens = re.exec(qs)) {
+    params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+  }
+
+  return params;
+}
+
+/*jshint unused:false */
+function combineParams(op) {
+  /*jshint unused:true */
+  "use strict";
+  var combined = '',
+    i = 0,
+    keys = Object.keys(op.params);
+
+  if (keys.length === 0) {
+    return '';
+  }
+
+  //always have parameters in the same order
+  keys.sort();
+
+  if (!op.hasParams) {
+    combined += '?' + keys[0] + '=' + op.params[keys[0]];
+    i += 1;
+  }
+
+  for (; i < keys.length; i += 1) {
+    combined += '&' + keys[i] + '=' + op.params[keys[i]];
+  }
+  return combined;
+}
+
 //parses strings like 1h30m20s to seconds
 /*jshint unused:false */
 function getTime(timeString) {
-/*jshint unused:true */
+  /*jshint unused:true */
   "use strict";
   var totalSeconds = 0,
     timeValues = {
@@ -73,47 +143,58 @@ function getTime(timeString) {
 urlParser.bind({
   'provider': 'dailymotion',
   'alternatives': ['dai'],
-  'parse': function (url) {
+  'parse': function (url, params) {
     "use strict";
     var match,
       id,
-      startTime,
-      result = {};
+      result = {
+        params: params
+      };
 
     match = url.match(/(?:\/video|ly)\/([A-Za-z0-9]+)/i);
     id = match ? match[1] : undefined;
 
-    match = url.match(/[#\?&]start=([A-Za-z0-9]+)/i);
-    startTime = match ? getTime(match[1]) : undefined;
+    if (params.hasOwnProperty('start')) {
+      params.start = getTime(params.start);
+    }
 
     if (!id) {
       return undefined;
     }
     result.mediaType = 'video';
     result.id = id;
-    if (startTime) {
-      result.startTime = startTime;
-    }
+
     return result;
   },
-  'create': function (op) {
-    "use strict";
-    var vi = op.videoInfo;
-    if (vi.startTime) {
-      return 'https://dailymotion.com/video/' + vi.id + '?start=' + vi.startTime;
-    }
-
-    if (op.format === 'short') {
+  defaultFormat: 'long',
+  formats: {
+    short: function (vi) {
+      "use strict";
       return 'https://dai.ly/' + vi.id;
+    },
+    long: function (vi, params) {
+      "use strict";
+      return 'https://dailymotion.com/video/' +
+        vi.id +
+        combineParams({
+          params: params
+        });
+    },
+    embed: function (vi, params) {
+      "use strict";
+      return '//www.dailymotion.com/embed/video/' +
+        vi.id +
+        combineParams({
+          params: params
+        });
     }
-
-    return 'https://dailymotion.com/video/' + vi.id;
   }
+  //
 });
 
 urlParser.bind({
   'provider': 'twitch',
-  'parse': function (url) {
+  'parse': function (url, params) {
     "use strict";
     var match,
       id,
@@ -126,8 +207,7 @@ urlParser.bind({
     idPrefix = match ? match[2] : undefined;
     id = match ? match[3] : undefined;
 
-    match = url.match(/(?:\?channel|\&utm_content)=(\w+)/i);
-    channel = match ? match[1] : channel;
+    channel = params.channel || params.utm_content || channel;
 
     if (!channel) {
       return undefined;
@@ -143,21 +223,38 @@ urlParser.bind({
 
     return result;
   },
-  'create': function (op) {
-    "use strict";
-    var vi = op.videoInfo;
-    if (vi.mediaType === 'stream') {
-      return 'https://twitch.tv/' + vi.channel;
-    }
+  defaultFormat: 'long',
+  formats: {
+    long: function (vi, params) {
+      "use strict";
+      var url = '';
+      if (vi.mediaType === 'stream') {
+        url = 'https://twitch.tv/' + vi.channel;
+      } else if (vi.mediaType === 'video') {
+        url = 'https://twitch.tv/' + vi.channel + '/' + vi.idPrefix + '/' + vi.id;
+      }
+      url += combineParams({
+        params: params
+      });
 
-    return 'https://twitch.tv/' + vi.channel + '/' + vi.idPrefix + '/' + vi.id;
+      return url;
+    },
+    embed: function (vi, params) {
+      "use strict";
+      return '//www.twitch.tv/' +
+        vi.channel +
+        '/embed' +
+        combineParams({
+          params: params
+        });
+    },
   }
 });
 
 urlParser.bind({
-  'provider': 'vimeo',
-  'alternatives': ['vimeopro'],
-  'parse': function (url) {
+  provider: 'vimeo',
+  alternatives: ['vimeopro'],
+  parse: function (url) {
     "use strict";
     var match,
       id;
@@ -171,81 +268,119 @@ urlParser.bind({
       'id': id
     };
   },
-  'create': function (op) {
-    "use strict";
-    return 'https://vimeo.com/' + op.videoInfo.id;
+  defaultFormat: 'long',
+  formats:{
+    long: function(vi, params){
+      "use strict";
+      return 'https://vimeo.com/' + vi.id + combineParams({params: params});
+    },
+    embed: function(vi, params){
+      "use strict";
+      return '//player.vimeo.com/video/' + vi.id + combineParams({params: params});
+    }
   }
 });
 
 urlParser.bind({
   'provider': 'youtube',
   'alternatives': ['youtu'],
-  'parse': function (url) {
+  'parse': function (url, params) {
     "use strict";
     var match,
       id,
-      playlistId,
-      playlistIndex,
-      startTime,
-      result = {};
+      list,
+      result = {
+        params: params
+      };
 
-    match = url.match(/(?:(?:v|be|videos)\/|v=)([\w\-]{11})/i);
+    match = url.match(/(?:(?:v|be|videos|embed)\/(?!videoseries)|v=)([\w\-]{11})/i);
     id = match ? match[1] : undefined;
+    if (params.v === id) {
+      delete params.v;
+    }
 
-    match = url.match(/list=([\w\-]+)/i);
-    playlistId = match ? match[1] : undefined;
+    if (params.list === id) {
+      delete params.list;
+    } else {
+      list = params.list;
+    }
 
-    match = url.match(/index=(\d+)/i);
-    playlistIndex = match ? Number(match[1]) : undefined;
-
-    match = url.match(/[#\?&](?:star)?t=([A-Za-z0-9]+)/i);
-    startTime = match ? getTime(match[1]) : undefined;
+    if (params.hasOwnProperty('start')) {
+      params.start = getTime(params.start);
+    }
+    if (params.hasOwnProperty('t')) {
+      params.start = getTime(params.t);
+      delete params.t;
+    }
 
     if (id) {
       result.mediaType = 'video';
       result.id = id;
-      if (playlistId) {
-        result.playlistId = playlistId;
-        if (playlistIndex) {
-          result.playlistIndex = playlistIndex;
-        }
+      if (list) {
+        result.list = list;
       }
-      if (startTime) {
-        result.startTime = startTime;
-      }
-    } else if (playlistId) {
+    } else if (list) {
       result.mediaType = 'playlist';
-      result.playlistId = playlistId;
+      result.list = list;
     } else {
       return undefined;
     }
 
     return result;
   },
-  'create': function (op) {
-    "use strict";
-    var url,
-      vi = op.videoInfo;
-    if (vi.mediaType === 'playlist') {
-      return 'https://youtube.com/playlist?feature=share&list=' + vi.playlistId;
-    }
-
-    if (vi.playlistId) {
-      url = 'https://youtube.com/watch?v=' + vi.id + '&list=' + vi.playlistId;
-      if (vi.playlistIndex) {
-        url += '&index=' + vi.playlistIndex;
+  defaultFormat: 'long',
+  formats: {
+    short: function (vi, params) {
+      "use strict";
+      var url = 'https://youtu.be/' + vi.id;
+      if (params.start) {
+        url += '#t=' + params.start;
       }
-    } else {
-      if (op.format === 'short') {
-        url = 'https://youtu.be/' + vi.id;
+      return url;
+    },
+    embed: function (vi, params) {
+      "use strict";
+      var url = '//youtube.com/embed';
+
+      if (vi.mediaType === 'playlist') {
+        params.listType = 'playlist';
       } else {
-        url = 'https://youtube.com/watch?v=' + vi.id;
+        url += '/' + vi.id;
+        //loop hack
+        if (params.loop == 1) {
+          params.playlist = vi.id;
+        }
       }
-    }
 
-    if (vi.startTime) {
-      url += '#t=' + vi.startTime;
-    }
-    return url;
+      url += combineParams({
+        params: params
+      });
+
+      return url;
+    },
+    long: function (vi, params) {
+      "use strict";
+      var url = '',
+        startTime = params.start;
+      delete params.start;
+
+      if (vi.mediaType === 'playlist') {
+        params.feature = 'share';
+        url += 'https://youtube.com/playlist';
+      } else {
+        params.v = vi.id;
+        url += 'https://youtube.com/watch';
+      }
+
+      url += combineParams({
+        params: params
+      });
+
+      if (vi.mediaType !== 'playlist' && startTime) {
+        url += '#t=' + startTime;
+      }
+      return url;
+    },
+    'default': 'long'
   }
 });
