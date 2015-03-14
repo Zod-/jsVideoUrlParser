@@ -24,18 +24,28 @@ urlParser.bind({
 
     return result;
   },
-  'create': function (op) {
-    "use strict";
-    var vi = op.videoInfo,
-      url = '';
-
-    if (op.format === 'short') {
-      url = 'https://dai.ly/' + vi.id;
-    } else {
-      url = 'https://dailymotion.com/video/' + vi.id;
-      url += combineParams({params: op.params});
+  defaultFormat: 'long',
+  formats: {
+    short: function (vi) {
+      "use strict";
+      return 'https://dai.ly/' + vi.id;
+    },
+    long: function (vi, params) {
+      "use strict";
+      return 'https://dailymotion.com/video/' +
+        vi.id +
+        combineParams({
+          params: params
+        });
+    },
+    embed: function (vi, params) {
+      "use strict";
+      return '//www.dailymotion.com/embed/video/' +
+        vi.id +
+        combineParams({
+          params: params
+        });
     }
-
-    return url;
   }
+  //
 });

@@ -10,13 +10,17 @@ urlParser.bind({
         params: params
       };
 
-    match = url.match(/(?:(?:v|be|videos)\/|v=)([\w\-]{11})/i);
+    match = url.match(/(?:(?:v|be|videos|embed)\/(?!videoseries)|v=)([\w\-]{11})/i);
     id = match ? match[1] : undefined;
     if (params.v === id) {
       delete params.v;
     }
 
-    list = params.list;
+    if (params.list === id) {
+      delete params.list;
+    } else {
+      list = params.list;
+    }
 
     if (params.hasOwnProperty('start')) {
       params.start = getTime(params.start);
@@ -41,28 +45,59 @@ urlParser.bind({
 
     return result;
   },
-  'create': function (op) {
-    "use strict";
-    var url,
-      vi = op.videoInfo,
-      params = cloneObject(op.params),
-      startTime = params.start;
-    delete params.start;
+  defaultFormat: 'long',
+  formats: {
+    short: function (vi, params) {
+      "use strict";
+      var url = 'https://youtu.be/' + vi.id;
+      if (params.start) {
+        url += '#t=' + params.start;
+      }
+      return url;
+    },
+    embed: function (vi, params) {
+      "use strict";
+      var url = '//youtube.com/embed';
 
-    if (vi.mediaType === 'playlist') {
-      return 'https://youtube.com/playlist?feature=share&list=' + vi.list;
-    }
+      if (vi.mediaType === 'playlist') {
+        params.listType = 'playlist';
+      } else {
+        url += '/' + vi.id;
+        //loop hack
+        if (params.loop == 1) {
+          params.playlist = vi.id;
+        }
+      }
 
-    if (op.format === 'short') {
-      url = 'https://youtu.be/' + vi.id;
-    } else {
-      url = 'https://youtube.com/watch?v=' + vi.id;
-      url += combineParams({hasParams:true, params: params});
-    }
+      url += combineParams({
+        params: params
+      });
 
-    if (startTime) {
-      url += '#t=' + startTime;
-    }
-    return url;
+      return url;
+    },
+    long: function (vi, params) {
+      "use strict";
+      var url = '',
+        startTime = params.start;
+      delete params.start;
+
+      if (vi.mediaType === 'playlist') {
+        params.feature = 'share';
+        url += 'https://youtube.com/playlist';
+      } else {
+        params.v = vi.id;
+        url += 'https://youtube.com/watch';
+      }
+
+      url += combineParams({
+        params: params
+      });
+
+      if (vi.mediaType !== 'playlist' && startTime) {
+        url += '#t=' + startTime;
+      }
+      return url;
+    },
+    'default': 'long'
   }
 });

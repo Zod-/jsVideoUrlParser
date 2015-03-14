@@ -29,17 +29,30 @@ urlParser.bind({
 
     return result;
   },
-  'create': function (op) {
-    "use strict";
-    var vi = op.videoInfo,
-      url = '';
-    if (vi.mediaType === 'stream') {
-      url = 'https://twitch.tv/' + vi.channel;
-    }else{
-      url = 'https://twitch.tv/' + vi.channel + '/' + vi.idPrefix + '/' + vi.id;
-    }
-    url += combineParams({hasParams:false, params: op.params});
+  defaultFormat: 'long',
+  formats: {
+    long: function (vi, params) {
+      "use strict";
+      var url = '';
+      if (vi.mediaType === 'stream') {
+        url = 'https://twitch.tv/' + vi.channel;
+      } else if (vi.mediaType === 'video') {
+        url = 'https://twitch.tv/' + vi.channel + '/' + vi.idPrefix + '/' + vi.id;
+      }
+      url += combineParams({
+        params: params
+      });
 
-    return url;
+      return url;
+    },
+    embed: function (vi, params) {
+      "use strict";
+      return '//www.twitch.tv/' +
+        vi.channel +
+        '/embed' +
+        combineParams({
+          params: params
+        });
+    },
   }
 });

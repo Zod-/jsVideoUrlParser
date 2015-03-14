@@ -6,19 +6,14 @@ function assertUrlTest(assert, tests) {
     test.urls.forEach(function (url) {
       assert.deepEqual(urlParser.parse(url), test.videoInfo, url);
     });
-
-    assert.equal(urlParser.create({
-      videoInfo: test.videoInfo,
-      format: 'long',
-      params: test.videoInfo.params
-    }), test.createdUrl, JSON.stringify(test.videoInfo));
-
-    if (test.hasOwnProperty('createdShortUrl')) {
-      assert.equal(urlParser.create({
-        videoInfo: test.videoInfo,
-        format: 'short',
-        params: test.videoInfo.params
-      }), test.createdShortUrl, JSON.stringify(test.videoInfo));
+    for(var format in test.formats){
+      if(test.formats.hasOwnProperty(format)){
+        assert.equal(urlParser.create({
+          videoInfo: test.videoInfo,
+          format: format,
+          params: test.videoInfo.params
+        }), test.formats[format], JSON.stringify(test.videoInfo));
+      }
     }
   });
 }

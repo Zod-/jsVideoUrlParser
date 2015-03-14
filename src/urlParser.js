@@ -2,10 +2,10 @@ function URLParser() {
   "use strict";
   this.plugins = {};
 }
-URLParser.prototype.parse = function(url) {
+URLParser.prototype.parse = function (url) {
   "use strict";
   var th = this,
-    match = url.match(/(?:https?:\/\/)?(?:[^\.]+\.)?(\w+)\./i),
+    match = url.match(/(?:(?:https?:)?\/\/)?(?:[^\.]+\.)?(\w+)\./i),
     provider = match ? match[1] : undefined,
     result;
   if (match && provider && th.plugins[provider] && th.plugins[provider].parse) {
@@ -20,7 +20,7 @@ URLParser.prototype.parse = function(url) {
   }
   return undefined;
 };
-URLParser.prototype.bind = function(plugin) {
+URLParser.prototype.bind = function (plugin) {
   "use strict";
   var th = this;
   th.plugins[plugin.provider] = plugin;
@@ -30,13 +30,20 @@ URLParser.prototype.bind = function(plugin) {
     }
   }
 };
-URLParser.prototype.create = function(op) {
+URLParser.prototype.create = function (op) {
   "use strict";
   var th = this,
-    vi = op.videoInfo;
-    op.params = op.params || {};
-  if (th.plugins[vi.provider] && th.plugins[vi.provider].create) {
-    return th.plugins[vi.provider].create.call(this, op);
+    vi = op.videoInfo,
+    params = op.params,
+    plugin = th.plugins[vi.provider];
+
+  params = (params === 'internal') ? vi.params : params || {};
+
+  if (plugin) {
+    op.format = op.format || plugin.defaultFormat;
+    if (plugin.formats.hasOwnProperty(op.format)) {
+      return plugin.formats[op.format](vi, cloneObject(params));
+    }
   }
   return undefined;
 };

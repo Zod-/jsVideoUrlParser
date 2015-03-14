@@ -44,6 +44,9 @@ function combineParams(op) {
     return '';
   }
 
+  //always have parameters in the same order
+  keys.sort();
+
   if (!op.hasParams) {
     combined += '?' + keys[0] + '=' + op.params[keys[0]];
     i += 1;
