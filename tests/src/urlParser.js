@@ -1,4 +1,4 @@
-QUnit.test("urlParser Object", function (assert) {
+QUnit.test("urlParser Tests", function (assert) {
   "use strict";
   var parser = new URLParser();
 
@@ -13,7 +13,10 @@ QUnit.test("urlParser Object", function (assert) {
     defaultFormat: 'long',
     formats: {
       long: function (vi, params) {
-        return {videoInfo: vi, params: params};
+        return {
+          videoInfo: vi,
+          params: params
+        };
       }
     }
   });
@@ -64,4 +67,10 @@ QUnit.test("urlParser Object", function (assert) {
 
   assert.strictEqual(parser.parse('http://abc.com'), undefined, 'No .parse');
   assert.strictEqual(parser.create(createObj3), undefined, 'No .create');
+
+  for (var plugin in urlParser.plugins) {
+    if (urlParser.plugins.hasOwnProperty(plugin)) {
+      assert.notStrictEqual(urlParser.plugins[plugin].defaultFormat, undefined, 'Defaultformat not undefined ' + plugin);
+    }
+  }
 });
