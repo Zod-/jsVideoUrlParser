@@ -30,7 +30,17 @@ $ grunt dist --youtube=1 --vimeo=1
 bower install js-video-url-parser
 ```
 
+#npm
+```
+npm install git://github.com/thepeak99/jsVideoUrlParser.git
+```
+
 #Usage
+##Node
+```
+urlParser = require('videoUrlParser');
+```
+
 ##Parsing
 
 Parsing a url will return a videoInfo object with all the information

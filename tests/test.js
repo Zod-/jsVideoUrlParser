@@ -18,7 +18,7 @@ function assertUrlTest(assert, tests) {
   });
 }
 
-QUnit.test("urlParser Object", function (assert) {
+QUnit.test("urlParser Tests", function (assert) {
   "use strict";
   var parser = new URLParser();
 
@@ -33,7 +33,10 @@ QUnit.test("urlParser Object", function (assert) {
     defaultFormat: 'long',
     formats: {
       long: function (vi, params) {
-        return {videoInfo: vi, params: params};
+        return {
+          videoInfo: vi,
+          params: params
+        };
       }
     }
   });
@@ -84,6 +87,12 @@ QUnit.test("urlParser Object", function (assert) {
 
   assert.strictEqual(parser.parse('http://abc.com'), undefined, 'No .parse');
   assert.strictEqual(parser.create(createObj3), undefined, 'No .create');
+
+  for (var plugin in urlParser.plugins) {
+    if (urlParser.plugins.hasOwnProperty(plugin)) {
+      assert.notStrictEqual(urlParser.plugins[plugin].defaultFormat, undefined, 'Defaultformat not undefined ' + plugin);
+    }
+  }
 });
 
 QUnit.test("TimeString Parser", function (assert) {
@@ -119,6 +128,86 @@ QUnit.test("TimeString Parser", function (assert) {
         timeString + ' === ' + testPairs[timeString]);
     }
   }
+});
+
+QUnit.test("GetQueryParams Tests", function (assert) {
+  "use strict";
+  assert.deepEqual(getQueryParams(undefined), {}, 'Undefined argument');
+  assert.deepEqual(getQueryParams([]), {}, 'Not a string argument');
+  assert.deepEqual(getQueryParams('http://foo.bar/test'), {}, 'No params');
+  assert.deepEqual(getQueryParams('http://foo.bar/test?foo=bar'), {
+    foo: 'bar'
+  }, '?foo=bar');
+  assert.deepEqual(getQueryParams('http://foo.bar/test?foo=bar&'), {
+    foo: 'bar'
+  }, '?foo=bar&');
+  assert.deepEqual(getQueryParams('http://foo.bar/test#foo=bar'), {
+    foo: 'bar'
+  }, '#foo=bar');
+  assert.deepEqual(getQueryParams('http://foo.bar/test#foo'), {
+    foo: ''
+  }, '#foo');
+  assert.deepEqual(getQueryParams('http://foo.bar/test?foo=bar&faz=baz'), {
+    foo: 'bar',
+    faz: 'baz'
+  }, '?foo=bar&faz=baz');
+  assert.deepEqual(getQueryParams('http://foo.bar/test?foo=bar&faz=baz#fiz=biz'), {
+    foo: 'bar',
+    faz: 'baz',
+    fiz: 'biz'
+  }, '?foo=bar&faz=baz#fiz=biz');
+  assert.deepEqual(getQueryParams('http://foo.bar/test?foo=bar&faz=baz#fiz'), {
+    foo: 'bar',
+    faz: 'baz',
+    fiz: ''
+  }, '?foo=bar&faz=baz#fiz');
+});
+
+QUnit.test("CombineParams Tests", function (assert) {
+  "use strict";
+  assert.equal(combineParams(undefined), '', 'Undefined argument');
+  assert.equal(combineParams({}), '', 'No params object');
+
+  assert.equal(combineParams({
+    params: {
+      foo: 'bar'
+    }
+  }), '?foo=bar', "{foo:'bar'}");
+  assert.equal(combineParams({
+    params: {
+      foo: 'bar',
+      faz: 'baz'
+    }
+  }), '?faz=baz&foo=bar', "{foo:'bar',faz:'baz'}");
+  assert.equal(combineParams({
+    params: {
+      foo: 'bar',
+      faz: 'baz',
+      fiz: 'biz'
+    }
+  }), '?faz=baz&fiz=biz&foo=bar', "{foo: 'bar',faz: 'baz',fiz: 'biz'}");
+
+  assert.equal(combineParams({
+    hasParams: true,
+    params: {
+      foo: 'bar'
+    }
+  }), '&foo=bar', "{foo:'bar'}");
+  assert.equal(combineParams({
+    hasParams: true,
+    params: {
+      foo: 'bar',
+      faz: 'baz'
+    }
+  }), '&faz=baz&foo=bar', "{foo:'bar',faz:'baz'}");
+  assert.equal(combineParams({
+    hasParams: true,
+    params: {
+      foo: 'bar',
+      faz: 'baz',
+      fiz: 'biz'
+    }
+  }), '&faz=baz&fiz=biz&foo=bar', "{foo: 'bar',faz: 'baz',fiz: 'biz'}");
 });
 
 QUnit.test("Dailymotion URLs", function (assert) {

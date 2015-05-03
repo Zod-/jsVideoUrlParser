@@ -51,6 +51,10 @@ URLParser.prototype.create = function (op) {
 var urlParser = new URLParser();
 /*jshint unused:false */
 
+if (typeof module !== undefined && module.exports) {
+    module.exports = urlParser;
+}
+
 /*jshint unused:false */
 function cloneObject(obj) {
   /*jshint unused:true */
@@ -67,19 +71,30 @@ function cloneObject(obj) {
   return temp;
 }
 
-//http://stackoverflow.com/a/1099670
 /*jshint unused:false */
 function getQueryParams(qs) {
   /*jshint unused:true */
   "use strict";
-  qs = qs.split("+").join(" ");
+  if (typeof qs !== 'string') {
+    return {};
+  }
+  qs = qs.split('+').join(' ');
 
   var params = {},
-    tokens,
-    re = /[\?#&]([^=]+)=([^&#]*)/g;
+    match = qs.match(
+      /(?:[\?](?:[^=]+)=(?:[^&#]*)(?:[&](?:[^=]+)=(?:[^&#]*))*(?:[#].*)?)|(?:[#].*)/
+    ),
+    split;
 
-  while (tokens = re.exec(qs)) {
-    params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+  if (match === null) {
+    return {};
+  }
+
+  split = match[0].substr(1).split(/[&#=]/);
+
+  for (var i = 0; i < split.length; i += 2) {
+    params[decodeURIComponent(split[i])] =
+      decodeURIComponent(split[i + 1] || '');
   }
 
   return params;
@@ -89,6 +104,10 @@ function getQueryParams(qs) {
 function combineParams(op) {
   /*jshint unused:true */
   "use strict";
+  if (typeof op !== 'object') {
+    return '';
+  }
+  op.params = op.params || {};
   var combined = '',
     i = 0,
     keys = Object.keys(op.params);
@@ -135,7 +154,8 @@ function getTime(timeString) {
   timePairs = timeString.split(' ');
 
   for (var i = 0; i < timePairs.length; i += 2) {
-    totalSeconds += parseInt(timePairs[i], 10) * timeValues[timePairs[i + 1] || 's'];
+    totalSeconds += parseInt(timePairs[i], 10) *
+      timeValues[timePairs[i + 1] || 's'];
   }
   return totalSeconds;
 }
