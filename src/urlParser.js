@@ -47,6 +47,8 @@ URLParser.prototype.create = function (op) {
   }
   return undefined;
 };
-/*jshint unused:true */
 var urlParser = new URLParser();
-/*jshint unused:false */
+
+if (typeof module !== undefined && module.exports) {
+  module.exports = urlParser;
+}
