@@ -49,7 +49,7 @@ URLParser.prototype.create = function (op) {
 };
 var urlParser = new URLParser();
 
-if (typeof module !== undefined && module.exports) {
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   module.exports = urlParser;
 }
 
