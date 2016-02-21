@@ -5,7 +5,7 @@ urlParser.bind({
     "use strict";
     var match,
       id;
-    match = url.match(/(?:\/(?:channels\/[\w]+|(?:album\/\d+\/)?videos?))?\/(\d+)/i);
+    match = url.match(/(?:\/(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+)\/)?videos?))?\/(\d+)/i);
     id = match ? match[1] : undefined;
     if (!id) {
       return undefined;

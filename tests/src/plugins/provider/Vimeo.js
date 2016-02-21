@@ -31,7 +31,8 @@ QUnit.test("Vimeo URLs", function (assert) {
         embed: '//player.vimeo.com/video/97688625'
       },
       urls: ['https://vimeo.com/groups/shortfilms/videos/97688625',
-        '//player.vimeo.com/video/97688625'
+        '//player.vimeo.com/video/97688625',
+        'https://vimeo.com/groups/1minute/videos/97688625'
       ]
     }, {
       videoInfo: cloneObject(vi),
