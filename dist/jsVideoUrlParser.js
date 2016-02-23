@@ -159,6 +159,39 @@ function getTime(timeString) {
 }
 
 urlParser.bind({
+  provider: 'canalplus',
+  parse: function (url, params) {
+    "use strict";
+    var match;
+    var result = {
+      mediaType: 'video',
+      params: params
+    };
+
+    match = url.match(
+      /vid=(\d+)/
+    );
+
+    result.id = match ? match[1] : undefined;
+
+    if (!result.id) {
+      return undefined;
+    }
+
+    return result;
+  },
+  defaultFormat: 'embed',
+  formats: {
+    embed: function (vi) {
+      "use strict";
+      var url = 'http://player.canalplus.fr/embed/?param=cplus&vid=' + vi.id;
+
+      return url;
+    }
+  }
+});
+
+urlParser.bind({
   'provider': 'dailymotion',
   'alternatives': ['dai'],
   'parse': function (url, params) {
@@ -428,5 +461,38 @@ urlParser.bind({
       return url;
     },
     'default': 'long'
+  }
+});
+
+urlParser.bind({
+  provider: 'youku',
+  parse: function (url, params) {
+    "use strict";
+    var match;
+    var result = {
+      mediaType: 'video',
+      params: params
+    };
+
+    match = url.match(
+      /(?:embed\/|sid\/|v_show\/id_)(\w*)/
+    );
+
+    result.id = match ? match[1] : undefined;
+
+    if (!result.id) {
+      return undefined;
+    }
+
+    return result;
+  },
+  defaultFormat: 'embed',
+  formats: {
+    embed: function (vi) {
+      "use strict";
+      var url = 'http://player.youku.com/embed/' + vi.id;
+
+      return url;
+    }
   }
 });
