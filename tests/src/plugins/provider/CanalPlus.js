@@ -8,7 +8,7 @@ QUnit.test("CanalPlus URLs", function (assert) {
     tests = [{
       videoInfo: cloneObject(vi),
       formats: {
-        embed: 'http://player.canalplus.fr/embed/?param=cplus&vid=1365175'
+        embed: 'http://player.canalplus.fr/embed/?vid=1365175'
       },
       urls: ['http://player.canalplus.fr/embed/?param=cplus&vid=1365175']
     }];
