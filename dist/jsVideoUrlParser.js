@@ -159,175 +159,6 @@ function getTime(timeString) {
 }
 
 urlParser.bind({
-  'provider': 'dailymotion',
-  'alternatives': ['dai'],
-  'parse': function (url, params) {
-    "use strict";
-    var match,
-      id,
-      result = {
-        params: params
-      };
-
-    match = url.match(/(?:\/video|ly)\/([A-Za-z0-9]+)/i);
-    id = match ? match[1] : undefined;
-
-    if (params.hasOwnProperty('start')) {
-      params.start = getTime(params.start);
-    }
-
-    if (!id) {
-      return undefined;
-    }
-    result.mediaType = 'video';
-    result.id = id;
-
-    return result;
-  },
-  defaultFormat: 'long',
-  formats: {
-    short: function (vi) {
-      "use strict";
-      return 'https://dai.ly/' + vi.id;
-    },
-    long: function (vi, params) {
-      "use strict";
-      return 'https://dailymotion.com/video/' +
-        vi.id +
-        combineParams({
-          params: params
-        });
-    },
-    embed: function (vi, params) {
-      "use strict";
-      return '//www.dailymotion.com/embed/video/' +
-        vi.id +
-        combineParams({
-          params: params
-        });
-    }
-  }
-  //
-});
-
-urlParser.bind({
-  'provider': 'twitch',
-  'parse': function (url, params) {
-    "use strict";
-    var match,
-      id,
-      channel,
-      idPrefix,
-      result = {};
-
-    match = url.match(/twitch\.tv\/(\w+)(?:\/(.)\/(\d+))?/i);
-    channel = match ? match[1] : undefined;
-    idPrefix = match ? match[2] : undefined;
-    id = match ? match[3] : undefined;
-
-    channel = params.channel || params.utm_content || channel;
-
-    if (!channel) {
-      return undefined;
-    }
-    if (id) {
-      result.mediaType = 'video';
-      result.id = id;
-      result.idPrefix = idPrefix;
-    } else {
-      result.mediaType = 'stream';
-    }
-    result.channel = channel;
-
-    return result;
-  },
-  defaultFormat: 'long',
-  formats: {
-    long: function (vi, params) {
-      "use strict";
-      var url = '';
-      if (vi.mediaType === 'stream') {
-        url = 'https://twitch.tv/' + vi.channel;
-      } else if (vi.mediaType === 'video') {
-        url = 'https://twitch.tv/' + vi.channel + '/' + vi.idPrefix + '/' + vi.id;
-      }
-      url += combineParams({
-        params: params
-      });
-
-      return url;
-    },
-    embed: function (vi, params) {
-      "use strict";
-      return '//www.twitch.tv/' +
-        vi.channel +
-        '/embed' +
-        combineParams({
-          params: params
-        });
-    },
-  }
-});
-
-urlParser.bind({
-  provider: 'vimeo',
-  alternatives: ['vimeopro'],
-  parse: function (url, params) {
-    "use strict";
-    var match;
-    var result = {
-      mediaType: 'video',
-      params: params
-    };
-
-    match = url.match(
-      /(?:\/(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+)\/)?videos?))?\/(\d+)/i
-    );
-    result.id = match ? match[1] : undefined;
-
-    if (!result.id) {
-      return undefined;
-    }
-
-    if (params.hasOwnProperty('t')) {
-      params.start = getTime(params.t);
-      delete params.t;
-    }
-
-    return result;
-  },
-  defaultFormat: 'long',
-  formats: {
-    long: function (vi, params) {
-      "use strict";
-      var url = 'https://vimeo.com/' + vi.id;
-      var startTime = params.start;
-      delete params.start;
-      url += combineParams({
-        params: params
-      });
-      if (startTime) {
-        url += '#t=' + startTime;
-      }
-      return url;
-    },
-    embed: function (vi, params) {
-      "use strict";
-      var url = '//player.vimeo.com/video/' + vi.id;
-      var startTime = params.start;
-      delete params.start;
-      url += combineParams({
-        params: params
-      });
-      if (startTime) {
-        url += '#t=' + startTime;
-      }
-      return url;
-    }
-  }
-});
-
-urlParser.bind({
   'provider': 'youtube',
   'alternatives': ['youtu'],
   'parse': function (url, params) {
@@ -429,4 +260,171 @@ urlParser.bind({
     },
     'default': 'long'
   }
+});
+
+urlParser.bind({
+  provider: 'vimeo',
+  alternatives: ['vimeopro'],
+  parse: function (url, params) {
+    "use strict";
+    var match;
+    var result = {
+      mediaType: 'video',
+      params: params
+    };
+
+    match = url.match(
+      /(?:\/(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+)\/)?videos?))?\/(\d+)/i
+    );
+    result.id = match ? match[1] : undefined;
+
+    if (!result.id) {
+      return undefined;
+    }
+
+    if (params.hasOwnProperty('t')) {
+      params.start = getTime(params.t);
+      delete params.t;
+    }
+
+    return result;
+  },
+  defaultFormat: 'long',
+  formats: {
+    long: function (vi, params) {
+      "use strict";
+      var url = 'https://vimeo.com/' + vi.id;
+      var startTime = params.start;
+      delete params.start;
+      url += combineParams({
+        params: params
+      });
+      if (startTime) {
+        url += '#t=' + startTime;
+      }
+      return url;
+    },
+    embed: function (vi, params) {
+      "use strict";
+      var url = '//player.vimeo.com/video/' + vi.id;
+      var startTime = params.start;
+      delete params.start;
+      url += combineParams({
+        params: params
+      });
+      if (startTime) {
+        url += '#t=' + startTime;
+      }
+      return url;
+    }
+  }
+});
+
+urlParser.bind({
+  provider: 'coub',
+  parse: function (url, params) {
+    "use strict";
+    var match;
+    var result = {
+      mediaType: 'video',
+      params: params
+    };
+
+    match = url.match(
+      /coub\.com\/view\/([a-zA-Z\d]+)/i
+    );
+    result.id = match ? match[1] : undefined;
+
+    if (!result.id) {
+      return undefined;
+    }
+
+    if (params.hasOwnProperty('t')) {
+      params.start = getTime(params.t);
+      delete params.t;
+    }
+
+    return result;
+  },
+  defaultFormat: 'long',
+  formats: {
+    long: function (vi, params) {
+      "use strict";
+      var url = 'https://coub.com/view/' + vi.id;
+      var startTime = params.start;
+      delete params.start;
+      url += combineParams({
+        params: params
+      });
+      if (startTime) {
+        url += '#t=' + startTime;
+      }
+      return url;
+    },
+    embed: function (vi, params) {
+      "use strict";
+      var url = '//coub.com/embed/' + vi.id;
+      var startTime = params.start;
+      delete params.start;
+      url += combineParams({
+        params: params
+      });
+      if (startTime) {
+        url += '#t=' + startTime;
+      }
+      return url;
+    }
+  }
+});
+
+urlParser.bind({
+  'provider': 'dailymotion',
+  'alternatives': ['dai'],
+  'parse': function (url, params) {
+    "use strict";
+    var match,
+      id,
+      result = {
+        params: params
+      };
+
+    match = url.match(/(?:\/video|ly)\/([A-Za-z0-9]+)/i);
+    id = match ? match[1] : undefined;
+
+    if (params.hasOwnProperty('start')) {
+      params.start = getTime(params.start);
+    }
+
+    if (!id) {
+      return undefined;
+    }
+    result.mediaType = 'video';
+    result.id = id;
+
+    return result;
+  },
+  defaultFormat: 'long',
+  formats: {
+    short: function (vi) {
+      "use strict";
+      return 'https://dai.ly/' + vi.id;
+    },
+    long: function (vi, params) {
+      "use strict";
+      return 'https://dailymotion.com/video/' +
+        vi.id +
+        combineParams({
+          params: params
+        });
+    },
+    embed: function (vi, params) {
+      "use strict";
+      return '//www.dailymotion.com/embed/video/' +
+        vi.id +
+        combineParams({
+          params: params
+        });
+    }
+  }
+  //
 });
