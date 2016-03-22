@@ -13,7 +13,8 @@ module.exports = function (grunt) {
       '--dailymotion': ['Dailymotion.js'],
       '--youtube': ['YouTube.js'],
       '--vimeo': ['Vimeo.js'],
-      '--coub': ['Coub.js']
+      '--coub': ['Coub.js'],
+      '--twitch': ['Twitch.js']
     };
   grunt.option.flags().forEach(function (flag) {
     flag = flag.toLowerCase();
