@@ -14,7 +14,7 @@ QUnit.test('Twitch Stream URLs', function (assert) {
     urls: ['http://www.twitch.tv/rains8',
       'http://www.twitch.tv/widgets/live_embed_player.swf\
       ?channel=rains8',
-      'http://twitch.tv/rains8/chat?popout=',
+      'http://twitch.tv/rains8/chat',
       '//www.twitch.tv/rains8/embed'
     ]
   }];
@@ -36,6 +36,13 @@ QUnit.test('Twitch Video URLs', function (assert) {
       long: 'https://twitch.tv/rains8/v/75292411'
     },
     urls: ['http://www.twitch.tv/rains8/v/75292411']
+  },{
+    videoInfo: cloneObject(vi),
+    formats: {
+      long: 'https://twitch.tv/rains8/v/75292411?t=90s'
+    },
+    urls: ['https://www.twitch.tv/rains8/v/75292411?t=1m30s']
   }];
+  tests[1].videoInfo.params = {start: 90};
   assertUrlTest(assert, tests);
 });
