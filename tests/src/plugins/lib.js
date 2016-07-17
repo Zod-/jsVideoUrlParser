@@ -1,5 +1,5 @@
-QUnit.test("TimeString Parser", function (assert) {
-  "use strict";
+QUnit.test('TimeString Parser', function (assert) {
+  'use strict';
   var s = 1,
     m = 60 * s,
     h = 60 * m,
@@ -33,8 +33,8 @@ QUnit.test("TimeString Parser", function (assert) {
   }
 });
 
-QUnit.test("GetQueryParams Tests", function (assert) {
-  "use strict";
+QUnit.test('GetQueryParams Tests', function (assert) {
+  'use strict';
   assert.deepEqual(getQueryParams(undefined), {}, 'Undefined argument');
   assert.deepEqual(getQueryParams([]), {}, 'Not a string argument');
   assert.deepEqual(getQueryParams('http://foo.bar/test'), {}, 'No params');
@@ -54,11 +54,12 @@ QUnit.test("GetQueryParams Tests", function (assert) {
     foo: 'bar',
     faz: 'baz'
   }, '?foo=bar&faz=baz');
-  assert.deepEqual(getQueryParams('http://foo.bar/test?foo=bar&faz=baz#fiz=biz'), {
-    foo: 'bar',
-    faz: 'baz',
-    fiz: 'biz'
-  }, '?foo=bar&faz=baz#fiz=biz');
+  assert.deepEqual(
+    getQueryParams('http://foo.bar/test?foo=bar&faz=baz#fiz=biz'), {
+      foo: 'bar',
+      faz: 'baz',
+      fiz: 'biz'
+    }, '?foo=bar&faz=baz#fiz=biz');
   assert.deepEqual(getQueryParams('http://foo.bar/test?foo=bar&faz=baz#fiz'), {
     foo: 'bar',
     faz: 'baz',
@@ -66,8 +67,8 @@ QUnit.test("GetQueryParams Tests", function (assert) {
   }, '?foo=bar&faz=baz#fiz');
 });
 
-QUnit.test("CombineParams Tests", function (assert) {
-  "use strict";
+QUnit.test('CombineParams Tests', function (assert) {
+  'use strict';
   assert.equal(combineParams(undefined), '', 'Undefined argument');
   assert.equal(combineParams({}), '', 'No params object');
 
@@ -75,34 +76,34 @@ QUnit.test("CombineParams Tests", function (assert) {
     params: {
       foo: 'bar'
     }
-  }), '?foo=bar', "{foo:'bar'}");
+  }), '?foo=bar', '{foo:\'bar\'}');
   assert.equal(combineParams({
     params: {
       foo: 'bar',
       faz: 'baz'
     }
-  }), '?faz=baz&foo=bar', "{foo:'bar',faz:'baz'}");
+  }), '?faz=baz&foo=bar', '{foo:\'bar\',faz:\'baz\'}');
   assert.equal(combineParams({
     params: {
       foo: 'bar',
       faz: 'baz',
       fiz: 'biz'
     }
-  }), '?faz=baz&fiz=biz&foo=bar', "{foo: 'bar',faz: 'baz',fiz: 'biz'}");
+  }), '?faz=baz&fiz=biz&foo=bar', '{foo: \'bar\',faz: \'baz\',fiz: \'biz\'}');
 
   assert.equal(combineParams({
     hasParams: true,
     params: {
       foo: 'bar'
     }
-  }), '&foo=bar', "{foo:'bar'}");
+  }), '&foo=bar', '{foo:\'bar\'}');
   assert.equal(combineParams({
     hasParams: true,
     params: {
       foo: 'bar',
       faz: 'baz'
     }
-  }), '&faz=baz&foo=bar', "{foo:'bar',faz:'baz'}");
+  }), '&faz=baz&foo=bar', '{foo:\'bar\',faz:\'baz\'}');
   assert.equal(combineParams({
     hasParams: true,
     params: {
@@ -110,5 +111,5 @@ QUnit.test("CombineParams Tests", function (assert) {
       faz: 'baz',
       fiz: 'biz'
     }
-  }), '&faz=baz&fiz=biz&foo=bar', "{foo: 'bar',faz: 'baz',fiz: 'biz'}");
+  }), '&faz=baz&fiz=biz&foo=bar', '{foo: \'bar\',faz: \'baz\',fiz: \'biz\'}');
 });

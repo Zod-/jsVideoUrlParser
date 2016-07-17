@@ -1,14 +1,16 @@
 /*jshint unused:false */
 function cloneObject(obj) {
   /*jshint unused:true */
-  "use strict";
+  'use strict';
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }
 
   var temp = obj.constructor(); // give temp the original obj's constructor
   for (var key in obj) {
-    temp[key] = cloneObject(obj[key]);
+    if (obj.hasOwnProperty(key)) {
+      temp[key] = cloneObject(obj[key]);
+    }
   }
 
   return temp;
@@ -17,17 +19,19 @@ function cloneObject(obj) {
 /*jshint unused:false */
 function getQueryParams(qs) {
   /*jshint unused:true */
-  "use strict";
+  'use strict';
   if (typeof qs !== 'string') {
     return {};
   }
   qs = qs.split('+').join(' ');
 
-  var params = {},
-    match = qs.match(
-      /(?:[\?](?:[^=]+)=(?:[^&#]*)(?:[&](?:[^=]+)=(?:[^&#]*))*(?:[#].*)?)|(?:[#].*)/
-    ),
-    split;
+  var params = {};
+  var match = qs.match(
+    /*jshint ignore:start */
+    /(?:[\?](?:[^=]+)=(?:[^&#]*)(?:[&](?:[^=]+)=(?:[^&#]*))*(?:[#].*)?)|(?:[#].*)/
+    /*jshint ignore:end */
+  );
+  var split;
 
   if (match === null) {
     return {};
@@ -46,7 +50,7 @@ function getQueryParams(qs) {
 /*jshint unused:false */
 function combineParams(op) {
   /*jshint unused:true */
-  "use strict";
+  'use strict';
   if (typeof op !== 'object') {
     return '';
   }
@@ -77,17 +81,16 @@ function combineParams(op) {
 /*jshint unused:false */
 function getTime(timeString) {
   /*jshint unused:true */
-  "use strict";
-  var totalSeconds = 0,
-    timeValues = {
-      's': 1,
-      'm': 1 * 60,
-      'h': 1 * 60 * 60,
-      'd': 1 * 60 * 60 * 24,
-      'w': 1 * 60 * 60 * 24 * 7
-    },
-    timePairs;
-
+  'use strict';
+  var totalSeconds = 0;
+  var timeValues = {
+    's': 1,
+    'm': 1 * 60,
+    'h': 1 * 60 * 60,
+    'd': 1 * 60 * 60 * 24,
+    'w': 1 * 60 * 60 * 24 * 7
+  };
+  var timePairs;
   //is the format 1h30m20s etc
   if (!timeString.match(/^(\d+[smhdw]?)+$/)) {
     return 0;
