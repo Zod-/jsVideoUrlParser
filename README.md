@@ -84,8 +84,9 @@ Any url but the id parameter will be saved in the params object
 
 ##URL Creation
 
-The VideoInfo objects can be turned back into a `'short'`, `'embed'` or `'long'` url where `'long'` is the default.
-Embedded links will be protocol relative.
+The VideoInfo objects can be turned back into a `'short'`, `'long'`, `'embed'`, `'shortImage'`, `'longImage'` url where `'long'` is the default.
+Embedded links will be protocol relative. Image modes are for generating thumbnail
+urls for currently only YouTube videos.
 
 ```javascript
 > urlParser.create({
@@ -102,6 +103,17 @@ Embedded links will be protocol relative.
   format: 'embed'
 })
 '//youtube.com/embed/HRb7B9fPhfA'
+> urlParser.create({
+  videoInfo: urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA'),
+  format: 'shortImage'
+})
+'https://i.ytimg.com/vi/HRb7B9fPhfA/hqdefault.jpg'
+'//youtube.com/embed/HRb7B9fPhfA'
+> urlParser.create({
+  videoInfo: urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA'),
+  format: 'shortImage'
+})
+'https://img.youtube.com/vi/HRb7B9fPhfA/hqdefault.jpg'
 
 > urlParser.create({
     videoInfo: urlParser.parse('https://vimeo.com/97276391')
@@ -173,12 +185,14 @@ To the reuse the params in the videoInfo object without having to save it in a t
 
 ##YouTube
 
-It can extract the id from shortened, mobile and feed urls.
+It can extract the id from shortened, mobile, feed and thumbnail urls.
 ```javascript
 > urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA');
 > urlParser.parse('http://youtu.be/HRb7B9fPhfA');
 > urlParser.parse('https://m.youtube.com/details?v=HRb7B9fPhfA');
 > urlParser.parse('https://gdata.youtube.com/feeds/api/videos/HRb7B9fPhfA/related');
+> urlParser.parse('https://i.ytimg.com/vi/HRb7B9fPhfA/hqdefault.jpg');
+> urlParser.parse('https://img.youtube.com/vi/HRb7B9fPhfA/hqdefault.jpg');
 { mediaType: 'video',
   id: 'HRb7B9fPhfA',
   provider: 'youtube' }

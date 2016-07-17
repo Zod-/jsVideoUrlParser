@@ -2,6 +2,7 @@ var yt1 = 'https://youtube.com';
 var yt2 = 'http://www.youtube.com';
 var yt3 = 'https://www.youtube.com';
 var yt4 = '//youtube.com/embed';
+var yt5 = 'https://img.youtube.com';
 QUnit.test('Regular YouTube URLs', function (assert) {
   'use strict';
   var vi = {
@@ -31,7 +32,9 @@ QUnit.test('Regular YouTube URLs', function (assert) {
     formats: {
       long: yt1 + '/watch?v=HRb7B9fPhfA',
       embed: yt4 + '/HRb7B9fPhfA',
-      short: 'https://youtu.be/HRb7B9fPhfA'
+      short: 'https://youtu.be/HRb7B9fPhfA',
+      shortImage: 'https://i.ytimg.com/vi/HRb7B9fPhfA/hqdefault.jpg',
+      longImage: yt5 + '/vi/HRb7B9fPhfA/hqdefault.jpg'
     },
     urls: [yt2 + '/watch?v=HRb7B9fPhfA',
       'http://youtu.be/HRb7B9fPhfA',
@@ -176,5 +179,40 @@ QUnit.test('Feed YouTube URLs', function (assert) {
       yt3 + '/v/HRb7B9fPhfA'
     ]
   }];
+  assertUrlTest(assert, tests);
+});
+
+QUnit.test('Image YouTube URLs', function (assert) {
+  'use strict';
+  var vi = {
+    provider: 'youtube',
+    id: 'HRb7B9fPhfA',
+    mediaType: 'video'
+  };
+  var tests = [{
+    videoInfo: cloneObject(vi),
+    formats: {
+      shortImage: 'https://i.ytimg.com/vi/HRb7B9fPhfA/hqdefault.jpg',
+      longImage: yt5 + '/vi/HRb7B9fPhfA/hqdefault.jpg'
+    },
+    urls: ['https://i.ytimg.com/vi/HRb7B9fPhfA/0.jpg',
+      'https://i.ytimg.com/vi/HRb7B9fPhfA/1.jpg',
+      'https://i.ytimg.com/vi/HRb7B9fPhfA/2.jpg',
+      'https://i.ytimg.com/vi/HRb7B9fPhfA/3.jpg',
+      'https://i.ytimg.com/vi/HRb7B9fPhfA/hqdefault.jpg',
+      'https://i.ytimg.com/vi/HRb7B9fPhfA/mqdefault.jpg',
+      'https://i.ytimg.com/vi/HRb7B9fPhfA/sddefault.jpg',
+      'https://i.ytimg.com/vi/HRb7B9fPhfA/maxresdefault.jpg',
+      'https://img.youtube.com/vi/HRb7B9fPhfA/0.jpg',
+      'https://img.youtube.com/vi/HRb7B9fPhfA/1.jpg',
+      'https://img.youtube.com/vi/HRb7B9fPhfA/2.jpg',
+      'https://img.youtube.com/vi/HRb7B9fPhfA/3.jpg',
+      'https://img.youtube.com/vi/HRb7B9fPhfA/hqdefault.jpg',
+      'https://img.youtube.com/vi/HRb7B9fPhfA/mqdefault.jpg',
+      'https://img.youtube.com/vi/HRb7B9fPhfA/sddefault.jpg',
+      'https://img.youtube.com/vi/HRb7B9fPhfA/maxresdefault.jpg',
+    ]
+  }];
+
   assertUrlTest(assert, tests);
 });

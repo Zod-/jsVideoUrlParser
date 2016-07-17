@@ -1,19 +1,33 @@
 function YouTube() {
   'use strict';
   this.provider = 'youtube';
-  this.alternatives = ['youtu'];
+  this.alternatives = ['youtu', 'ytimg'];
   this.defaultFormat = 'long';
   this.formats = {
     short: this.createShortURL,
     long: this.createLongURL,
-    embed: this.createEmbedURL
+    embed: this.createEmbedURL,
+    shortImage: this.createShortImageURL,
+    longImage: this.createLongImageURL
   };
+  this.imageQualities = {
+    '0': '0',
+    '1': '1',
+    '2': '2',
+    '3': '3',
+    DEFAULT: 'default',
+    HQDEFAULT: 'hqdefault',
+    SDDEFAULT: 'sddefault',
+    MQDEFAULT: 'mqdefault',
+    MAXRESDEFAULT: 'maxresdefault',
+  };
+  this.defaultImageQuality = this.imageQualities.HQDEFAULT;
 }
 
 YouTube.prototype.parseUrl = function (url) {
   'use strict';
   var match = url.match(
-    /(?:(?:v|be|videos|embed)\/(?!videoseries)|v=)([\w\-]{11})/i
+    /(?:(?:v|vi|be|videos|embed)\/(?!videoseries)|v=)([\w\-]{11})/i
   );
   return match ? match[1] : undefined;
 };
@@ -121,6 +135,24 @@ YouTube.prototype.createEmbedURL = function (vi, params) {
   });
 
   return url;
+};
+
+YouTube.prototype.createImageURL = function (baseURL, vi, params) {
+  'use strict';
+  var url = baseURL + vi.id + '/';
+  var quality = params.imageQuality || this.defaultImageQuality;
+
+  return url + quality + '.jpg';
+};
+
+YouTube.prototype.createShortImageURL = function (vi, params) {
+  'use strict';
+  return this.createImageURL('https://i.ytimg.com/vi/', vi, params);
+};
+
+YouTube.prototype.createLongImageURL = function (vi, params) {
+  'use strict';
+  return this.createImageURL('https://img.youtube.com/vi/', vi, params);
 };
 
 urlParser.bind(new YouTube());
