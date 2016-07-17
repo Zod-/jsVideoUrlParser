@@ -65,7 +65,7 @@ Parsing a url will return a videoInfo object with all the information
   provider: 'dailymotion' }
 ```
 
-Any url but the id parameter will be saved in the params object
+Any url parameters expect for the id will be saved in the params object
 
 ```javascript
 > urlParser.parse('https://www.youtube.com/watch?v=6xLcSTDeB7A&index=25&list=PL46F0A159EC02DF82&t=1m40')
@@ -91,67 +91,38 @@ urls for currently only YouTube videos.
 ```javascript
 > urlParser.create({
     videoInfo: urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA'),
-    format: 'short'
+    format: 'long'
   })
-'https://youtu.be/HRb7B9fPhfA'
-> urlParser.create({
-    videoInfo: urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA')
-  })
-'https://www.youtube.com/watch?v=HRb7B9fPhfA'
-> urlParser.create({
-  videoInfo: urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA'),
-  format: 'embed'
-})
-'//youtube.com/embed/HRb7B9fPhfA'
-> urlParser.create({
-  videoInfo: urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA'),
-  format: 'shortImage'
-})
-'https://i.ytimg.com/vi/HRb7B9fPhfA/hqdefault.jpg'
-'//youtube.com/embed/HRb7B9fPhfA'
-> urlParser.create({
-  videoInfo: urlParser.parse('http://www.youtube.com/watch?feature=player_embedded&v=HRb7B9fPhfA'),
-  format: 'shortImage'
-})
-'https://img.youtube.com/vi/HRb7B9fPhfA/hqdefault.jpg'
+'long': 'https://www.youtube.com/watch?v=HRb7B9fPhfA'
+'short': 'https://youtu.be/HRb7B9fPhfA'
+'embed': '//youtube.com/embed/HRb7B9fPhfA'
+'shortImage': 'https://i.ytimg.com/vi/HRb7B9fPhfA/hqdefault.jpg'
+'longImage': 'https://img.youtube.com/vi/HRb7B9fPhfA/hqdefault.jpg'
 
 > urlParser.create({
-    videoInfo: urlParser.parse('https://vimeo.com/97276391')
+    videoInfo: urlParser.parse('https://vimeo.com/97276391'),
+    format: 'long'
   })
-'https://vimeo.com/97276391'
-> urlParser.create({
-  videoInfo: urlParser.parse('https://vimeo.com/97276391'),
-  format: 'embed'
-})
-'//player.vimeo.com/video/97276391'
+'long': 'https://vimeo.com/97276391'
+'embed': '//player.vimeo.com/video/97276391'
 
 > urlParser.create({
-    videoInfo: urlParser.parse('http://www.twitch.tv/tsm_wildturtle')
+    videoInfo: urlParser.parse('http://www.twitch.tv/tsm_wildturtle'),
+    format: 'long'
   })
-'https://twitch.tv/tsm_wildturtle'
-> urlParser.create({
-  videoInfo: urlParser.parse('http://www.twitch.tv/tsm_wildturtle'),
-  format: 'embed'
-})
-'//www.twitch.tv/tsm_wildturtle/embed'
+'long': 'https://twitch.tv/tsm_wildturtle'
+'embed': '//www.twitch.tv/tsm_wildturtle/embed'
 
 > urlParser.create({
     videoInfo: urlParser.parse('http://www.dailymotion.com/video/x1e2b95'),
-    format: 'short'
+    format: 'long'
   })
-'https://dai.ly/x1e2b95'
-> urlParser.create({
-    videoInfo: urlParser.parse('http://www.dailymotion.com/video/x1e2b95')
-  })
-'https://www.dailymotion.com/video/x1e2b95'
-> urlParser.create({
-  videoInfo: urlParser.parse('http://www.dailymotion.com/video/x1e2b95'),
-  format: 'embed'
-})
-'//www.dailymotion.com/embed/video/x1e2b95'
+'long': 'https://www.dailymotion.com/video/x1e2b95'
+'short': 'https://dai.ly/x1e2b95'
+'embed': '//www.dailymotion.com/embed/video/x1e2b95'
 ```
 
-Url parameters can be added by adding a params object
+Url parameters can be added via the params object:
 ```javascript
 > urlParser.create({
   videoInfo: urlParser.parse('http://www.youtube.com/watch?v=yQaAGmHNn9s'),
@@ -165,7 +136,20 @@ Url parameters can be added by adding a params object
 'https://youtube.com/watch?foo=bar&index=25&list=PL46F0A159EC02DF82&v=yQaAGmHNn9s#t=100'
 ```
 
-To the reuse the params in the videoInfo object without having to save it in a temp variable use the keyword `'internal'` as params
+A special paramter for image YouTube urls is the imageQuality. It can be set to one
+of `'0', '1', '2', '3', 'default', 'hqdefault', 'mqdefault', 'sddefault', 'maxresdefault'`
+with `'hqdefault'` being the default.
+```javascript
+> urlParser.create({
+  videoInfo: urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA'),
+  params:{
+    imageQuality: 'mqdefault'
+  }
+})
+'https://img.youtube.com/vi/HRb7B9fPhfA/mqdefault.jpg'
+```
+
+To reuse the params in the videoInfo object without having to save it in a temp variable use the keyword `'internal'` as params
 
 ```javascript
 > urlParser.create({
