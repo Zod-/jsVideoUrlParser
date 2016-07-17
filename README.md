@@ -56,9 +56,9 @@ Parsing a url will return a videoInfo object with all the information
   id: '97276391',
   provider: 'vimeo' }
 
-> urlParser.parse('http://www.twitch.tv/tsm_wildturtle')
+> urlParser.parse('http://www.twitch.tv/rains8')
 { mediaType: 'stream',
-  channel: 'tsm_wildturtle',
+  channel: 'rains8',
   provider: 'twitch' }
 
 > urlParser.parse('http://www.dailymotion.com/video/x1e2b95')
@@ -109,11 +109,11 @@ urls for currently only YouTube videos.
 'embed': '//player.vimeo.com/video/97276391'
 
 > urlParser.create({
-    videoInfo: urlParser.parse('http://www.twitch.tv/tsm_wildturtle'),
+    videoInfo: urlParser.parse('http://www.twitch.tv/rains8'),
     format: 'long'
   })
-'long': 'https://twitch.tv/tsm_wildturtle'
-'embed': '//www.twitch.tv/tsm_wildturtle/embed'
+'long': 'https://twitch.tv/rains8'
+'embed': '//www.twitch.tv/rains8/embed'
 
 > urlParser.create({
     videoInfo: urlParser.parse('http://www.dailymotion.com/video/x1e2b95'),
@@ -262,18 +262,18 @@ Supports urls from channels, albums, groups and frames.
 Supports embedded, stream and video urls
 
 ```javascript
-> urlParser.parse('http://www.twitch.tv/tsm_wildturtle');
-> urlParser.parse('http://www.twitch.tv/widgets/live_embed_player.swf?channel=tsm_wildturtle');
-> urlParser.parse('http://twitch.tv/tsm_wildturtle/chat');
+> urlParser.parse('http://www.twitch.tv/rains8');
+> urlParser.parse('http://www.twitch.tv/widgets/live_embed_player.swf?channel=rains8');
+> urlParser.parse('http://twitch.tv/rains8/chat');
 { mediaType: 'stream',
-  channel: 'tsm_wildturtle',
+  channel: 'rains8',
   provider: 'twitch' }
 
-> urlParser.parse('http://www.twitch.tv/tsm_wildturtle/c/2724914');
+> urlParser.parse('http://www.twitch.tv/rains8/v/75292411');
 { mediaType: 'video',
-  id: '2724914',
-  idPrefix: 'c',
-  channel: 'tsm_wildturtle',
+  id: '75292411',
+  idPrefix: 'v',
+  channel: 'rains8',
   provider: 'twitch' }
 ```
 

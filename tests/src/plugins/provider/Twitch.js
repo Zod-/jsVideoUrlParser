@@ -2,30 +2,40 @@ QUnit.test('Twitch Stream URLs', function (assert) {
   'use strict';
   var vi = {
     provider: 'twitch',
-    channel: 'tsm_wildturtle',
+    channel: 'rains8',
     mediaType: 'stream'
   };
   var tests = [{
     videoInfo: cloneObject(vi),
     formats: {
-      long: 'https://twitch.tv/tsm_wildturtle',
-      embed: '//www.twitch.tv/tsm_wildturtle/embed'
+      long: 'https://twitch.tv/rains8',
+      embed: '//www.twitch.tv/rains8/embed'
     },
-    urls: ['http://www.twitch.tv/tsm_wildturtle',
+    urls: ['http://www.twitch.tv/rains8',
       'http://www.twitch.tv/widgets/live_embed_player.swf\
-      ?channel=tsm_wildturtle',
-      'http://twitch.tv/tsm_wildturtle/chat?popout=',
-      '//www.twitch.tv/tsm_wildturtle/embed'
+      ?channel=rains8',
+      'http://twitch.tv/rains8/chat?popout=',
+      '//www.twitch.tv/rains8/embed'
     ]
-  }, {
+  }];
+  assertUrlTest(assert, tests);
+});
+
+QUnit.test('Twitch Video URLs', function (assert) {
+  'use strict';
+  var vi = {
+    provider: 'twitch',
+    id: '75292411',
+    idPrefix: 'v',
+    channel: 'rains8',
+    mediaType: 'video'
+  };
+  var tests = [{
     videoInfo: cloneObject(vi),
     formats: {
-      long: 'https://twitch.tv/tsm_wildturtle/c/2724914',
+      long: 'https://twitch.tv/rains8/v/75292411'
     },
-    urls: ['http://www.twitch.tv/tsm_wildturtle/c/2724914']
+    urls: ['http://www.twitch.tv/rains8/v/75292411']
   }];
-  tests[1].videoInfo.id = '2724914';
-  tests[1].videoInfo.idPrefix = 'c';
-  tests[1].videoInfo.mediaType = 'video';
   assertUrlTest(assert, tests);
 });
