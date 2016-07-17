@@ -8,6 +8,8 @@ Currently supports
  - Vimeo
  - Twitch
  - Dailymotion
+ - Canal+
+ - Youku
 
 #grunt
 
