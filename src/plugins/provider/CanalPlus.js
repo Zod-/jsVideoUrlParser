@@ -1,28 +1,42 @@
-urlParser.bind({
-  provider: 'canalplus',
-  parse: function (url, params) {
-    'use strict';
-    var result = {
-      mediaType: 'video',
-      params: params
-    };
+function CanalPlus() {
+  'use strict';
+  this.provider = 'canalplus';
+  this.defaultFormat = 'embed';
+  this.formats = {
+    embed: this.createEmbedURL
+  };
+}
 
-    result.id = result.params.vid;
-    delete result.params.vid;
+CanalPlus.prototype.parseParameters = function (params) {
+  'use strict';
+  delete params.vid;
+  return params;
+};
 
-    if (!result.id) {
-      return undefined;
-    }
+CanalPlus.prototype.parse = function (url, params) {
+  'use strict';
+  var _this = this;
+  var result = {
+    mediaType: 'video',
+    id: params.vid
+  };
+  result.params = _this.parseParameters(params);
 
-    return result;
-  },
-  defaultFormat: 'embed',
-  formats: {
-    embed: function (vi) {
-      'use strict';
-      var url = 'http://player.canalplus.fr/embed/?param=cplus&vid=' + vi.id;
-
-      return url;
-    }
+  if (!result.id) {
+    return undefined;
   }
-});
+  return result;
+};
+
+CanalPlus.prototype.createEmbedURL = function (vi, params) {
+  'use strict';
+  var url = 'http://player.canalplus.fr/embed/';
+  params.vid = vi.id;
+
+  url += combineParams({
+    params: params
+  });
+  return url;
+};
+
+urlParser.bind(new CanalPlus());
