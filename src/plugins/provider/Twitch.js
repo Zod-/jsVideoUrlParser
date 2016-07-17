@@ -1,58 +1,72 @@
-urlParser.bind({
-  'provider': 'twitch',
-  'parse': function (url, params) {
-    "use strict";
-    var match,
-      id,
-      channel,
-      idPrefix,
-      result = {};
+function Twitch() {
+  'use strict';
+  this.provider = 'twitch';
+  this.defaultFormat = 'long';
+  this.formats = {
+    long: this.createLongURL,
+    embed: this.createEmbedURL
+  };
+}
 
-    match = url.match(/twitch\.tv\/(\w+)(?:\/(.)\/(\d+))?/i);
-    channel = match ? match[1] : undefined;
-    idPrefix = match ? match[2] : undefined;
-    id = match ? match[3] : undefined;
+Twitch.prototype.parseChannel = function (result, params) {
+  'use strict';
+  /*jshint camelcase:false */
+  return params.channel || params.utm_content || result.channel;
+  /*jshint camelcase:true */
+};
 
-    channel = params.channel || params.utm_content || channel;
 
-    if (!channel) {
-      return undefined;
-    }
-    if (id) {
-      result.mediaType = 'video';
-      result.id = id;
-      result.idPrefix = idPrefix;
-    } else {
-      result.mediaType = 'stream';
-    }
-    result.channel = channel;
-
-    return result;
-  },
-  defaultFormat: 'long',
-  formats: {
-    long: function (vi, params) {
-      "use strict";
-      var url = '';
-      if (vi.mediaType === 'stream') {
-        url = 'https://twitch.tv/' + vi.channel;
-      } else if (vi.mediaType === 'video') {
-        url = 'https://twitch.tv/' + vi.channel + '/' + vi.idPrefix + '/' + vi.id;
-      }
-      url += combineParams({
-        params: params
-      });
-
-      return url;
-    },
-    embed: function (vi, params) {
-      "use strict";
-      return '//www.twitch.tv/' +
-        vi.channel +
-        '/embed' +
-        combineParams({
-          params: params
-        });
-    },
+Twitch.prototype.parseUrl = function (url, result) {
+  'use strict';
+  var match;
+  match = url.match(/twitch\.tv\/(\w+)(?:\/(.)\/(\d+))?/i);
+  result.channel = match ? match[1] : undefined;
+  if (match && match[2] && match[3]) {
+    result.idPrefix = match[2];
+    result.id = match[3];
   }
-});
+  return result;
+};
+
+Twitch.prototype.parseMediaType = function (result) {
+  'use strict';
+  return result.id ? 'video' : 'stream';
+};
+
+Twitch.prototype.parse = function (url, params) {
+  'use strict';
+  var _this = this;
+  var result = {};
+  result = _this.parseUrl(url, result);
+  result.channel = _this.parseChannel(result, params);
+  result.mediaType = _this.parseMediaType(result);
+  return result.channel ? result : undefined;
+};
+
+Twitch.prototype.createLongURL = function (vi, params) {
+  'use strict';
+  var url = '';
+  if (vi.mediaType === 'stream') {
+    url = 'https://twitch.tv/' + vi.channel;
+  } else if (vi.mediaType === 'video') {
+    url = 'https://twitch.tv/' + vi.channel + '/' + vi.idPrefix + '/' +
+      vi.id;
+  }
+  url += combineParams({
+    params: params
+  });
+
+  return url;
+};
+
+Twitch.prototype.createEmbedURL = function (vi, params) {
+  'use strict';
+  return '//www.twitch.tv/' +
+    vi.channel +
+    '/embed' +
+    combineParams({
+      params: params
+    });
+};
+
+urlParser.bind(new Twitch());

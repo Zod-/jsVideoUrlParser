@@ -1,7 +1,7 @@
 /*jshint unused:false */
 function assertUrlTest(assert, tests) {
   /*jshint unused:true */
-  "use strict";
+  'use strict';
   tests.forEach(function (test) {
     test.urls.forEach(function (url) {
       assert.deepEqual(urlParser.parse(url), test.videoInfo, url);
