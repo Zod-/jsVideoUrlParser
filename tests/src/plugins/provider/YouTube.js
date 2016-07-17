@@ -216,3 +216,21 @@ QUnit.test('Image YouTube URLs', function (assert) {
 
   assertUrlTest(assert, tests);
 });
+
+QUnit.test('Share YouTube URLs', function (assert) {
+  'use strict';
+  var vi = {
+    provider: 'youtube',
+    id: 'E14kBrDEvYo',
+    mediaType: 'share'
+  };
+  var tests = [{
+    videoInfo: cloneObject(vi),
+    formats: {
+      share: 'https://www.youtube.com/shared?ci=E14kBrDEvYo'
+    },
+    urls: ['https://www.youtube.com/shared?ci=E14kBrDEvYo']
+  }];
+
+  assertUrlTest(assert, tests);
+});

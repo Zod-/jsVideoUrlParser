@@ -8,7 +8,8 @@ function YouTube() {
     long: this.createLongURL,
     embed: this.createEmbedURL,
     shortImage: this.createShortImageURL,
-    longImage: this.createLongImageURL
+    longImage: this.createLongImageURL,
+    share: this.createShareURL
   };
   this.imageQualities = {
     '0': '0',
@@ -27,7 +28,7 @@ function YouTube() {
 YouTube.prototype.parseUrl = function (url) {
   'use strict';
   var match = url.match(
-    /(?:(?:v|vi|be|videos|embed)\/(?!videoseries)|v=)([\w\-]{11})/i
+    /(?:(?:v|vi|be|videos|embed)\/(?!videoseries)|(?:v|ci)=)([\w\-]{11})/i
   );
   return match ? match[1] : undefined;
 };
@@ -60,12 +61,15 @@ YouTube.prototype.parseMediaType = function (result) {
   if (result.params.list) {
     result.list = result.params.list;
   }
-  if (result.id) {
+  if (result.id && !result.params.ci) {
     result.mediaType = 'video';
   } else if (result.params.list) {
     delete result.id;
     result.mediaType = 'playlist';
-  } else {
+  } else if (result.params.ci){
+    delete result.params.ci;
+    result.mediaType = 'share';
+  }else {
     return undefined;
   }
   return result;
@@ -153,6 +157,16 @@ YouTube.prototype.createShortImageURL = function (vi, params) {
 YouTube.prototype.createLongImageURL = function (vi, params) {
   'use strict';
   return this.createImageURL('https://img.youtube.com/vi/', vi, params);
+};
+
+YouTube.prototype.createShareURL = function (vi, params) {
+  'use strict';
+  var url = 'https://www.youtube.com/shared';
+  params.ci = vi.id;
+  url += combineParams({
+    params: params
+  });
+  return url;
 };
 
 urlParser.bind(new YouTube());
