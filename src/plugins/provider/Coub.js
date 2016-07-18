@@ -1,41 +1,52 @@
-urlParser.bind({
-  provider: 'coub',
-  parse: function (url, params) {
-    'use strict';
-    var match;
-    var result = {
-      mediaType: 'video',
-      params: params
-    };
+function Coub() {
+  'use strict';
+  this.provider = 'coub';
+  this.defaultFormat = 'long';
+  this.formats = {
+    long: this.createLongUrl,
+    embed: this.createEmbedUrl
+  };
+}
 
-    match = url.match(
-      /(?:embed|view)\/([a-zA-Z\d]+)/i
-    );
-    result.id = match ? match[1] : undefined;
+Coub.prototype.parseUrl = function (url) {
+  'use strict';
+  var match = url.match(
+    /(?:embed|view)\/([a-zA-Z\d]+)/i
+  );
+  return match ? match[1] : undefined;
+};
 
-    if (!result.id) {
-      return undefined;
-    }
-    
-    return result;
-  },
-  defaultFormat: 'long',
-  formats: {
-    long: function (vi, params) {
-      'use strict';
-      var url = 'https://coub.com/view/' + vi.id;
-      url += combineParams({
-        params: params
-      });
-      return url;
-    },
-    embed: function (vi, params) {
-      'use strict';
-      var url = '//coub.com/embed/' + vi.id;
-      url += combineParams({
-        params: params
-      });
-      return url;
-    }
+Coub.prototype.parse = function (url, params) {
+  'use strict';
+  var result = {
+    mediaType: 'video',
+    params: params,
+    id: this.parseUrl(url)
+  };
+  
+  if (!result.id) {
+    return undefined;
   }
-});
+  return result;
+};
+
+Coub.prototype.createUrl = function (baseUrl, vi, params) {
+  'use strict';
+  var url = baseUrl + vi.id;
+  url += combineParams({
+    params: params
+  });
+  return url;
+};
+
+Coub.prototype.createLongUrl = function (vi, params) {
+  'use strict';
+  return this.createUrl('https://coub.com/view/', vi, params);
+};
+
+Coub.prototype.createEmbedUrl = function (vi, params) {
+  'use strict';
+  return this.createUrl('//coub.com/embed/', vi, params);
+};
+
+urlParser.bind(new Coub());
