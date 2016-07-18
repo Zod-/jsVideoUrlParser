@@ -14,7 +14,8 @@
     "Dailymotion",
     "Twitch",
     "CanalPlus",
-    "Youku"
+    "Youku",
+    "Coub"
   ],
   "author": {
     "name": "Julian Hangstörfer",
@@ -34,10 +35,10 @@
   "scripts": {
     "test": "grunt test"
   },
-  "files" : [
-     "dist/",
-     "tests/",
-     "README.md",
-     "LICENSE"
+  "files": [
+    "dist/",
+    "tests/",
+    "README.md",
+    "LICENSE"
   ]
 }
