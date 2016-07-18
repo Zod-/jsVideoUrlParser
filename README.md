@@ -125,7 +125,7 @@ If you still want to reuse the generated parameters object you can use the keywo
 
 ####Supported url formats:
 * `'short'`: Shortened urls.
-* `'long'`: Regular urls.
+* `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
 * `'shortImage'`: Shortened thumbnail urls.
 * `'longImage'`: Regular thumbnail urls.
@@ -280,7 +280,7 @@ If you still want to reuse the generated parameters object you can use the keywo
 * `'video'`: Regular videos
 
 ####Supported url formats:
-* `'long'`: Regular urls.
+* `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
 
 ####Creating urls with different media types:
@@ -362,7 +362,7 @@ If you still want to reuse the generated parameters object you can use the keywo
   of urls don't contain the channel name so they are incompatible with eachother
 
 ####Supported url formats:
-* `'long'`: Regular urls.
+* `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
 
 ####Creating urls with different media types:
@@ -464,7 +464,7 @@ If you still want to reuse the generated parameters object you can use the keywo
 
 ####Supported url formats:
 * `'short'`: Shortened urls.
-* `'long'`: Regular urls.
+* `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
 
 ####Creating urls with different media types:
@@ -534,7 +534,7 @@ If you still want to reuse the generated parameters object you can use the keywo
 * `'video'`: Regular videos.
 
 ####Supported url formats:
-* `'long'`: Regular urls.
+* `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
 
 ####Creating urls with different media types:
@@ -572,7 +572,7 @@ If you still want to reuse the generated parameters object you can use the keywo
 * `'video'`: Regular videos.
 
 ####Supported url formats:
-* `'long'`: Regular urls.
+* `'long'`(default): Regular urls.
 * `'static'`: Video player that fills out the whole website.
 * `'embed'`: Embedded urls.
 * `'flash'`: Flash embedded urls.
@@ -616,7 +616,7 @@ If you still want to reuse the generated parameters object you can use the keywo
 * `'video'`: Regular videos.
 
 ####Supported url formats:
-* `'embed'`: Embedded urls.
+* `'embed'`(default): Embedded urls.
 
 ####Creating urls with different media types:
 
