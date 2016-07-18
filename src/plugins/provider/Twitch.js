@@ -27,20 +27,31 @@ Twitch.prototype.parseChannel = function (result, params) {
 };
 
 
-Twitch.prototype.parseUrl = function (url, result) {
+Twitch.prototype.parseUrl = function (url, result, params) {
   'use strict';
   var match;
-  match = url.match(/twitch\.tv\/(\w+)(?:\/(.)\/(\d+))?/i);
+  match = url.match(
+    /twitch\.tv\/(\w+)(?:\/(.)\/(\d+))?/i
+  );
   result.channel = match ? match[1] : undefined;
   if (match && match[2] && match[3]) {
     result.id = match[2] + match[3];
+  }else if (params.video){
+    result.id = params.video;
+    delete params.video;
   }
   return result;
 };
 
 Twitch.prototype.parseMediaType = function (result) {
   'use strict';
-  return result.id ? 'video' : 'stream';
+  var mediaType;
+  if (result.channel){
+    mediaType = result.id ? 'video' : 'stream';
+  }else if (result.id){
+    mediaType = 'embed-video';
+  }
+  return mediaType;
 };
 
 Twitch.prototype.parseParameters = function (params) {
@@ -56,11 +67,11 @@ Twitch.prototype.parse = function (url, params) {
   'use strict';
   var _this = this;
   var result = {};
-  result = _this.parseUrl(url, result);
+  result = _this.parseUrl(url, result, params);
   result.channel = _this.parseChannel(result, params);
   result.mediaType = _this.parseMediaType(result);
   result.params = _this.parseParameters(params);
-  return result.channel ? result : undefined;
+  return result.channel || result.id ? result : undefined;
 };
 
 Twitch.prototype.createLongUrl = function (vi, params) {
@@ -86,12 +97,24 @@ Twitch.prototype.createLongUrl = function (vi, params) {
 
 Twitch.prototype.createEmbedUrl = function (vi, params) {
   'use strict';
-  return '//www.twitch.tv/' +
-    vi.channel +
-    '/embed' +
-    combineParams({
-      params: params
-    });
+  var url = '';
+
+  if (vi.mediaType === 'stream'){
+    url = '//www.twitch.tv/' + vi.channel + '/embed';
+  }else if (vi.mediaType === 'video' || vi.mediaType === 'embed-video'){
+    url = 'https://player.twitch.tv/';
+    params.video = vi.id;
+    if (params.start) {
+      params.t = params.start + 's';
+      delete params.start;
+    }
+  }
+
+  url += combineParams({
+    params: params
+  });
+
+  return url;
 };
 
 urlParser.bind(new Twitch());
