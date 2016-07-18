@@ -1,7 +1,7 @@
 function Youku() {
   'use strict';
   this.provider = 'youku';
-  this.defaultFormat = 'embed';
+  this.defaultFormat = 'long';
   this.formats = {
     embed: this.createEmbedUrl,
     long: this.createLongUrl,
