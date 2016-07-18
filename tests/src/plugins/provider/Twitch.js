@@ -25,8 +25,7 @@ QUnit.test('Twitch Video Urls', function (assert) {
   'use strict';
   var vi = {
     provider: 'twitch',
-    id: '75292411',
-    idPrefix: 'v',
+    id: 'v75292411',
     channel: 'rains8',
     mediaType: 'video'
   };

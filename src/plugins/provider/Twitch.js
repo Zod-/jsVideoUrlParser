@@ -8,6 +8,14 @@ function Twitch() {
   };
 }
 
+Twitch.prototype.seperateId = function (id) {
+  'use strict';
+  return {
+    pre: id[0],
+    id: id.substr(1)
+  };
+};
+
 Twitch.prototype.parseChannel = function (result, params) {
   'use strict';
   /*jshint camelcase:false */
@@ -25,8 +33,7 @@ Twitch.prototype.parseUrl = function (url, result) {
   match = url.match(/twitch\.tv\/(\w+)(?:\/(.)\/(\d+))?/i);
   result.channel = match ? match[1] : undefined;
   if (match && match[2] && match[3]) {
-    result.idPrefix = match[2];
-    result.id = match[3];
+    result.id = match[2] + match[3];
   }
   return result;
 };
@@ -63,8 +70,8 @@ Twitch.prototype.createLongUrl = function (vi, params) {
   if (vi.mediaType === 'stream') {
     url = 'https://twitch.tv/' + vi.channel;
   } else if (vi.mediaType === 'video') {
-    url = 'https://twitch.tv/' + vi.channel + '/' + vi.idPrefix + '/' +
-      vi.id;
+    var sep = this.seperateId(vi.id);
+    url = 'https://twitch.tv/' + vi.channel + '/' + sep.pre + '/' + sep.id;
     if (params.start) {
       params.t = params.start + 's';
       delete params.start;

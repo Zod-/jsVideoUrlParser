@@ -272,8 +272,7 @@ Supports embedded, stream and video urls
 
 > urlParser.parse('http://www.twitch.tv/rains8/v/75292411');
 { mediaType: 'video',
-  id: '75292411',
-  idPrefix: 'v',
+  id: 'v75292411',
   channel: 'rains8',
   provider: 'twitch' }
 ```
