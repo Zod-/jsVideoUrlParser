@@ -85,7 +85,7 @@ Any url parameters expect for the id will be saved in the params object
 }
 ```
 
-##URL Creation
+##Url Creation
 
 The VideoInfo objects can be turned back into a `'short'`, `'long'`, `'embed'`, `'shortImage'`, `'longImage'` url where `'long'` is the default.
 Embedded links will be protocol relative. Image modes are for generating thumbnail

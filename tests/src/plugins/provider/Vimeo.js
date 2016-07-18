@@ -1,4 +1,4 @@
-QUnit.test('Vimeo URLs', function (assert) {
+QUnit.test('Vimeo Urls', function (assert) {
   'use strict';
   var vi = {
     'provider': 'vimeo',

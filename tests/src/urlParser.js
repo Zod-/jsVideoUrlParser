@@ -1,13 +1,13 @@
 QUnit.test('urlParser Tests', function (assert) {
   'use strict';
-  var parser = new URLParser();
+  var parser = new UrlParser();
 
   function Plugin() {
     this.provider = 'foo';
     this.alternatives = ['bar'];
     this.defaultFormat = 'long';
     this.formats = {
-      long: this.createLongURL
+      long: this.createLongUrl
     };
   }
 
@@ -17,7 +17,7 @@ QUnit.test('urlParser Tests', function (assert) {
     };
   };
 
-  Plugin.prototype.createLongURL = function (vi, params) {
+  Plugin.prototype.createLongUrl = function (vi, params) {
     return {
       videoInfo: vi,
       params: params

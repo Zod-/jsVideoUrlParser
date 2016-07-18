@@ -4,8 +4,8 @@ function Vimeo() {
   this.alternatives = ['vimeopro'];
   this.defaultFormat = 'long';
   this.formats = {
-    long: this.createLongURL,
-    embed: this.createEmbedURL
+    long: this.createLongUrl,
+    embed: this.createEmbedUrl
   };
 }
 
@@ -43,9 +43,9 @@ Vimeo.prototype.parse = function (url, params) {
   return result.id ? result : undefined;
 };
 
-Vimeo.prototype.createURL = function (baseURL, vi, params) {
+Vimeo.prototype.createUrl = function (baseUrl, vi, params) {
   'use strict';
-  var url = baseURL + vi.id;
+  var url = baseUrl + vi.id;
   var startTime = params.start;
   delete params.start;
 
@@ -59,14 +59,14 @@ Vimeo.prototype.createURL = function (baseURL, vi, params) {
   return url;
 };
 
-Vimeo.prototype.createLongURL = function (vi, params) {
+Vimeo.prototype.createLongUrl = function (vi, params) {
   'use strict';
-  return this.createURL('https://vimeo.com/', vi, params);
+  return this.createUrl('https://vimeo.com/', vi, params);
 };
 
-Vimeo.prototype.createEmbedURL = function (vi, params) {
+Vimeo.prototype.createEmbedUrl = function (vi, params) {
   'use strict';
-  return this.createURL('//player.vimeo.com/video/', vi, params);
+  return this.createUrl('//player.vimeo.com/video/', vi, params);
 };
 
 urlParser.bind(new Vimeo());

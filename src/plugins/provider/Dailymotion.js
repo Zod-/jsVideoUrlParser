@@ -4,9 +4,9 @@ function Dailymotion() {
   this.alternatives = ['dai'];
   this.defaultFormat = 'long';
   this.formats = {
-    short: this.createShortURL,
-    long: this.createLongURL,
-    embed: this.createEmbedURL
+    short: this.createShortUrl,
+    long: this.createLongUrl,
+    embed: this.createEmbedUrl
   };
 }
 
@@ -40,7 +40,7 @@ Dailymotion.prototype.parse = function (url, params) {
   return result.id ? result : undefined;
 };
 
-Dailymotion.prototype.createURL = function (base, vi, params) {
+Dailymotion.prototype.createUrl = function (base, vi, params) {
   'use strict';
   return base + vi.id +
     combineParams({
@@ -48,19 +48,19 @@ Dailymotion.prototype.createURL = function (base, vi, params) {
     });
 };
 
-Dailymotion.prototype.createShortURL = function (vi) {
+Dailymotion.prototype.createShortUrl = function (vi) {
   'use strict';
-  return this.createURL('https://dai.ly/', vi, {});
+  return this.createUrl('https://dai.ly/', vi, {});
 };
 
-Dailymotion.prototype.createLongURL = function (vi, params) {
+Dailymotion.prototype.createLongUrl = function (vi, params) {
   'use strict';
-  return this.createURL('https://dailymotion.com/video/', vi, params);
+  return this.createUrl('https://dailymotion.com/video/', vi, params);
 };
 
-Dailymotion.prototype.createEmbedURL = function (vi, params) {
+Dailymotion.prototype.createEmbedUrl = function (vi, params) {
   'use strict';
-  return this.createURL('//www.dailymotion.com/embed/video/', vi, params);
+  return this.createUrl('//www.dailymotion.com/embed/video/', vi, params);
 };
 
 urlParser.bind(new Dailymotion());

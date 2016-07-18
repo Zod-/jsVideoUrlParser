@@ -4,12 +4,12 @@ function YouTube() {
   this.alternatives = ['youtu', 'ytimg'];
   this.defaultFormat = 'long';
   this.formats = {
-    short: this.createShortURL,
-    long: this.createLongURL,
-    embed: this.createEmbedURL,
-    shortImage: this.createShortImageURL,
-    longImage: this.createLongImageURL,
-    share: this.createShareURL
+    short: this.createShortUrl,
+    long: this.createLongUrl,
+    embed: this.createEmbedUrl,
+    shortImage: this.createShortImageUrl,
+    longImage: this.createLongImageUrl,
+    share: this.createShareUrl
   };
   this.imageQualities = {
     '0': '0',
@@ -87,7 +87,7 @@ YouTube.prototype.parse = function (url, params) {
   return result;
 };
 
-YouTube.prototype.createShortURL = function (vi, params) {
+YouTube.prototype.createShortUrl = function (vi, params) {
   'use strict';
   var url = 'https://youtu.be/' + vi.id;
   if (params.start) {
@@ -96,7 +96,7 @@ YouTube.prototype.createShortURL = function (vi, params) {
   return url;
 };
 
-YouTube.prototype.createLongURL = function (vi, params) {
+YouTube.prototype.createLongUrl = function (vi, params) {
   'use strict';
   var url = '';
   var startTime = params.start;
@@ -120,7 +120,7 @@ YouTube.prototype.createLongURL = function (vi, params) {
   return url;
 };
 
-YouTube.prototype.createEmbedURL = function (vi, params) {
+YouTube.prototype.createEmbedUrl = function (vi, params) {
   'use strict';
   var url = '//youtube.com/embed';
 
@@ -141,25 +141,25 @@ YouTube.prototype.createEmbedURL = function (vi, params) {
   return url;
 };
 
-YouTube.prototype.createImageURL = function (baseURL, vi, params) {
+YouTube.prototype.createImageUrl = function (baseUrl, vi, params) {
   'use strict';
-  var url = baseURL + vi.id + '/';
+  var url = baseUrl + vi.id + '/';
   var quality = params.imageQuality || this.defaultImageQuality;
 
   return url + quality + '.jpg';
 };
 
-YouTube.prototype.createShortImageURL = function (vi, params) {
+YouTube.prototype.createShortImageUrl = function (vi, params) {
   'use strict';
-  return this.createImageURL('https://i.ytimg.com/vi/', vi, params);
+  return this.createImageUrl('https://i.ytimg.com/vi/', vi, params);
 };
 
-YouTube.prototype.createLongImageURL = function (vi, params) {
+YouTube.prototype.createLongImageUrl = function (vi, params) {
   'use strict';
-  return this.createImageURL('https://img.youtube.com/vi/', vi, params);
+  return this.createImageUrl('https://img.youtube.com/vi/', vi, params);
 };
 
-YouTube.prototype.createShareURL = function (vi, params) {
+YouTube.prototype.createShareUrl = function (vi, params) {
   'use strict';
   var url = 'https://www.youtube.com/shared';
   params.ci = vi.id;

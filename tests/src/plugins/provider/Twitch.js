@@ -1,4 +1,4 @@
-QUnit.test('Twitch Stream URLs', function (assert) {
+QUnit.test('Twitch Stream Urls', function (assert) {
   'use strict';
   var vi = {
     provider: 'twitch',
@@ -21,7 +21,7 @@ QUnit.test('Twitch Stream URLs', function (assert) {
   assertUrlTest(assert, tests);
 });
 
-QUnit.test('Twitch Video URLs', function (assert) {
+QUnit.test('Twitch Video Urls', function (assert) {
   'use strict';
   var vi = {
     provider: 'twitch',

@@ -1,5 +1,5 @@
 var vk1 = 'http://static.youku.com/v1.0.0638/v/swf/';
-QUnit.test('Youku URLs', function (assert) {
+QUnit.test('Youku Urls', function (assert) {
   'use strict';
   var vi = {
       'provider': 'youku',

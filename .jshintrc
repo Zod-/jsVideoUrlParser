@@ -5,7 +5,7 @@
     "assertUrlTest":  true,
     "QUnit":          true,
     "cloneObject":    true,
-    "URLParser":      true,
+    "UrlParser":      true,
     "getQueryParams": true,
     "combineParams":  true
   },

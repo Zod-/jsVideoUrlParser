@@ -3,8 +3,8 @@ function Twitch() {
   this.provider = 'twitch';
   this.defaultFormat = 'long';
   this.formats = {
-    long: this.createLongURL,
-    embed: this.createEmbedURL
+    long: this.createLongUrl,
+    embed: this.createEmbedUrl
   };
 }
 
@@ -56,7 +56,7 @@ Twitch.prototype.parse = function (url, params) {
   return result.channel ? result : undefined;
 };
 
-Twitch.prototype.createLongURL = function (vi, params) {
+Twitch.prototype.createLongUrl = function (vi, params) {
   'use strict';
   var url = '';
 
@@ -77,7 +77,7 @@ Twitch.prototype.createLongURL = function (vi, params) {
   return url;
 };
 
-Twitch.prototype.createEmbedURL = function (vi, params) {
+Twitch.prototype.createEmbedUrl = function (vi, params) {
   'use strict';
   return '//www.twitch.tv/' +
     vi.channel +

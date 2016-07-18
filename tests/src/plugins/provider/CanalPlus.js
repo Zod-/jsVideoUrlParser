@@ -1,4 +1,4 @@
-QUnit.test('CanalPlus URLs', function (assert) {
+QUnit.test('CanalPlus Urls', function (assert) {
   'use strict';
   var vi = {
       provider: 'canalplus',

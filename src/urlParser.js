@@ -1,9 +1,9 @@
-function URLParser() {
+function UrlParser() {
   'use strict';
   this.plugins = {};
 }
 
-URLParser.prototype.parseProvider = function (url) {
+UrlParser.prototype.parseProvider = function (url) {
   'use strict';
   var match = url.match(
     /(?:(?:https?:)?\/\/)?(?:[^\.]+\.)?(\w+)\./i
@@ -11,7 +11,7 @@ URLParser.prototype.parseProvider = function (url) {
   return match ? match[1] : undefined;
 };
 
-URLParser.prototype.removeEmptyParameters = function (result) {
+UrlParser.prototype.removeEmptyParameters = function (result) {
   'use strict';
   if (result.params && Object.keys(result.params).length === 0) {
     delete result.params;
@@ -19,7 +19,7 @@ URLParser.prototype.removeEmptyParameters = function (result) {
   return result;
 };
 
-URLParser.prototype.parse = function (url) {
+UrlParser.prototype.parse = function (url) {
   'use strict';
   var _this = this;
   var provider = _this.parseProvider(url);
@@ -38,7 +38,7 @@ URLParser.prototype.parse = function (url) {
   return result;
 };
 
-URLParser.prototype.bind = function (plugin) {
+UrlParser.prototype.bind = function (plugin) {
   'use strict';
   this.plugins[plugin.provider] = plugin;
   if (plugin.alternatives) {
@@ -48,7 +48,7 @@ URLParser.prototype.bind = function (plugin) {
   }
 };
 
-URLParser.prototype.create = function (op) {
+UrlParser.prototype.create = function (op) {
   'use strict';
   var vi = op.videoInfo;
   var params = op.params;
@@ -64,7 +64,7 @@ URLParser.prototype.create = function (op) {
   }
   return undefined;
 };
-var urlParser = new URLParser();
+var urlParser = new UrlParser();
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   module.exports = urlParser;

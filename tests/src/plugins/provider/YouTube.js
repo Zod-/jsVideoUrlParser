@@ -3,7 +3,7 @@ var yt2 = 'http://www.youtube.com';
 var yt3 = 'https://www.youtube.com';
 var yt4 = '//youtube.com/embed';
 var yt5 = 'https://img.youtube.com';
-QUnit.test('Regular YouTube URLs', function (assert) {
+QUnit.test('Regular YouTube Urls', function (assert) {
   'use strict';
   var vi = {
     provider: 'youtube',
@@ -54,7 +54,7 @@ QUnit.test('Regular YouTube URLs', function (assert) {
 
   assertUrlTest(assert, tests);
 });
-QUnit.test('Playlist YouTube URLs', function (assert) {
+QUnit.test('Playlist YouTube Urls', function (assert) {
   'use strict';
   var vi = {
     provider: 'youtube',
@@ -160,7 +160,7 @@ QUnit.test('Playlist YouTube URLs', function (assert) {
   assertUrlTest(assert, tests);
 });
 
-QUnit.test('Feed YouTube URLs', function (assert) {
+QUnit.test('Feed YouTube Urls', function (assert) {
   'use strict';
   var tests = [{
     videoInfo: {
@@ -182,7 +182,7 @@ QUnit.test('Feed YouTube URLs', function (assert) {
   assertUrlTest(assert, tests);
 });
 
-QUnit.test('Image YouTube URLs', function (assert) {
+QUnit.test('Image YouTube Urls', function (assert) {
   'use strict';
   var vi = {
     provider: 'youtube',
@@ -217,7 +217,7 @@ QUnit.test('Image YouTube URLs', function (assert) {
   assertUrlTest(assert, tests);
 });
 
-QUnit.test('Share YouTube URLs', function (assert) {
+QUnit.test('Share YouTube Urls', function (assert) {
   'use strict';
   var vi = {
     provider: 'youtube',

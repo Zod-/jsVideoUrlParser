@@ -3,7 +3,7 @@ function CanalPlus() {
   this.provider = 'canalplus';
   this.defaultFormat = 'embed';
   this.formats = {
-    embed: this.createEmbedURL
+    embed: this.createEmbedUrl
   };
 }
 
@@ -28,7 +28,7 @@ CanalPlus.prototype.parse = function (url, params) {
   return result;
 };
 
-CanalPlus.prototype.createEmbedURL = function (vi, params) {
+CanalPlus.prototype.createEmbedUrl = function (vi, params) {
   'use strict';
   var url = 'http://player.canalplus.fr/embed/';
   params.vid = vi.id;
