@@ -222,7 +222,7 @@ QUnit.test('Share YouTube Urls', function (assert) {
   var tests = [{
     videoInfo: cloneObject(vi),
     formats: {
-      share: 'https://www.youtube.com/shared?ci=E14kBrDEvYo'
+      long: 'https://www.youtube.com/shared?ci=E14kBrDEvYo'
     },
     urls: ['https://www.youtube.com/shared?ci=E14kBrDEvYo']
   }];

@@ -8,8 +8,7 @@ function YouTube() {
     long: this.createLongUrl,
     embed: this.createEmbedUrl,
     shortImage: this.createShortImageUrl,
-    longImage: this.createLongImageUrl,
-    share: this.createShareUrl
+    longImage: this.createLongImageUrl
   };
   this.imageQualities = {
     '0': '0',
@@ -111,9 +110,12 @@ YouTube.prototype.createLongUrl = function (vi, params) {
   if (vi.mediaType === this.mediaTypes.PLAYLIST) {
     params.feature = 'share';
     url += 'https://youtube.com/playlist';
-  } else {
+  } else if (vi.mediaType === this.mediaTypes.VIDEO) {
     params.v = vi.id;
     url += 'https://youtube.com/watch';
+  } else if (vi.mediaType === this.mediaTypes.SHARE) {
+    params.ci = vi.id;
+    url += 'https://www.youtube.com/shared';
   }
 
   if (vi.list){
@@ -171,16 +173,6 @@ YouTube.prototype.createShortImageUrl = function (vi, params) {
 YouTube.prototype.createLongImageUrl = function (vi, params) {
   'use strict';
   return this.createImageUrl('https://img.youtube.com/vi/', vi, params);
-};
-
-YouTube.prototype.createShareUrl = function (vi, params) {
-  'use strict';
-  var url = 'https://www.youtube.com/shared';
-  params.ci = vi.id;
-  url += combineParams({
-    params: params
-  });
-  return url;
 };
 
 urlParser.bind(new YouTube());
