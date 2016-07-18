@@ -15,7 +15,8 @@ module.exports = function (grunt) {
     '--vimeo': ['Vimeo.js'],
     '--twitch': ['Twitch.js'],
     '--canalplus': ['CanalPlus.js'],
-    '--youku': ['Youku.js']
+    '--youku': ['Youku.js'],
+    '--coub': ['Coub.js']
   };
   grunt.option.flags().forEach(function (flag) {
     flag = flag.toLowerCase();
