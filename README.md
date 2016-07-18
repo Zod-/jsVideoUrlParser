@@ -79,7 +79,6 @@ Any url parameters expect for the id will be saved in the params object
   mediaType: 'video',
   params: {
     start: 100,
-    list: 'PL46F0A159EC02DF82',
     index: '25'
   }
 }
@@ -192,20 +191,14 @@ Also supports the start time parameter and playlist urls.
 > urlParser.parse('http://www.youtube.com/playlist?list=PL46F0A159EC02DF82');
 { mediaType: 'playlist',
   list: 'PL46F0A159EC02DF82',
-  provider: 'youtube',
-  params: {
-    list: 'PL46F0A159EC02DF82'
-  }
+  provider: 'youtube'
 }
 
 > urlParser.parse('http://www.youtube.com/watch?v=yQaAGmHNn9s&list=PL46F0A159EC02DF82');
 { mediaType: 'video',
   id: 'yQaAGmHNn9s',
   list: 'PL46F0A159EC02DF82',
-  provider: 'youtube',
-  params: {
-    list: 'PL46F0A159EC02DF82'
-  }
+  provider: 'youtube'
 }
 
 > urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA#t=30s');
@@ -227,8 +220,7 @@ Also supports the start time parameter and playlist urls.
   list: 'PL46F0A159EC02DF82',
   provider: 'youtube'
   params: {
-    start: 100,
-    list: 'PL46F0A159EC02DF82',
+    start: 100
   }
 }
 ```

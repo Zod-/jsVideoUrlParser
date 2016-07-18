@@ -62,8 +62,7 @@ QUnit.test('Playlist YouTube Urls', function (assert) {
     list: 'PL46F0A159EC02DF82',
     mediaType: 'video',
     params: {
-      start: 100,
-      list: 'PL46F0A159EC02DF82',
+      start: 100
     }
   };
   var tests = [{
@@ -122,10 +121,7 @@ QUnit.test('Playlist YouTube Urls', function (assert) {
     videoInfo: {
       provider: 'youtube',
       list: 'PL46F0A159EC02DF82',
-      mediaType: 'playlist',
-      params: {
-        list: 'PL46F0A159EC02DF82'
-      }
+      mediaType: 'playlist'
     },
     formats: {
       long: yt1 + '/playlist?feature=share&list=PL46F0A159EC02DF82',
@@ -141,7 +137,6 @@ QUnit.test('Playlist YouTube Urls', function (assert) {
       list: 'PL46F0A159EC02DF82',
       mediaType: 'playlist',
       params: {
-        list: 'PL46F0A159EC02DF82',
         listType: 'playlist'
       }
     },
@@ -153,7 +148,7 @@ QUnit.test('Playlist YouTube Urls', function (assert) {
     ]
   }];
 
-  delete tests[1].videoInfo.params.start;
+  delete tests[1].videoInfo.params;
   delete tests[2].videoInfo.params.start;
   tests[2].videoInfo.params.index = tests[3].videoInfo.params.index = '25';
   tests[2].videoInfo.id = tests[3].videoInfo.id = '6xLcSTDeB7A';

@@ -60,10 +60,11 @@ YouTube.prototype.parseMediaType = function (result) {
   'use strict';
   if (result.params.list) {
     result.list = result.params.list;
+    delete result.params.list;
   }
   if (result.id && !result.params.ci) {
     result.mediaType = 'video';
-  } else if (result.params.list) {
+  } else if (result.list) {
     delete result.id;
     result.mediaType = 'playlist';
   } else if (result.params.ci){
@@ -110,6 +111,10 @@ YouTube.prototype.createLongUrl = function (vi, params) {
     url += 'https://youtube.com/watch';
   }
 
+  if (vi.list){
+    params.list = vi.list;
+  }
+
   url += combineParams({
     params: params
   });
@@ -132,6 +137,10 @@ YouTube.prototype.createEmbedUrl = function (vi, params) {
     if (params.loop === '1') {
       params.playlist = vi.id;
     }
+  }
+
+  if (vi.list){
+    params.list = vi.list;
   }
 
   url += combineParams({
