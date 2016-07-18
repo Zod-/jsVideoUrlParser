@@ -71,10 +71,10 @@ YouTube.prototype.parseMediaType = function (result) {
   } else if (result.list) {
     delete result.id;
     result.mediaType = this.mediaTypes.PLAYLIST;
-  } else if (result.params.ci){
+  } else if (result.params.ci) {
     delete result.params.ci;
     result.mediaType = this.mediaTypes.SHARE;
-  }else {
+  } else {
     return undefined;
   }
   return result;
@@ -118,7 +118,7 @@ YouTube.prototype.createLongUrl = function (vi, params) {
     url += 'https://www.youtube.com/shared';
   }
 
-  if (vi.list){
+  if (vi.list) {
     params.list = vi.list;
   }
 
@@ -146,7 +146,7 @@ YouTube.prototype.createEmbedUrl = function (vi, params) {
     }
   }
 
-  if (vi.list){
+  if (vi.list) {
     params.list = vi.list;
   }
 

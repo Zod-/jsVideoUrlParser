@@ -29,7 +29,7 @@ Youku.prototype.parseParameters = function (params) {
   return params;
 };
 
-Youku.prototype.parse = function(url, params) {
+Youku.prototype.parse = function (url, params) {
   'use strict';
   var _this = this;
   var result = {
@@ -44,7 +44,7 @@ Youku.prototype.parse = function(url, params) {
   return result;
 };
 
-Youku.prototype.createUrl = function(baseUrl, vi, params) {
+Youku.prototype.createUrl = function (baseUrl, vi, params) {
   'use strict';
   var url = baseUrl + vi.id;
 
@@ -55,17 +55,17 @@ Youku.prototype.createUrl = function(baseUrl, vi, params) {
 };
 
 
-Youku.prototype.createEmbedUrl = function(vi, params) {
+Youku.prototype.createEmbedUrl = function (vi, params) {
   'use strict';
   return this.createUrl('http://player.youku.com/embed/', vi, params);
 };
 
-Youku.prototype.createLongUrl = function(vi, params) {
+Youku.prototype.createLongUrl = function (vi, params) {
   'use strict';
   return this.createUrl('http://v.youku.com/v_show/id_', vi, params);
 };
 
-Youku.prototype.createStaticUrl = function(vi, params) {
+Youku.prototype.createStaticUrl = function (vi, params) {
   'use strict';
   return this.createUrl(
     'http://static.youku.com/v1.0.0638/v/swf/loader.swf?VideoIDS=',
@@ -73,7 +73,7 @@ Youku.prototype.createStaticUrl = function(vi, params) {
   );
 };
 
-Youku.prototype.createFlashUrl = function(vi, params) {
+Youku.prototype.createFlashUrl = function (vi, params) {
   'use strict';
   var url = 'http://player.youku.com/player.php/sid/' + vi.id + '/v.swf';
 

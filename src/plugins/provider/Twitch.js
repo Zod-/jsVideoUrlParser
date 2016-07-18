@@ -41,7 +41,7 @@ Twitch.prototype.parseUrl = function (url, result, params) {
   result.channel = match ? match[1] : undefined;
   if (match && match[2] && match[3]) {
     result.id = match[2] + match[3];
-  }else if (params.video){
+  } else if (params.video) {
     result.id = params.video;
     delete params.video;
   }
@@ -51,9 +51,9 @@ Twitch.prototype.parseUrl = function (url, result, params) {
 Twitch.prototype.parseMediaType = function (result) {
   'use strict';
   var mediaType;
-  if (result.channel){
+  if (result.channel) {
     mediaType = result.id ? this.mediaTypes.VIDEO : this.mediaTypes.STREAM;
-  }else if (result.id){
+  } else if (result.id) {
     mediaType = this.mediaTypes.EMBEDVIDEO;
   }
   return mediaType;
@@ -104,10 +104,10 @@ Twitch.prototype.createEmbedUrl = function (vi, params) {
   'use strict';
   var url = '';
 
-  if (vi.mediaType === this.mediaTypes.STREAM){
+  if (vi.mediaType === this.mediaTypes.STREAM) {
     url = '//www.twitch.tv/' + vi.channel + '/embed';
-  }else if (vi.mediaType === this.mediaTypes.VIDEO ||
-            vi.mediaType === this.mediaTypes.EMBEDVIDEO){
+  } else if (vi.mediaType === this.mediaTypes.VIDEO ||
+    vi.mediaType === this.mediaTypes.EMBEDVIDEO) {
     url = 'https://player.twitch.tv/';
     params.video = vi.id;
     if (params.start) {

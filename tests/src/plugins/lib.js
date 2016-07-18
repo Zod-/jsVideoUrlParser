@@ -84,12 +84,13 @@ QUnit.test('CombineParams Tests', function (assert) {
     }
   }), '?faz=baz&foo=bar', '{foo:\'bar\',faz:\'baz\'}');
   assert.equal(combineParams({
-    params: {
-      foo: 'bar',
-      faz: 'baz',
-      fiz: 'biz'
-    }
-  }), '?faz=baz&fiz=biz&foo=bar', '{foo: \'bar\',faz: \'baz\',fiz: \'biz\'}');
+      params: {
+        foo: 'bar',
+        faz: 'baz',
+        fiz: 'biz'
+      }
+    }), '?faz=baz&fiz=biz&foo=bar',
+    '{foo: \'bar\',faz: \'baz\',fiz: \'biz\'}');
 
   assert.equal(combineParams({
     hasParams: true,
@@ -105,11 +106,12 @@ QUnit.test('CombineParams Tests', function (assert) {
     }
   }), '&faz=baz&foo=bar', '{foo:\'bar\',faz:\'baz\'}');
   assert.equal(combineParams({
-    hasParams: true,
-    params: {
-      foo: 'bar',
-      faz: 'baz',
-      fiz: 'biz'
-    }
-  }), '&faz=baz&fiz=biz&foo=bar', '{foo: \'bar\',faz: \'baz\',fiz: \'biz\'}');
+      hasParams: true,
+      params: {
+        foo: 'bar',
+        faz: 'baz',
+        fiz: 'biz'
+      }
+    }), '&faz=baz&fiz=biz&foo=bar',
+    '{foo: \'bar\',faz: \'baz\',fiz: \'biz\'}');
 });

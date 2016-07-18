@@ -15,9 +15,9 @@ function Vimeo() {
 Vimeo.prototype.parseUrl = function (url) {
   'use strict';
   var match = url.match(
-  /*jshint ignore:start */
+    /*jshint ignore:start */
     /(?:\/(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+)\/)?videos?))?\/(\d+)/i
-  /*jshint ignore:end */
+    /*jshint ignore:end */
   );
   return match ? match[1] : undefined;
 };

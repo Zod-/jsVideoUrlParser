@@ -4,7 +4,7 @@ QUnit.test('CanalPlus Urls', function (assert) {
       provider: 'canalplus',
       id: '1365175',
       mediaType: 'video',
-      params:{
+      params: {
         param: 'cplus'
       }
     },
