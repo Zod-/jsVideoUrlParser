@@ -55,8 +55,7 @@ QUnit.test('Twitch Embed Video Urls', function (assert) {
   var vi = {
     provider: 'twitch',
     id: 'v75292411',
-    mediaType: 'embed-video',
-    channel: undefined
+    mediaType: 'embed-video'
   };
   var tests = [{
     videoInfo: cloneObject(vi),

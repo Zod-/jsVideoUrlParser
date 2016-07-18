@@ -55,6 +55,7 @@ Twitch.prototype.parseMediaType = function (result) {
     mediaType = result.id ? this.mediaTypes.VIDEO : this.mediaTypes.STREAM;
   } else if (result.id) {
     mediaType = this.mediaTypes.EMBEDVIDEO;
+    delete result.channel;
   }
   return mediaType;
 };
