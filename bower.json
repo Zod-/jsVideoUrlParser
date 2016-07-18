@@ -12,7 +12,10 @@
     "YouTube",
     "Vimeo",
     "Dailymotion",
-    "Twitch"
+    "Twitch",
+    "Canal+",
+    "CanalPlus",
+    "Youku"
   ],
   "license": "MIT",
   "ignore": [
