@@ -10,6 +10,7 @@ Currently supports
  - Dailymotion
  - Canal+
  - Youku
+ - Coub
 
 #grunt
 
