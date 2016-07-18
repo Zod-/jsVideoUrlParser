@@ -9,7 +9,7 @@ QUnit.test('Twitch Stream Urls', function (assert) {
     videoInfo: cloneObject(vi),
     formats: {
       long: 'https://twitch.tv/rains8',
-      embed: '//www.twitch.tv/rains8/embed'
+      embed: 'https://player.twitch.tv/?channel=rains8'
     },
     urls: ['http://www.twitch.tv/rains8',
       'http://www.twitch.tv/widgets/live_embed_player.swf\

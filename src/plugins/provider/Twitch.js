@@ -103,13 +103,12 @@ Twitch.prototype.createLongUrl = function (vi, params) {
 
 Twitch.prototype.createEmbedUrl = function (vi, params) {
   'use strict';
-  var url = '';
+  var url = 'https://player.twitch.tv/';
 
   if (vi.mediaType === this.mediaTypes.STREAM) {
-    url = '//www.twitch.tv/' + vi.channel + '/embed';
+    params.channel = vi.channel;
   } else if (vi.mediaType === this.mediaTypes.VIDEO ||
     vi.mediaType === this.mediaTypes.EMBEDVIDEO) {
-    url = 'https://player.twitch.tv/';
     params.video = vi.id;
     if (params.start) {
       params.t = params.start + 's';
