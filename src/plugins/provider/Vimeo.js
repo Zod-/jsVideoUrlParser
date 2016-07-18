@@ -7,6 +7,9 @@ function Vimeo() {
     long: this.createLongUrl,
     embed: this.createEmbedUrl
   };
+  this.mediaTypes = {
+    VIDEO: 'video'
+  };
 }
 
 Vimeo.prototype.parseUrl = function (url) {
@@ -36,7 +39,7 @@ Vimeo.prototype.parseTime = function (params) {
 Vimeo.prototype.parse = function (url, params) {
   'use strict';
   var result = {
-    mediaType: 'video',
+    mediaType: this.mediaTypes.VIDEO,
     params: this.parseParameters(params),
     id: this.parseUrl(url)
   };

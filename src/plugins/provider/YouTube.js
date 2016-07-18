@@ -23,6 +23,11 @@ function YouTube() {
     MAXRESDEFAULT: 'maxresdefault',
   };
   this.defaultImageQuality = this.imageQualities.HQDEFAULT;
+  this.mediaTypes = {
+    VIDEO: 'video',
+    PLAYLIST: 'playlist',
+    SHARE: 'share'
+  };
 }
 
 YouTube.prototype.parseUrl = function (url) {
@@ -63,13 +68,13 @@ YouTube.prototype.parseMediaType = function (result) {
     delete result.params.list;
   }
   if (result.id && !result.params.ci) {
-    result.mediaType = 'video';
+    result.mediaType = this.mediaTypes.VIDEO;
   } else if (result.list) {
     delete result.id;
-    result.mediaType = 'playlist';
+    result.mediaType = this.mediaTypes.PLAYLIST;
   } else if (result.params.ci){
     delete result.params.ci;
-    result.mediaType = 'share';
+    result.mediaType = this.mediaTypes.SHARE;
   }else {
     return undefined;
   }
@@ -103,7 +108,7 @@ YouTube.prototype.createLongUrl = function (vi, params) {
   var startTime = params.start;
   delete params.start;
 
-  if (vi.mediaType === 'playlist') {
+  if (vi.mediaType === this.mediaTypes.PLAYLIST) {
     params.feature = 'share';
     url += 'https://youtube.com/playlist';
   } else {
@@ -119,7 +124,7 @@ YouTube.prototype.createLongUrl = function (vi, params) {
     params: params
   });
 
-  if (vi.mediaType !== 'playlist' && startTime) {
+  if (vi.mediaType !== this.mediaTypes.PLAYLIST && startTime) {
     url += '#t=' + startTime;
   }
   return url;
@@ -129,7 +134,7 @@ YouTube.prototype.createEmbedUrl = function (vi, params) {
   'use strict';
   var url = '//youtube.com/embed';
 
-  if (vi.mediaType === 'playlist') {
+  if (vi.mediaType === this.mediaTypes.PLAYLIST) {
     params.listType = 'playlist';
   } else {
     url += '/' + vi.id;

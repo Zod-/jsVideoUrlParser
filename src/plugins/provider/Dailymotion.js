@@ -8,6 +8,9 @@ function Dailymotion() {
     long: this.createLongUrl,
     embed: this.createEmbedUrl
   };
+  this.mediaTypes = {
+    VIDEO: 'video'
+  };
 }
 
 Dailymotion.prototype.parseParameters = function (params) {
@@ -33,7 +36,7 @@ Dailymotion.prototype.parse = function (url, params) {
   'use strict';
   var _this = this;
   var result = {
-    mediaType: 'video',
+    mediaType: this.mediaTypes.VIDEO,
     params: _this.parseParameters(params),
     id: _this.parseUrl(url)
   };

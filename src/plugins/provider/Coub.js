@@ -6,6 +6,9 @@ function Coub() {
     long: this.createLongUrl,
     embed: this.createEmbedUrl
   };
+  this.mediaTypes = {
+    VIDEO: 'video'
+  };
 }
 
 Coub.prototype.parseUrl = function (url) {
@@ -19,11 +22,11 @@ Coub.prototype.parseUrl = function (url) {
 Coub.prototype.parse = function (url, params) {
   'use strict';
   var result = {
-    mediaType: 'video',
+    mediaType: this.mediaTypes.VIDEO,
     params: params,
     id: this.parseUrl(url)
   };
-  
+
   if (!result.id) {
     return undefined;
   }

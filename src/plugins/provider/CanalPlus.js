@@ -5,6 +5,9 @@ function CanalPlus() {
   this.formats = {
     embed: this.createEmbedUrl
   };
+  this.mediaTypes = {
+    VIDEO: 'video'
+  };
 }
 
 CanalPlus.prototype.parseParameters = function (params) {
@@ -17,7 +20,7 @@ CanalPlus.prototype.parse = function (url, params) {
   'use strict';
   var _this = this;
   var result = {
-    mediaType: 'video',
+    mediaType: this.mediaTypes.VIDEO,
     id: params.vid
   };
   result.params = _this.parseParameters(params);

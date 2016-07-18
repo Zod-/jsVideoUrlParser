@@ -8,6 +8,9 @@ function Youku() {
     flash: this.createFlashUrl,
     static: this.createStaticUrl
   };
+  this.mediaTypes = {
+    VIDEO: 'video'
+  };
 }
 
 Youku.prototype.parseUrl = function (url) {
@@ -30,7 +33,7 @@ Youku.prototype.parse = function(url, params) {
   'use strict';
   var _this = this;
   var result = {
-    mediaType: 'video',
+    mediaType: this.mediaTypes.VIDEO,
     id: _this.parseUrl(url),
     params: _this.parseParameters(params)
   };

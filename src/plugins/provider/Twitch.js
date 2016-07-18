@@ -6,6 +6,11 @@ function Twitch() {
     long: this.createLongUrl,
     embed: this.createEmbedUrl
   };
+  this.mediaTypes = {
+    VIDEO: 'video',
+    STREAM: 'stream',
+    EMBEDVIDEO: 'embed-video'
+  };
 }
 
 Twitch.prototype.seperateId = function (id) {
@@ -47,9 +52,9 @@ Twitch.prototype.parseMediaType = function (result) {
   'use strict';
   var mediaType;
   if (result.channel){
-    mediaType = result.id ? 'video' : 'stream';
+    mediaType = result.id ? this.mediaTypes.VIDEO : this.mediaTypes.STREAM;
   }else if (result.id){
-    mediaType = 'embed-video';
+    mediaType = this.mediaTypes.EMBEDVIDEO;
   }
   return mediaType;
 };
@@ -78,9 +83,9 @@ Twitch.prototype.createLongUrl = function (vi, params) {
   'use strict';
   var url = '';
 
-  if (vi.mediaType === 'stream') {
+  if (vi.mediaType === this.mediaTypes.STREAM) {
     url = 'https://twitch.tv/' + vi.channel;
-  } else if (vi.mediaType === 'video') {
+  } else if (vi.mediaType === this.mediaTypes.VIDEO) {
     var sep = this.seperateId(vi.id);
     url = 'https://twitch.tv/' + vi.channel + '/' + sep.pre + '/' + sep.id;
     if (params.start) {
@@ -99,9 +104,10 @@ Twitch.prototype.createEmbedUrl = function (vi, params) {
   'use strict';
   var url = '';
 
-  if (vi.mediaType === 'stream'){
+  if (vi.mediaType === this.mediaTypes.STREAM){
     url = '//www.twitch.tv/' + vi.channel + '/embed';
-  }else if (vi.mediaType === 'video' || vi.mediaType === 'embed-video'){
+  }else if (vi.mediaType === this.mediaTypes.VIDEO ||
+            vi.mediaType === this.mediaTypes.EMBEDVIDEO){
     url = 'https://player.twitch.tv/';
     params.video = vi.id;
     if (params.start) {
