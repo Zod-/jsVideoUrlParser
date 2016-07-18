@@ -9,7 +9,7 @@ urlParser.bind({
     };
 
     match = url.match(
-      /coub\.com\/view\/([a-zA-Z\d]+)/i
+      /(?:embed|view)\/([a-zA-Z\d]+)/i
     );
     result.id = match ? match[1] : undefined;
 
