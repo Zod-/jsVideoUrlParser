@@ -16,12 +16,7 @@ urlParser.bind({
     if (!result.id) {
       return undefined;
     }
-
-    if (params.hasOwnProperty('t')) {
-      params.start = getTime(params.t);
-      delete params.t;
-    }
-
+    
     return result;
   },
   defaultFormat: 'long',
@@ -29,27 +24,17 @@ urlParser.bind({
     long: function (vi, params) {
       'use strict';
       var url = 'https://coub.com/view/' + vi.id;
-      var startTime = params.start;
-      delete params.start;
       url += combineParams({
         params: params
       });
-      if (startTime) {
-        url += '#t=' + startTime;
-      }
       return url;
     },
     embed: function (vi, params) {
       'use strict';
       var url = '//coub.com/embed/' + vi.id;
-      var startTime = params.start;
-      delete params.start;
       url += combineParams({
         params: params
       });
-      if (startTime) {
-        url += '#t=' + startTime;
-      }
       return url;
     }
   }
