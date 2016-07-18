@@ -1,7 +1,7 @@
 urlParser.bind({
   provider: 'coub',
   parse: function (url, params) {
-    "use strict";
+    'use strict';
     var match;
     var result = {
       mediaType: 'video',
@@ -27,7 +27,7 @@ urlParser.bind({
   defaultFormat: 'long',
   formats: {
     long: function (vi, params) {
-      "use strict";
+      'use strict';
       var url = 'https://coub.com/view/' + vi.id;
       var startTime = params.start;
       delete params.start;
@@ -40,7 +40,7 @@ urlParser.bind({
       return url;
     },
     embed: function (vi, params) {
-      "use strict";
+      'use strict';
       var url = '//coub.com/embed/' + vi.id;
       var startTime = params.start;
       delete params.start;
