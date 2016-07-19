@@ -21,12 +21,11 @@ $ grunt test
 $ grunt dist
 
 #build and test specific plugins
-$ grunt --youtube=1 --vimeo=1
-$ grunt build --youtube=1 --vimeo=1
-$ grunt test --youtube=1 --vimeo=1
-$ grunt dist --youtube=1 --vimeo=1
+$ grunt --youtube --vimeo
+$ grunt build --youtube --vimeo
+$ grunt test --youtube --vimeo
+$ grunt dist --youtube --vimeo
 ```
-=1 since [gruntjs/grunt#908](https://github.com/gruntjs/grunt/issues/908)
 
 #bower
 ```shell
