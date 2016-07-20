@@ -113,6 +113,15 @@ If you still want to reuse the generated parameters object you can use the keywo
 'https://youtube.com/watch?foo=bar&v=HRb7B9fPhfA'
 ```
 
+##Adding a provider
+
+Add a new file in the `src/plugins/provider/` directory with the template found [here](src/plugins/provider/Template.js) and also add it in the [Gruntfile](https://github.com/Zod-/jsVideoUrlParser/blob/master/Gruntfile.js#L13).
+<br>
+Add some tests in `tests/src/plugins/provider/` with the template found
+[here](tests/src/plugins/provider/Template.js).
+
+Run `grunt build test --template` to create the parser and test your plugin.
+
 #Plugins
 
 ##YouTube

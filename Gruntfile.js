@@ -3,12 +3,13 @@ module.exports = function (grunt) {
 
   var srcDir = 'src/';
   var testDir = 'tests/';
+  var testSrcDir = testDir + srcDir;
   var providerDir = 'plugins/provider/';
   var outputFile = 'dist/jsVideoUrlParser.js';
   var minOutputFile = 'dist/jsVideoUrlParser.min.js';
   var testOutputFile = testDir + 'test.js';
   var src = [srcDir + 'urlParser.js', srcDir + 'plugins/*.js'];
-  var test = [testDir + 'src/*.js', testDir + 'src/plugins/*.js'];
+  var test = [testSrcDir + '*.js', testSrcDir + 'plugins/*.js'];
   var provider = {
     '--dailymotion': ['Dailymotion.js'],
     '--youtube': ['YouTube.js'],
@@ -16,19 +17,24 @@ module.exports = function (grunt) {
     '--twitch': ['Twitch.js'],
     '--canalplus': ['CanalPlus.js'],
     '--youku': ['Youku.js'],
-    '--coub': ['Coub.js']
+    '--coub': ['Coub.js'],
+    '--template': ['Template.js']
   };
   grunt.option.flags().forEach(function (flag) {
     flag = flag.toLowerCase();
     grunt.log.writeln(flag);
     if (provider.hasOwnProperty(flag)) {
       src.push(srcDir + providerDir + provider[flag]);
-      test.push(testDir + 'src/' + providerDir + provider[flag]);
+      test.push(testSrcDir + '' + providerDir + provider[flag]);
     }
   });
+  //add all files when no flags were found
   if (src.length === 2) {
     src.push(srcDir + providerDir + '*.js');
-    test.push(testDir + 'src/' + providerDir + '*.js');
+    test.push(testSrcDir + providerDir + '*.js');
+    //ignore template files
+    src.push('!' + srcDir + providerDir + 'Template.js');
+    test.push('!' + testSrcDir + providerDir + 'Template.js');
   }
 
   grunt.initConfig({
