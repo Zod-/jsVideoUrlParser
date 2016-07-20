@@ -37,13 +37,6 @@ YouTube.prototype.parseUrl = function (url) {
   return match ? match[1] : undefined;
 };
 
-YouTube.prototype.parseTime = function (params) {
-  'use strict';
-  params.start = getTime(params.start || params.t);
-  delete params.t;
-  return params;
-};
-
 YouTube.prototype.parseParameters = function (params, result) {
   'use strict';
   if (params.start || params.t) {
