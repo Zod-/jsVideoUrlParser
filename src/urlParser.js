@@ -65,7 +65,3 @@ UrlParser.prototype.create = function (op) {
   return undefined;
 };
 var urlParser = new UrlParser();
-
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-  module.exports = urlParser;
-}

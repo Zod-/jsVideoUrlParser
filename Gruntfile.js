@@ -8,8 +8,17 @@ module.exports = function (grunt) {
   var outputFile = 'dist/jsVideoUrlParser.js';
   var minOutputFile = 'dist/jsVideoUrlParser.min.js';
   var testOutputFile = testDir + 'test.js';
+  var header = srcDir + 'header.js';
+  var footer = srcDir + 'footer.js';
+  var dist = [header];
   var src = [srcDir + 'urlParser.js', srcDir + 'plugins/*.js'];
-  var test = [testSrcDir + '*.js', testSrcDir + 'plugins/*.js'];
+  var srcOldLength = src.length;
+  var test = [
+    testSrcDir + '*.js',
+    testSrcDir + 'plugins/*.js',
+    srcDir + 'plugins/*.js',
+    srcDir + 'urlParser.js'
+  ];
   var provider = {
     '--dailymotion': ['Dailymotion.js'],
     '--youtube': ['YouTube.js'],
@@ -20,6 +29,7 @@ module.exports = function (grunt) {
     '--coub': ['Coub.js'],
     '--template': ['Template.js']
   };
+
   grunt.option.flags().forEach(function (flag) {
     flag = flag.toLowerCase();
     if (provider.hasOwnProperty(flag)) {
@@ -27,8 +37,9 @@ module.exports = function (grunt) {
       test.push(testSrcDir + '' + providerDir + provider[flag]);
     }
   });
+
   //add all files when no flags were found
-  if (src.length === 2) {
+  if (src.length === srcOldLength) {
     src.push(srcDir + providerDir + '*.js');
     test.push(testSrcDir + providerDir + '*.js');
     //ignore template files
@@ -36,14 +47,21 @@ module.exports = function (grunt) {
     test.push('!' + testSrcDir + providerDir + 'Template.js');
   }
 
+  dist = dist.concat(src);
+  dist.push(footer);
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
       dist: {
-        src: src,
+        src: dist,
         dest: outputFile,
       },
       test: {
+        options: {
+          banner: '(function(){\n\'use strict\';\n',
+          footer: '\n})();'
+        },
         src: test,
         dest: testOutputFile,
       }
@@ -58,7 +76,6 @@ module.exports = function (grunt) {
       options: {
         jshintrc: '.jshintrc',
       },
-      beforeconcat: src.concat(test),
       afterconcat: [outputFile, testOutputFile],
       other: ['Gruntfile.js']
     },
