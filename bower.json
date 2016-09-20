@@ -2,6 +2,7 @@
   "name": "jsVideoUrlParser",
   "version": "0.2.0",
   "homepage": "https://github.com/Zod-/jsVideoUrlParser",
+  "main": "./dist/jsVideoUrlParser.min.js",
   "authors": [{
     "name": "Julian Hangstörfer",
     "email": "jhangstoerfer@gmail.com"
