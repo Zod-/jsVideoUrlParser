@@ -1,5 +1,4 @@
 function YouTube() {
-  'use strict';
   this.provider = 'youtube';
   this.alternatives = ['youtu', 'ytimg'];
   this.defaultFormat = 'long';
@@ -30,7 +29,6 @@ function YouTube() {
 }
 
 YouTube.prototype.parseUrl = function (url) {
-  'use strict';
   var match = url.match(
     /(?:(?:v|vi|be|videos|embed)\/(?!videoseries)|(?:v|ci)=)([\w\-]{11})/i
   );
@@ -38,7 +36,6 @@ YouTube.prototype.parseUrl = function (url) {
 };
 
 YouTube.prototype.parseParameters = function (params, result) {
-  'use strict';
   if (params.start || params.t) {
     params.start = getTime(params.start || params.t);
     delete params.t;
@@ -54,7 +51,6 @@ YouTube.prototype.parseParameters = function (params, result) {
 };
 
 YouTube.prototype.parseMediaType = function (result) {
-  'use strict';
   if (result.params.list) {
     result.list = result.params.list;
     delete result.params.list;
@@ -74,7 +70,6 @@ YouTube.prototype.parseMediaType = function (result) {
 };
 
 YouTube.prototype.parse = function (url, params) {
-  'use strict';
   var _this = this;
   var result = {
     params: params,
@@ -86,7 +81,6 @@ YouTube.prototype.parse = function (url, params) {
 };
 
 YouTube.prototype.createShortUrl = function (vi, params) {
-  'use strict';
   var url = 'https://youtu.be/' + vi.id;
   if (params.start) {
     url += '#t=' + params.start;
@@ -95,7 +89,6 @@ YouTube.prototype.createShortUrl = function (vi, params) {
 };
 
 YouTube.prototype.createLongUrl = function (vi, params) {
-  'use strict';
   var url = '';
   var startTime = params.start;
   delete params.start;
@@ -126,7 +119,6 @@ YouTube.prototype.createLongUrl = function (vi, params) {
 };
 
 YouTube.prototype.createEmbedUrl = function (vi, params) {
-  'use strict';
   var url = '//youtube.com/embed';
 
   if (vi.mediaType === this.mediaTypes.PLAYLIST) {
@@ -151,7 +143,6 @@ YouTube.prototype.createEmbedUrl = function (vi, params) {
 };
 
 YouTube.prototype.createImageUrl = function (baseUrl, vi, params) {
-  'use strict';
   var url = baseUrl + vi.id + '/';
   var quality = params.imageQuality || this.defaultImageQuality;
 
@@ -159,12 +150,10 @@ YouTube.prototype.createImageUrl = function (baseUrl, vi, params) {
 };
 
 YouTube.prototype.createShortImageUrl = function (vi, params) {
-  'use strict';
   return this.createImageUrl('https://i.ytimg.com/vi/', vi, params);
 };
 
 YouTube.prototype.createLongImageUrl = function (vi, params) {
-  'use strict';
   return this.createImageUrl('https://img.youtube.com/vi/', vi, params);
 };
 

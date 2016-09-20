@@ -1,5 +1,4 @@
 QUnit.test('TimeString Parser', function (assert) {
-  'use strict';
   var s = 1,
     m = 60 * s,
     h = 60 * m,
@@ -34,7 +33,6 @@ QUnit.test('TimeString Parser', function (assert) {
 });
 
 QUnit.test('GetQueryParams Tests', function (assert) {
-  'use strict';
   assert.deepEqual(getQueryParams(undefined), {}, 'Undefined argument');
   assert.deepEqual(getQueryParams([]), {}, 'Not a string argument');
   assert.deepEqual(getQueryParams('http://foo.bar/test'), {}, 'No params');
@@ -68,7 +66,6 @@ QUnit.test('GetQueryParams Tests', function (assert) {
 });
 
 QUnit.test('CombineParams Tests', function (assert) {
-  'use strict';
   assert.equal(combineParams(undefined), '', 'Undefined argument');
   assert.equal(combineParams({}), '', 'No params object');
 

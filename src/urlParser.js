@@ -1,10 +1,8 @@
 function UrlParser() {
-  'use strict';
   this.plugins = {};
 }
 
 UrlParser.prototype.parseProvider = function (url) {
-  'use strict';
   var match = url.match(
     /(?:(?:https?:)?\/\/)?(?:[^\.]+\.)?(\w+)\./i
   );
@@ -12,7 +10,6 @@ UrlParser.prototype.parseProvider = function (url) {
 };
 
 UrlParser.prototype.removeEmptyParameters = function (result) {
-  'use strict';
   if (result.params && Object.keys(result.params).length === 0) {
     delete result.params;
   }
@@ -20,7 +17,6 @@ UrlParser.prototype.removeEmptyParameters = function (result) {
 };
 
 UrlParser.prototype.parse = function (url) {
-  'use strict';
   var _this = this;
   var provider = _this.parseProvider(url);
   var result;
@@ -39,7 +35,6 @@ UrlParser.prototype.parse = function (url) {
 };
 
 UrlParser.prototype.bind = function (plugin) {
-  'use strict';
   this.plugins[plugin.provider] = plugin;
   if (plugin.alternatives) {
     for (var i = 0; i < plugin.alternatives.length; i += 1) {
@@ -49,7 +44,6 @@ UrlParser.prototype.bind = function (plugin) {
 };
 
 UrlParser.prototype.create = function (op) {
-  'use strict';
   var vi = op.videoInfo;
   var params = op.params;
   var plugin = this.plugins[vi.provider];

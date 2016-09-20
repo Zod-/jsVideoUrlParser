@@ -1,5 +1,4 @@
 QUnit.test('Coub Urls', function (assert) {
-  'use strict';
   var vi = {
     'provider': 'coub',
     'id': 'by7sm',

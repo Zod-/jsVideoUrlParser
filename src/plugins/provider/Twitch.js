@@ -1,5 +1,4 @@
 function Twitch() {
-  'use strict';
   this.provider = 'twitch';
   this.defaultFormat = 'long';
   this.formats = {
@@ -14,7 +13,6 @@ function Twitch() {
 }
 
 Twitch.prototype.seperateId = function (id) {
-  'use strict';
   return {
     pre: id[0],
     id: id.substr(1)
@@ -22,7 +20,6 @@ Twitch.prototype.seperateId = function (id) {
 };
 
 Twitch.prototype.parseChannel = function (result, params) {
-  'use strict';
   /*jshint camelcase:false */
   var channel = params.channel || params.utm_content || result.channel;
   delete params.utm_content;
@@ -33,7 +30,6 @@ Twitch.prototype.parseChannel = function (result, params) {
 
 
 Twitch.prototype.parseUrl = function (url, result, params) {
-  'use strict';
   var match;
   match = url.match(
     /twitch\.tv\/(\w+)(?:\/(.)\/(\d+))?/i
@@ -49,7 +45,6 @@ Twitch.prototype.parseUrl = function (url, result, params) {
 };
 
 Twitch.prototype.parseMediaType = function (result) {
-  'use strict';
   var mediaType;
   if (result.channel) {
     mediaType = result.id ? this.mediaTypes.VIDEO : this.mediaTypes.STREAM;
@@ -61,7 +56,6 @@ Twitch.prototype.parseMediaType = function (result) {
 };
 
 Twitch.prototype.parseParameters = function (params) {
-  'use strict';
   if (params.t) {
     params.start = getTime(params.t);
     delete params.t;
@@ -70,7 +64,6 @@ Twitch.prototype.parseParameters = function (params) {
 };
 
 Twitch.prototype.parse = function (url, params) {
-  'use strict';
   var _this = this;
   var result = {};
   result = _this.parseUrl(url, result, params);
@@ -81,7 +74,6 @@ Twitch.prototype.parse = function (url, params) {
 };
 
 Twitch.prototype.createLongUrl = function (vi, params) {
-  'use strict';
   var url = '';
 
   if (vi.mediaType === this.mediaTypes.STREAM) {
@@ -102,7 +94,6 @@ Twitch.prototype.createLongUrl = function (vi, params) {
 };
 
 Twitch.prototype.createEmbedUrl = function (vi, params) {
-  'use strict';
   var url = 'https://player.twitch.tv/';
 
   if (vi.mediaType === this.mediaTypes.STREAM) {

@@ -1,7 +1,6 @@
 /*jshint unused:false */
 function cloneObject(obj) {
   /*jshint unused:true */
-  'use strict';
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }
@@ -19,7 +18,6 @@ function cloneObject(obj) {
 /*jshint unused:false */
 function getQueryParams(qs) {
   /*jshint unused:true */
-  'use strict';
   if (typeof qs !== 'string') {
     return {};
   }
@@ -50,7 +48,6 @@ function getQueryParams(qs) {
 /*jshint unused:false */
 function combineParams(op) {
   /*jshint unused:true */
-  'use strict';
   if (typeof op !== 'object') {
     return '';
   }
@@ -81,7 +78,6 @@ function combineParams(op) {
 /*jshint unused:false */
 function getTime(timeString) {
   /*jshint unused:true */
-  'use strict';
   var totalSeconds = 0;
   var timeValues = {
     's': 1,

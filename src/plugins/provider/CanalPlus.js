@@ -1,5 +1,4 @@
 function CanalPlus() {
-  'use strict';
   this.provider = 'canalplus';
   this.defaultFormat = 'embed';
   this.formats = {
@@ -11,13 +10,11 @@ function CanalPlus() {
 }
 
 CanalPlus.prototype.parseParameters = function (params) {
-  'use strict';
   delete params.vid;
   return params;
 };
 
 CanalPlus.prototype.parse = function (url, params) {
-  'use strict';
   var _this = this;
   var result = {
     mediaType: this.mediaTypes.VIDEO,
@@ -32,7 +29,6 @@ CanalPlus.prototype.parse = function (url, params) {
 };
 
 CanalPlus.prototype.createEmbedUrl = function (vi, params) {
-  'use strict';
   var url = 'http://player.canalplus.fr/embed/';
   params.vid = vi.id;
 

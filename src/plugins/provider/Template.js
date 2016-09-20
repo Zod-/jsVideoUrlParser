@@ -1,5 +1,4 @@
 function Template() {
-  'use strict';
   //Main urls that the provider users
   this.provider = 'template';
   //Alternatives such as shortened versions e.g. youtube.com, youtu.be
@@ -16,7 +15,6 @@ function Template() {
 }
 
 Template.prototype.parse = function (url, params) {
-  'use strict';
   //Set up the videoInfo object with relevant information
   var result = {
     params: params,
@@ -43,7 +41,6 @@ Template.prototype.parse = function (url, params) {
 };
 
 Template.prototype.createLongUrl = function (vi, params) {
-  'use strict';
   var url = '';
 
   //Create the url depending on the media type
@@ -61,7 +58,6 @@ Template.prototype.createLongUrl = function (vi, params) {
 };
 
 Template.prototype.createShortUrl = function (vi, params) {
-  'use strict';
   var url = '';
 
   //Create shortened urls

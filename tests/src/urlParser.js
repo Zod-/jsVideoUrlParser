@@ -1,5 +1,4 @@
 QUnit.test('urlParser Tests', function (assert) {
-  'use strict';
   var parser = new UrlParser();
 
   function Plugin() {

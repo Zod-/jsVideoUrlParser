@@ -1,5 +1,4 @@
 function Coub() {
-  'use strict';
   this.provider = 'coub';
   this.defaultFormat = 'long';
   this.formats = {
@@ -12,7 +11,6 @@ function Coub() {
 }
 
 Coub.prototype.parseUrl = function (url) {
-  'use strict';
   var match = url.match(
     /(?:embed|view)\/([a-zA-Z\d]+)/i
   );
@@ -20,7 +18,6 @@ Coub.prototype.parseUrl = function (url) {
 };
 
 Coub.prototype.parse = function (url, params) {
-  'use strict';
   var result = {
     mediaType: this.mediaTypes.VIDEO,
     params: params,
@@ -34,7 +31,6 @@ Coub.prototype.parse = function (url, params) {
 };
 
 Coub.prototype.createUrl = function (baseUrl, vi, params) {
-  'use strict';
   var url = baseUrl + vi.id;
   url += combineParams({
     params: params
@@ -43,12 +39,10 @@ Coub.prototype.createUrl = function (baseUrl, vi, params) {
 };
 
 Coub.prototype.createLongUrl = function (vi, params) {
-  'use strict';
   return this.createUrl('https://coub.com/view/', vi, params);
 };
 
 Coub.prototype.createEmbedUrl = function (vi, params) {
-  'use strict';
   return this.createUrl('//coub.com/embed/', vi, params);
 };
 
