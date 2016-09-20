@@ -11,13 +11,13 @@ module.exports = function (grunt) {
   var header = srcDir + 'header.js';
   var footer = srcDir + 'footer.js';
   var dist = [header];
-  var src = [srcDir + 'urlParser.js', srcDir + 'plugins/*.js'];
+  var src = [srcDir + 'plugins/*.js', srcDir + 'urlParser.js'];
   var srcOldLength = src.length;
   var test = [
-    testSrcDir + '*.js',
-    testSrcDir + 'plugins/*.js',
     srcDir + 'plugins/*.js',
-    srcDir + 'urlParser.js'
+    srcDir + 'urlParser.js',
+    testSrcDir + '*.js',
+    testSrcDir + 'plugins/*.js'
   ];
   var provider = {
     '--dailymotion': ['Dailymotion.js'],
