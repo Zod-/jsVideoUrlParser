@@ -22,7 +22,6 @@ module.exports = function (grunt) {
   };
   grunt.option.flags().forEach(function (flag) {
     flag = flag.toLowerCase();
-    grunt.log.writeln(flag);
     if (provider.hasOwnProperty(flag)) {
       src.push(srcDir + providerDir + provider[flag]);
       test.push(testSrcDir + '' + providerDir + provider[flag]);
