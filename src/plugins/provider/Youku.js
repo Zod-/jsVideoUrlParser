@@ -1,5 +1,4 @@
 function Youku() {
-  'use strict';
   this.provider = 'youku';
   this.defaultFormat = 'long';
   this.formats = {
@@ -14,7 +13,6 @@ function Youku() {
 }
 
 Youku.prototype.parseUrl = function (url) {
-  'use strict';
   var match = url.match(
     /(?:(?:embed|sid)\/|v_show\/id_|VideoIDS=)([a-zA-Z0-9]+)/
   );
@@ -22,7 +20,6 @@ Youku.prototype.parseUrl = function (url) {
 };
 
 Youku.prototype.parseParameters = function (params) {
-  'use strict';
   if (params.VideoIDS) {
     delete params.VideoIDS;
   }
@@ -30,7 +27,6 @@ Youku.prototype.parseParameters = function (params) {
 };
 
 Youku.prototype.parse = function (url, params) {
-  'use strict';
   var _this = this;
   var result = {
     mediaType: this.mediaTypes.VIDEO,
@@ -45,7 +41,6 @@ Youku.prototype.parse = function (url, params) {
 };
 
 Youku.prototype.createUrl = function (baseUrl, vi, params) {
-  'use strict';
   var url = baseUrl + vi.id;
 
   url += combineParams({
@@ -56,17 +51,14 @@ Youku.prototype.createUrl = function (baseUrl, vi, params) {
 
 
 Youku.prototype.createEmbedUrl = function (vi, params) {
-  'use strict';
   return this.createUrl('http://player.youku.com/embed/', vi, params);
 };
 
 Youku.prototype.createLongUrl = function (vi, params) {
-  'use strict';
   return this.createUrl('http://v.youku.com/v_show/id_', vi, params);
 };
 
 Youku.prototype.createStaticUrl = function (vi, params) {
-  'use strict';
   return this.createUrl(
     'http://static.youku.com/v1.0.0638/v/swf/loader.swf?VideoIDS=',
     vi, params
@@ -74,7 +66,6 @@ Youku.prototype.createStaticUrl = function (vi, params) {
 };
 
 Youku.prototype.createFlashUrl = function (vi, params) {
-  'use strict';
   var url = 'http://player.youku.com/player.php/sid/' + vi.id + '/v.swf';
 
   url += combineParams({

@@ -1,5 +1,4 @@
 function Vimeo() {
-  'use strict';
   this.provider = 'vimeo';
   this.alternatives = ['vimeopro'];
   this.defaultFormat = 'long';
@@ -13,7 +12,6 @@ function Vimeo() {
 }
 
 Vimeo.prototype.parseUrl = function (url) {
-  'use strict';
   var match = url.match(
     /*jshint ignore:start */
     /(?:\/(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+)\/)?videos?))?\/(\d+)/i
@@ -23,12 +21,10 @@ Vimeo.prototype.parseUrl = function (url) {
 };
 
 Vimeo.prototype.parseParameters = function (params) {
-  'use strict';
   return this.parseTime(params);
 };
 
 Vimeo.prototype.parseTime = function (params) {
-  'use strict';
   if (params.t) {
     params.start = getTime(params.t);
     delete params.t;
@@ -37,7 +33,6 @@ Vimeo.prototype.parseTime = function (params) {
 };
 
 Vimeo.prototype.parse = function (url, params) {
-  'use strict';
   var result = {
     mediaType: this.mediaTypes.VIDEO,
     params: this.parseParameters(params),
@@ -47,7 +42,6 @@ Vimeo.prototype.parse = function (url, params) {
 };
 
 Vimeo.prototype.createUrl = function (baseUrl, vi, params) {
-  'use strict';
   var url = baseUrl + vi.id;
   var startTime = params.start;
   delete params.start;
@@ -63,12 +57,10 @@ Vimeo.prototype.createUrl = function (baseUrl, vi, params) {
 };
 
 Vimeo.prototype.createLongUrl = function (vi, params) {
-  'use strict';
   return this.createUrl('https://vimeo.com/', vi, params);
 };
 
 Vimeo.prototype.createEmbedUrl = function (vi, params) {
-  'use strict';
   return this.createUrl('//player.vimeo.com/video/', vi, params);
 };
 

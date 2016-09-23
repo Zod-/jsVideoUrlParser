@@ -1,5 +1,4 @@
 QUnit.test('urlParser Tests', function (assert) {
-  'use strict';
   var parser = new UrlParser();
 
   function Plugin() {
@@ -81,9 +80,9 @@ QUnit.test('urlParser Tests', function (assert) {
   assert.strictEqual(parser.parse('http://abc.com'), undefined, 'No .parse');
   assert.strictEqual(parser.create(createObj3), undefined, 'No .create');
 
-  for (var plugin in urlParser.plugins) {
-    if (urlParser.plugins.hasOwnProperty(plugin)) {
-      assert.notStrictEqual(urlParser.plugins[plugin].defaultFormat,
+  for (var plugin in window.urlParser.plugins) {
+    if (window.urlParser.plugins.hasOwnProperty(plugin)) {
+      assert.notStrictEqual(window.urlParser.plugins[plugin].defaultFormat,
         undefined, 'Defaultformat not undefined ' + plugin);
     }
   }

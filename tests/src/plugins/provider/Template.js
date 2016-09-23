@@ -1,5 +1,4 @@
 QUnit.test('Template Urls', function (assert) {
-  'use strict';
   //Parse urls to test against the videoInfo object
   //Create urls with the videoInfo objects to test against the format urls
   var vi = {

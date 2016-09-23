@@ -4,7 +4,6 @@ var yt3 = 'https://www.youtube.com';
 var yt4 = '//youtube.com/embed';
 var yt5 = 'https://img.youtube.com';
 QUnit.test('Regular YouTube Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'youtube',
     id: 'HRb7B9fPhfA',
@@ -55,7 +54,6 @@ QUnit.test('Regular YouTube Urls', function (assert) {
   assertUrlTest(assert, tests);
 });
 QUnit.test('Playlist YouTube Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'youtube',
     id: 'yQaAGmHNn9s',
@@ -156,7 +154,6 @@ QUnit.test('Playlist YouTube Urls', function (assert) {
 });
 
 QUnit.test('Feed YouTube Urls', function (assert) {
-  'use strict';
   var tests = [{
     videoInfo: {
       'provider': 'youtube',
@@ -178,7 +175,6 @@ QUnit.test('Feed YouTube Urls', function (assert) {
 });
 
 QUnit.test('Image YouTube Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'youtube',
     id: 'HRb7B9fPhfA',
@@ -213,7 +209,6 @@ QUnit.test('Image YouTube Urls', function (assert) {
 });
 
 QUnit.test('Share YouTube Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'youtube',
     id: 'E14kBrDEvYo',

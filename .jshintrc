@@ -10,6 +10,7 @@
     "combineParams":  true
   },
   "qunit":       true,
+  "browser":     true,
   "boss":        true,
   "node":        true,
   "onecase":     true,

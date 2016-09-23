@@ -1,5 +1,4 @@
 QUnit.test('Dailymotion Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'dailymotion',
     id: 'x1e2b95',

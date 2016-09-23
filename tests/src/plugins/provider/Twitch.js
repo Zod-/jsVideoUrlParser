@@ -1,5 +1,4 @@
 QUnit.test('Twitch Stream Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'twitch',
     channel: 'rains8',
@@ -22,7 +21,6 @@ QUnit.test('Twitch Stream Urls', function (assert) {
 });
 
 QUnit.test('Twitch Video Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'twitch',
     id: 'v75292411',
@@ -51,7 +49,6 @@ QUnit.test('Twitch Video Urls', function (assert) {
 });
 
 QUnit.test('Twitch Embed Video Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'twitch',
     id: 'v75292411',

@@ -1,0 +1,2 @@
+(function (w) {
+  'use strict';
