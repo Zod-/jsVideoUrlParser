@@ -1,14 +1,181 @@
+(function(){
+'use strict';
+/*jshint unused:false */
+function cloneObject(obj) {
+  /*jshint unused:true */
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+
+  var temp = obj.constructor(); // give temp the original obj's constructor
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      temp[key] = cloneObject(obj[key]);
+    }
+  }
+
+  return temp;
+}
+
+/*jshint unused:false */
+function getQueryParams(qs) {
+  /*jshint unused:true */
+  if (typeof qs !== 'string') {
+    return {};
+  }
+  qs = qs.split('+').join(' ');
+
+  var params = {};
+  var match = qs.match(
+    /*jshint ignore:start */
+    /(?:[\?](?:[^=]+)=(?:[^&#]*)(?:[&](?:[^=]+)=(?:[^&#]*))*(?:[#].*)?)|(?:[#].*)/
+    /*jshint ignore:end */
+  );
+  var split;
+
+  if (match === null) {
+    return {};
+  }
+
+  split = match[0].substr(1).split(/[&#=]/);
+
+  for (var i = 0; i < split.length; i += 2) {
+    params[decodeURIComponent(split[i])] =
+      decodeURIComponent(split[i + 1] || '');
+  }
+
+  return params;
+}
+
+/*jshint unused:false */
+function combineParams(op) {
+  /*jshint unused:true */
+  if (typeof op !== 'object') {
+    return '';
+  }
+  op.params = op.params || {};
+  var combined = '',
+    i = 0,
+    keys = Object.keys(op.params);
+
+  if (keys.length === 0) {
+    return '';
+  }
+
+  //always have parameters in the same order
+  keys.sort();
+
+  if (!op.hasParams) {
+    combined += '?' + keys[0] + '=' + op.params[keys[0]];
+    i += 1;
+  }
+
+  for (; i < keys.length; i += 1) {
+    combined += '&' + keys[i] + '=' + op.params[keys[i]];
+  }
+  return combined;
+}
+
+//parses strings like 1h30m20s to seconds
+/*jshint unused:false */
+function getTime(timeString) {
+  /*jshint unused:true */
+  var totalSeconds = 0;
+  var timeValues = {
+    's': 1,
+    'm': 1 * 60,
+    'h': 1 * 60 * 60,
+    'd': 1 * 60 * 60 * 24,
+    'w': 1 * 60 * 60 * 24 * 7
+  };
+  var timePairs;
+  //is the format 1h30m20s etc
+  if (!timeString.match(/^(\d+[smhdw]?)+$/)) {
+    return 0;
+  }
+  //expand to "1 h 30 m 20 s" and split
+  timeString = timeString.replace(/([smhdw])/g, ' $1 ').trim();
+  timePairs = timeString.split(' ');
+
+  for (var i = 0; i < timePairs.length; i += 2) {
+    totalSeconds += parseInt(timePairs[i], 10) *
+      timeValues[timePairs[i + 1] || 's'];
+  }
+  return totalSeconds;
+}
+
+function UrlParser() {
+  this.plugins = {};
+}
+
+UrlParser.prototype.parseProvider = function (url) {
+  var match = url.match(
+    /(?:(?:https?:)?\/\/)?(?:[^\.]+\.)?(\w+)\./i
+  );
+  return match ? match[1] : undefined;
+};
+
+UrlParser.prototype.removeEmptyParameters = function (result) {
+  if (result.params && Object.keys(result.params).length === 0) {
+    delete result.params;
+  }
+  return result;
+};
+
+UrlParser.prototype.parse = function (url) {
+  var _this = this;
+  var provider = _this.parseProvider(url);
+  var result;
+  var plugin = _this.plugins[provider];
+  if (!provider || !plugin || !plugin.parse) {
+    return undefined;
+  }
+  result = plugin.parse.apply(
+    plugin, [url, getQueryParams(url)]
+  );
+  if (result) {
+    result = _this.removeEmptyParameters(result);
+    result.provider = plugin.provider;
+  }
+  return result;
+};
+
+UrlParser.prototype.bind = function (plugin) {
+  this.plugins[plugin.provider] = plugin;
+  if (plugin.alternatives) {
+    for (var i = 0; i < plugin.alternatives.length; i += 1) {
+      this.plugins[plugin.alternatives[i]] = plugin;
+    }
+  }
+};
+
+UrlParser.prototype.create = function (op) {
+  var vi = op.videoInfo;
+  var params = op.params;
+  var plugin = this.plugins[vi.provider];
+
+  params = (params === 'internal') ? vi.params : params || {};
+
+  if (plugin) {
+    op.format = op.format || plugin.defaultFormat;
+    if (plugin.formats.hasOwnProperty(op.format)) {
+      return plugin.formats[op.format].apply(plugin, [vi, cloneObject(params)]);
+    }
+  }
+  return undefined;
+};
+var urlParser = new UrlParser();
+
 /*jshint unused:false */
 function assertUrlTest(assert, tests) {
   /*jshint unused:true */
-  'use strict';
   tests.forEach(function (test) {
     test.urls.forEach(function (url) {
-      assert.deepEqual(urlParser.parse(url), test.videoInfo, url);
+      assert.deepEqual(window.urlParser.parse(url), test.videoInfo, url);
     });
     for (var format in test.formats) {
       if (test.formats.hasOwnProperty(format)) {
-        assert.equal(urlParser.create({
+        assert.equal(window.urlParser.create({
           videoInfo: test.videoInfo,
           format: format,
           params: test.videoInfo.params
@@ -19,7 +186,6 @@ function assertUrlTest(assert, tests) {
 }
 
 QUnit.test('urlParser Tests', function (assert) {
-  'use strict';
   var parser = new UrlParser();
 
   function Plugin() {
@@ -101,16 +267,15 @@ QUnit.test('urlParser Tests', function (assert) {
   assert.strictEqual(parser.parse('http://abc.com'), undefined, 'No .parse');
   assert.strictEqual(parser.create(createObj3), undefined, 'No .create');
 
-  for (var plugin in urlParser.plugins) {
-    if (urlParser.plugins.hasOwnProperty(plugin)) {
-      assert.notStrictEqual(urlParser.plugins[plugin].defaultFormat,
+  for (var plugin in window.urlParser.plugins) {
+    if (window.urlParser.plugins.hasOwnProperty(plugin)) {
+      assert.notStrictEqual(window.urlParser.plugins[plugin].defaultFormat,
         undefined, 'Defaultformat not undefined ' + plugin);
     }
   }
 });
 
 QUnit.test('TimeString Parser', function (assert) {
-  'use strict';
   var s = 1,
     m = 60 * s,
     h = 60 * m,
@@ -145,7 +310,6 @@ QUnit.test('TimeString Parser', function (assert) {
 });
 
 QUnit.test('GetQueryParams Tests', function (assert) {
-  'use strict';
   assert.deepEqual(getQueryParams(undefined), {}, 'Undefined argument');
   assert.deepEqual(getQueryParams([]), {}, 'Not a string argument');
   assert.deepEqual(getQueryParams('http://foo.bar/test'), {}, 'No params');
@@ -179,7 +343,6 @@ QUnit.test('GetQueryParams Tests', function (assert) {
 });
 
 QUnit.test('CombineParams Tests', function (assert) {
-  'use strict';
   assert.equal(combineParams(undefined), '', 'Undefined argument');
   assert.equal(combineParams({}), '', 'No params object');
 
@@ -228,7 +391,6 @@ QUnit.test('CombineParams Tests', function (assert) {
 });
 
 QUnit.test('CanalPlus Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'canalplus',
     id: '1365175',
@@ -248,7 +410,6 @@ QUnit.test('CanalPlus Urls', function (assert) {
 });
 
 QUnit.test('Coub Urls', function (assert) {
-  'use strict';
   var vi = {
     'provider': 'coub',
     'id': 'by7sm',
@@ -270,7 +431,6 @@ QUnit.test('Coub Urls', function (assert) {
 });
 
 QUnit.test('Dailymotion Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'dailymotion',
     id: 'x1e2b95',
@@ -310,7 +470,6 @@ QUnit.test('Dailymotion Urls', function (assert) {
 });
 
 QUnit.test('Twitch Stream Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'twitch',
     channel: 'rains8',
@@ -333,7 +492,6 @@ QUnit.test('Twitch Stream Urls', function (assert) {
 });
 
 QUnit.test('Twitch Video Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'twitch',
     id: 'v75292411',
@@ -362,7 +520,6 @@ QUnit.test('Twitch Video Urls', function (assert) {
 });
 
 QUnit.test('Twitch Embed Video Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'twitch',
     id: 'v75292411',
@@ -392,7 +549,6 @@ QUnit.test('Twitch Embed Video Urls', function (assert) {
 });
 
 QUnit.test('Vimeo Urls', function (assert) {
-  'use strict';
   var vi = {
     'provider': 'vimeo',
     'id': '97276391',
@@ -463,7 +619,6 @@ var yt3 = 'https://www.youtube.com';
 var yt4 = '//youtube.com/embed';
 var yt5 = 'https://img.youtube.com';
 QUnit.test('Regular YouTube Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'youtube',
     id: 'HRb7B9fPhfA',
@@ -514,7 +669,6 @@ QUnit.test('Regular YouTube Urls', function (assert) {
   assertUrlTest(assert, tests);
 });
 QUnit.test('Playlist YouTube Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'youtube',
     id: 'yQaAGmHNn9s',
@@ -615,7 +769,6 @@ QUnit.test('Playlist YouTube Urls', function (assert) {
 });
 
 QUnit.test('Feed YouTube Urls', function (assert) {
-  'use strict';
   var tests = [{
     videoInfo: {
       'provider': 'youtube',
@@ -637,7 +790,6 @@ QUnit.test('Feed YouTube Urls', function (assert) {
 });
 
 QUnit.test('Image YouTube Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'youtube',
     id: 'HRb7B9fPhfA',
@@ -672,7 +824,6 @@ QUnit.test('Image YouTube Urls', function (assert) {
 });
 
 QUnit.test('Share YouTube Urls', function (assert) {
-  'use strict';
   var vi = {
     provider: 'youtube',
     id: 'E14kBrDEvYo',
@@ -691,7 +842,6 @@ QUnit.test('Share YouTube Urls', function (assert) {
 
 var vk1 = 'http://static.youku.com/v1.0.0638/v/swf/';
 QUnit.test('Youku Urls', function (assert) {
-  'use strict';
   var vi = {
     'provider': 'youku',
     'id': 'XMTQ3OTM4MzMxMg',
@@ -715,3 +865,5 @@ QUnit.test('Youku Urls', function (assert) {
 
   assertUrlTest(assert, tests);
 });
+
+})();
