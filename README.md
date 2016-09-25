@@ -366,6 +366,7 @@ Run `grunt build test --template` to create the parser and test your plugin.
 ####Supported media types:
 * `'stream'`: Streams which are just a direct url to a channel.
 * `'video'`: Regular videos.
+* `'clip'`: Short video clips that can be created by anyone on a stream.
 * `'embed-video'`: This is a seperate media type from video because these types
   of urls don't contain the channel name so they are incompatible with eachother
 
@@ -379,6 +380,7 @@ Run `grunt build test --template` to create the parser and test your plugin.
 | ------------- | :--: | :--: |
 | **stream** | ✓  | ✓  |
 | **video** | ✓  | ✓  |
+| **clip** | ✓  | ✓  |
 | **embed-video** | X  | ✓  |
 
 ####Special parameters:
@@ -411,6 +413,13 @@ Run `grunt build test --template` to create the parser and test your plugin.
 > urlParser.parse('https://player.twitch.tv/?video=v75292411');
 { mediaType: 'embed-video',
   id: 'v75292411',
+  provider: 'twitch' }
+
+> urlParser.parse('https://clips.twitch.tv/rains8/PerfectStingrayFunRun');
+> urlParser.parse('https://clips.twitch.tv/embed?clip=rains8/PerfectStingrayFunRun');
+{ mediaType: 'clip',
+  id: 'PerfectStingrayFunRun',
+  channel: 'rains8',
   provider: 'twitch' }
 ```
 
@@ -463,6 +472,18 @@ Run `grunt build test --template` to create the parser and test your plugin.
     format: <format>
   })
 'embed': 'https://player.twitch.tv/?video=v75292411'
+
+> urlParser.create({
+    videoInfo: {
+      provider: 'twitch',
+      channel: 'rains8',
+      id: 'PerfectStingrayFunRun',
+      mediaType: 'clip'
+    },
+    format: <format>
+  })
+'long': 'https://clips.twitch.tv/rains8/PerfectStingrayFunRun'
+'embed': 'https://clips.twitch.tv/embed?clip=rains8/PerfectStingrayFunRun'
 ```
 
 ##Dailymotion
