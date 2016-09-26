@@ -1,6 +1,6 @@
 {
   "name": "js-video-url-parser",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A parser to extract provider, video id, starttime and others from YouTube, Vimeo, ... urls",
   "main": "dist/jsVideoUrlParser.js",
   "repository": {

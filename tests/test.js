@@ -469,6 +469,7 @@ QUnit.test('Dailymotion Urls', function (assert) {
   assertUrlTest(assert, tests);
 });
 
+var tw1 = 'https://clips.twitch.tv/';
 QUnit.test('Twitch Stream Urls', function (assert) {
   var vi = {
     provider: 'twitch',
@@ -545,6 +546,27 @@ QUnit.test('Twitch Embed Video Urls', function (assert) {
   tests[1].videoInfo.params = {
     start: 90
   };
+  assertUrlTest(assert, tests);
+});
+
+QUnit.test('Twitch Clip Urls', function (assert) {
+  var vi = {
+    provider: 'twitch',
+    id: 'PerfectStingrayFunRun',
+    channel: 'rains8',
+    mediaType: 'clip'
+  };
+  var tests = [{
+    videoInfo: cloneObject(vi),
+    formats: {
+      long: tw1 + 'rains8/PerfectStingrayFunRun',
+      embed: tw1 + 'embed?clip=rains8/PerfectStingrayFunRun'
+    },
+    urls: [
+      tw1 + 'rains8/PerfectStingrayFunRun',
+      tw1 + 'embed?clip=rains8/PerfectStingrayFunRun'
+    ]
+  }];
   assertUrlTest(assert, tests);
 });
 
