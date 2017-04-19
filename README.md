@@ -1,6 +1,8 @@
 jsVideoUrlParser [![Build Status](https://travis-ci.org/Zod-/jsVideoUrlParser.svg)](https://travis-ci.org/Zod-/jsVideoUrlParser) [![Gitter](https://badges.gitter.im/Zod-/jsVideoUrlParser.svg)](https://gitter.im/Zod-/jsVideoUrlParser?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 ================
 
+[![Join the chat at https://gitter.im/Zod-/jsVideoUrlParser](https://badges.gitter.im/Zod-/jsVideoUrlParser.svg)](https://gitter.im/Zod-/jsVideoUrlParser?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A javascript parser to extract informations like provider, video id, start time from video urls
 
 Currently supports
