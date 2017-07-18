@@ -12,7 +12,7 @@ Currently supports
  - Youku
  - Coub
 
-#grunt
+# grunt
 
 ```shell
 $ grunt
@@ -27,21 +27,21 @@ $ grunt test --youtube --vimeo
 $ grunt dist --youtube --vimeo
 ```
 
-#bower
+# bower
 ```shell
 bower install js-video-url-parser
 ```
-#npm
+# npm
 ```
 npm install js-video-url-parser
 ```
 
-#Usage
-##Node
+# Usage
+## Node
 ```
 urlParser = require('js-video-url-parser');
 ```
-##Parsing
+## Parsing
 
 Parsing a url will return a videoInfo object with all the information
 
@@ -75,7 +75,7 @@ different descriptions for the providers.
 }
 ```
 
-##Url Creation
+## Url Creation
 
 The videoInfo objects can be turned back into urls with the `.create` function.
 The required parameter for this is the videoInfo object itself. Optional ones are
@@ -113,7 +113,7 @@ If you still want to reuse the generated parameters object you can use the keywo
 'https://youtube.com/watch?foo=bar&v=HRb7B9fPhfA'
 ```
 
-##Adding a provider
+## Adding a provider
 
 Add a new file in the `src/plugins/provider/` directory with the template found [here](src/plugins/provider/Template.js) and also add it in the [Gruntfile](https://github.com/Zod-/jsVideoUrlParser/blob/master/Gruntfile.js#L13).
 <br>
@@ -122,23 +122,23 @@ Add some tests in `tests/src/plugins/provider/` with the template found
 
 Run `grunt build test --template` to create the parser and test your plugin.
 
-#Plugins
+# Plugins
 
-##YouTube
+## YouTube
 
-####Supported media types:
+#### Supported media types:
 * `'video'`: Regular videos which can also be livestreams.
 * `'playlist'`: YouTube playlist.
 * `'share'`: Shared YouTube videos that link to a special website and are not actual videos themselves.
 
-####Supported url formats:
+#### Supported url formats:
 * `'short'`: Shortened urls.
 * `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
 * `'shortImage'`: Shortened thumbnail urls.
 * `'longImage'`: Regular thumbnail urls.
 
-####Creating urls with different media types:
+#### Creating urls with different media types:
 
 | mediaType/formats| short | long | embed | shortImage | longImage |
 | ------------- | :--: | :--: | :--: | :--: | :--: |
@@ -146,12 +146,12 @@ Run `grunt build test --template` to create the parser and test your plugin.
 | **playlist** | X  | ✓  | ✓  | X  | X  |
 | **share**    | X  | ✓  | X  | X  | X  |
 
-####Special parameters:
+#### Special parameters:
 * `'params.start'`: The number where the video should begin in seconds.
 * `'params.imageQuality'`: Custom parameter for generating different qualities of thumbnail urls.
   * `'0', '1', '2', '3', 'default', 'hqdefault'(default), 'mqdefault', 'sddefault', 'maxresdefault'`
 
-####Parsing Examples:
+#### Parsing Examples:
 ```javascript
 > urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA');
 > urlParser.parse('http://youtu.be/HRb7B9fPhfA');
@@ -187,7 +187,7 @@ Run `grunt build test --template` to create the parser and test your plugin.
 }
 ```
 
-####Creation Examples:
+#### Creation Examples:
 ```javascript
 > urlParser.create({
     videoInfo: {
@@ -282,25 +282,25 @@ Run `grunt build test --template` to create the parser and test your plugin.
 'maxresdefault': 'https://img.youtube.com/vi/HRb7B9fPhfA/maxresdefault.jpg'
 ```
 
-##Vimeo
+## Vimeo
 
-####Supported media types:
+#### Supported media types:
 * `'video'`: Regular videos
 
-####Supported url formats:
+#### Supported url formats:
 * `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
 
-####Creating urls with different media types:
+#### Creating urls with different media types:
 
 | mediaType/formats| long | embed |
 | ------------- | :--: | :--: |
 | **video**    | ✓  | ✓  |
 
-####Special parameters:
+#### Special parameters:
 * `'params.start'`: The number where the video should begin in seconds.
 
-####Parsing Examples:
+#### Parsing Examples:
 ```javascript
 > urlParser.parse('https://vimeo.com/97276391');
 > urlParser.parse('https://vimeo.com/channels/staffpicks/97276391');
@@ -333,7 +333,7 @@ Run `grunt build test --template` to create the parser and test your plugin.
 }
 ```
 
-####Creation Examples:
+#### Creation Examples:
 ```javascript
 > urlParser.create({
     videoInfo: {
@@ -361,20 +361,20 @@ Run `grunt build test --template` to create the parser and test your plugin.
 'embed': '//player.vimeo.com/video/97276391#t=90'
 ```
 
-##Twitch
+## Twitch
 
-####Supported media types:
+#### Supported media types:
 * `'stream'`: Streams which are just a direct url to a channel.
 * `'video'`: Regular videos.
 * `'clip'`: Short video clips that can be created by anyone on a stream.
 * `'embed-video'`: This is a seperate media type from video because these types
   of urls don't contain the channel name so they are incompatible with eachother
 
-####Supported url formats:
+#### Supported url formats:
 * `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
 
-####Creating urls with different media types:
+#### Creating urls with different media types:
 
 | mediaType/formats| long | embed |
 | ------------- | :--: | :--: |
@@ -383,7 +383,7 @@ Run `grunt build test --template` to create the parser and test your plugin.
 | **clip** | ✓  | ✓  |
 | **embed-video** | X  | ✓  |
 
-####Special parameters:
+#### Special parameters:
 * `'params.start'`: The number where the video should begin in seconds.
 
 ```javascript
@@ -423,7 +423,7 @@ Run `grunt build test --template` to create the parser and test your plugin.
   provider: 'twitch' }
 ```
 
-####Creation Examples:
+#### Creation Examples:
 ```javascript
 > urlParser.create({
     videoInfo: {
@@ -486,26 +486,26 @@ Run `grunt build test --template` to create the parser and test your plugin.
 'embed': 'https://clips.twitch.tv/embed?clip=rains8/PerfectStingrayFunRun'
 ```
 
-##Dailymotion
+## Dailymotion
 
-####Supported media types:
+#### Supported media types:
 * `'video'`: Regular videos.
 
-####Supported url formats:
+#### Supported url formats:
 * `'short'`: Shortened urls.
 * `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
 
-####Creating urls with different media types:
+#### Creating urls with different media types:
 
 | mediaType/formats| short | long | embed |
 | ------------- | :--: | :--: | :--: |
 | **video** | ✓  | ✓  | ✓ |
 
-####Special parameters:
+#### Special parameters:
 * `'params.start'`: The number where the video should begin in seconds.
 
-####Parsing Examples:
+#### Parsing Examples:
 ```javascript
 > urlParser.parse('http://www.dailymotion.com/video/x1e2b95_bruce-lee-nin-kayip-kedisi_animals');
 > urlParser.parse('http://www.dailymotion.com/video/x1e2b95');
@@ -527,7 +527,7 @@ Run `grunt build test --template` to create the parser and test your plugin.
 }
 ```
 
-####Creation Examples:
+#### Creation Examples:
 ```javascript
 > urlParser.create({
     videoInfo: {
@@ -557,22 +557,22 @@ Run `grunt build test --template` to create the parser and test your plugin.
 'embed': '//www.dailymotion.com/embed/video/x1e2b95?start=10'
 ```
 
-##Coub
+## Coub
 
-####Supported media types:
+#### Supported media types:
 * `'video'`: Regular videos.
 
-####Supported url formats:
+#### Supported url formats:
 * `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
 
-####Creating urls with different media types:
+#### Creating urls with different media types:
 
 | mediaType/formats| long | embed |
 | ------------- | :--: | :--: |
 | **video** | ✓  | ✓  |
 
-####Parsing Examples:
+#### Parsing Examples:
 ```javascript
 > urlParser.parse('https://coub.com/view/by7sm');
 > urlParser.parse('//coub.com/embed/by7sm');
@@ -581,7 +581,7 @@ Run `grunt build test --template` to create the parser and test your plugin.
   provider: 'coub' }
 ```
 
-####Creation Examples:
+#### Creation Examples:
 ```javascript
 > urlParser.create({
     videoInfo: {
@@ -595,24 +595,24 @@ Run `grunt build test --template` to create the parser and test your plugin.
 'embed': '//coub.com/embed/by7sm'
 ```
 
-##Youku
+## Youku
 
-####Supported media types:
+#### Supported media types:
 * `'video'`: Regular videos.
 
-####Supported url formats:
+#### Supported url formats:
 * `'long'`(default): Regular urls.
 * `'static'`: Video player that fills out the whole website.
 * `'embed'`: Embedded urls.
 * `'flash'`: Flash embedded urls.
 
-####Creating urls with different media types:
+#### Creating urls with different media types:
 
 | mediaType/formats| long | static | embed | flash |
 | ------------- | :--: | :--: | :--: | :--: |
 | **video** | ✓  | ✓  | ✓  | ✓  |
 
-####Parsing Examples:
+#### Parsing Examples:
 ```javascript
 > urlParser.parse('http://player.youku.com/embed/XMTQ3OTM4MzMxMg');
 > urlParser.parse('http://player.youku.com/player.php/sid/XMTQ3OTM4MzMxMg/v.swf');
@@ -623,7 +623,7 @@ Run `grunt build test --template` to create the parser and test your plugin.
   provider: 'youku' }
 ```
 
-####Creation Examples:
+#### Creation Examples:
 ```javascript
 > urlParser.create({
     videoInfo: {
@@ -639,21 +639,21 @@ Run `grunt build test --template` to create the parser and test your plugin.
 'static': 'http://static.youku.com/v1.0.0638/v/swf/loader.swf?VideoIDS=XMTQ3OTM4MzMxMg'
 ```
 
-##Canal+
+## Canal+
 
-####Supported media types:
+#### Supported media types:
 * `'video'`: Regular videos.
 
-####Supported url formats:
+#### Supported url formats:
 * `'embed'`(default): Embedded urls.
 
-####Creating urls with different media types:
+#### Creating urls with different media types:
 
 | mediaType/formats| embed |
 | ------------- | :--: |
 | **video** | ✓  |
 
-####Parsing Examples:
+#### Parsing Examples:
 ```javascript
 > urlParser.parse('http://player.canalplus.fr/embed/?param=cplus&vid=1365175');
 > urlParser.parse('http://www.canalplus.fr/humour/pid1784-les-guignols.html?vid=1365175');
@@ -662,7 +662,7 @@ Run `grunt build test --template` to create the parser and test your plugin.
   provider: 'canalplus' }
 ```
 
-####Creation Examples:
+#### Creation Examples:
 ```javascript
 > urlParser.create({
     videoInfo: {
