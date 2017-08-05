@@ -32,7 +32,7 @@ Twitch.prototype.parseChannel = function (result, params) {
 Twitch.prototype.parseUrl = function (url, result, params) {
   var match;
   match = url.match(
-    /(clips\.)?twitch\.tv\/(\w+)(?:\/(?:(.)\/(\d+)|(\w+)))?/i
+    /(clips\.)?twitch\.tv\/(\w+)(?:\/(?:(.)\/(\d+)))?/i
   );
   result.channel = match ? match[2] : undefined;
   if (match && match[3] && match[4]) { //video
@@ -40,15 +40,13 @@ Twitch.prototype.parseUrl = function (url, result, params) {
   } else if (params.video) { //video embed
     result.id = params.video;
     delete params.video;
-  } else if (match && match[1] && match[5]) { //clips
-    result.id = match[5];
-    result.isClip = true;
-  } else if (params.clip) { //clips embed
-    var split = params.clip.split('/');
-    result.channel = split[0];
-    result.id = split[1];
+  }  else if (params.clip) { //clips embed
+    result.id = params.clip;
     result.isClip = true;
     delete params.clip;
+  } else if (match && match[1] && match[2]) { //clips
+    result.id = match[2];
+    result.isClip = true;
   }
   return result;
 };
@@ -58,9 +56,11 @@ Twitch.prototype.parseMediaType = function (result) {
   if (result.channel) {
     if (result.id && result.isClip) {
       mediaType = this.mediaTypes.CLIP;
+      delete result.channel;
       delete result.isClip;
     } else if (result.id && !result.isClip) {
       mediaType = this.mediaTypes.VIDEO;
+      delete result.channel;
     } else {
       mediaType = this.mediaTypes.STREAM;
     }
@@ -102,7 +102,7 @@ Twitch.prototype.createLongUrl = function (vi, params) {
       delete params.start;
     }
   } else if (vi.mediaType === this.mediaTypes.CLIP) {
-    url = 'https://clips.twitch.tv/' + vi.channel + '/' + vi.id;
+    url = 'https://clips.twitch.tv/' + vi.id;
   }
   url += combineParams({
     params: params
@@ -125,7 +125,7 @@ Twitch.prototype.createEmbedUrl = function (vi, params) {
     }
   } else if (vi.mediaType === this.mediaTypes.CLIP) {
     url = 'https://clips.twitch.tv/embed';
-    params.clip = vi.channel + '/' + vi.id;
+    params.clip = vi.id;
   }
 
   url += combineParams({
