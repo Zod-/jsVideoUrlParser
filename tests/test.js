@@ -496,52 +496,22 @@ QUnit.test('Twitch Video Urls', function (assert) {
   var vi = {
     provider: 'twitch',
     id: 'v75292411',
-    channel: 'rains8',
     mediaType: 'video'
   };
   var tests = [{
     videoInfo: cloneObject(vi),
     formats: {
-      long: 'https://twitch.tv/rains8/v/75292411',
+      long: 'https://twitch.tv/videos/75292411',
       embed: 'https://player.twitch.tv/?video=v75292411'
     },
-    urls: ['http://www.twitch.tv/rains8/v/75292411']
+    urls: ['http://www.twitch.tv/videos/75292411']
   }, {
     videoInfo: cloneObject(vi),
     formats: {
-      long: 'https://twitch.tv/rains8/v/75292411?t=90s',
+      long: 'https://twitch.tv/videos/75292411?t=90s',
       embed: 'https://player.twitch.tv/?t=90s&video=v75292411'
     },
-    urls: ['https://www.twitch.tv/rains8/v/75292411?t=1m30s']
-  }];
-  tests[1].videoInfo.params = {
-    start: 90
-  };
-  assertUrlTest(assert, tests);
-});
-
-QUnit.test('Twitch Embed Video Urls', function (assert) {
-  var vi = {
-    provider: 'twitch',
-    id: 'v75292411',
-    mediaType: 'embed-video'
-  };
-  var tests = [{
-    videoInfo: cloneObject(vi),
-    formats: {
-      embed: 'https://player.twitch.tv/?video=v75292411'
-    },
-    urls: [
-      'https://player.twitch.tv/?video=v75292411'
-    ]
-  }, {
-    videoInfo: cloneObject(vi),
-    formats: {
-      embed: 'https://player.twitch.tv/?t=90s&video=v75292411'
-    },
-    urls: [
-      'https://player.twitch.tv/?video=v75292411&t=1m30s'
-    ]
+    urls: ['https://www.twitch.tv/videos/75292411?t=1m30s']
   }];
   tests[1].videoInfo.params = {
     start: 90
@@ -552,19 +522,18 @@ QUnit.test('Twitch Embed Video Urls', function (assert) {
 QUnit.test('Twitch Clip Urls', function (assert) {
   var vi = {
     provider: 'twitch',
-    id: 'PerfectStingrayFunRun',
-    channel: 'rains8',
+    id: 'SuspiciousImpartialLarkItsBoshyTime',
     mediaType: 'clip'
   };
   var tests = [{
     videoInfo: cloneObject(vi),
     formats: {
-      long: tw1 + 'rains8/PerfectStingrayFunRun',
-      embed: tw1 + 'embed?clip=rains8/PerfectStingrayFunRun'
+      long: tw1 + 'SuspiciousImpartialLarkItsBoshyTime',
+      embed: tw1 + 'embed?clip=SuspiciousImpartialLarkItsBoshyTime'
     },
     urls: [
-      tw1 + 'rains8/PerfectStingrayFunRun',
-      tw1 + 'embed?clip=rains8/PerfectStingrayFunRun'
+      tw1 + 'SuspiciousImpartialLarkItsBoshyTime',
+      tw1 + 'embed?clip=SuspiciousImpartialLarkItsBoshyTime'
     ]
   }];
   assertUrlTest(assert, tests);
