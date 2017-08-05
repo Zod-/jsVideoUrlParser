@@ -365,10 +365,8 @@ Run `grunt build test --template` to create the parser and test your plugin.
 
 ####Supported media types:
 * `'stream'`: Streams which are just a direct url to a channel.
-* `'video'`: Regular videos.
+* `'video'`: Part of streams or history of a full stream.
 * `'clip'`: Short video clips that can be created by anyone on a stream.
-* `'embed-video'`: This is a seperate media type from video because these types
-  of urls don't contain the channel name so they are incompatible with eachother
 
 ####Supported url formats:
 * `'long'`(default): Regular urls.
@@ -381,7 +379,6 @@ Run `grunt build test --template` to create the parser and test your plugin.
 | **stream** | ✓  | ✓  |
 | **video** | ✓  | ✓  |
 | **clip** | ✓  | ✓  |
-| **embed-video** | X  | ✓  |
 
 ####Special parameters:
 * `'params.start'`: The number where the video should begin in seconds.
@@ -394,32 +391,24 @@ Run `grunt build test --template` to create the parser and test your plugin.
   channel: 'rains8',
   provider: 'twitch' }
 
-> urlParser.parse('http://www.twitch.tv/rains8/v/75292411');
+> urlParser.parse('http://www.twitch.tv/75292411');
 { mediaType: 'video',
   id: 'v75292411',
-  channel: 'rains8',
   provider: 'twitch' }
 
-> urlParser.parse('http://www.twitch.tv/rains8/v/75292411?t=1m30s');
+> urlParser.parse('http://www.twitch.tv/75292411?t=1m30s');
 { mediaType: 'video',
   id: 'v75292411',
-  channel: 'rains8',
   provider: 'twitch',
   params: {
     start: 90
   }
 }
 
-> urlParser.parse('https://player.twitch.tv/?video=v75292411');
-{ mediaType: 'embed-video',
-  id: 'v75292411',
-  provider: 'twitch' }
-
-> urlParser.parse('https://clips.twitch.tv/rains8/PerfectStingrayFunRun');
-> urlParser.parse('https://clips.twitch.tv/embed?clip=rains8/PerfectStingrayFunRun');
+> urlParser.parse('https://clips.twitch.tv/SuspiciousImpartialLarkItsBoshyTime');
+> urlParser.parse('https://clips.twitch.tv/embed?clip=SuspiciousImpartialLarkItsBoshyTime');
 { mediaType: 'clip',
-  id: 'PerfectStingrayFunRun',
-  channel: 'rains8',
+  id: 'SuspiciousImpartialLarkItsBoshyTime',
   provider: 'twitch' }
 ```
 
@@ -439,19 +428,17 @@ Run `grunt build test --template` to create the parser and test your plugin.
 > urlParser.create({
     videoInfo: {
       provider: 'twitch',
-      channel: 'rains8',
       id: 'v75292411',
       mediaType: 'video'
     },
     format: <format>
   })
-'long': 'https://twitch.tv/rains8/v/75292411'
+'long': 'https://twitch.tv/75292411'
 'embed': 'https://player.twitch.tv/?video=v75292411'
 
 > urlParser.create({
     videoInfo: {
       provider: 'twitch',
-      channel: 'rains8',
       id: 'v75292411',
       mediaType: 'video',
       params: {
@@ -460,30 +447,19 @@ Run `grunt build test --template` to create the parser and test your plugin.
     },
     format: <format>
   })
-'long': 'https://twitch.tv/rains8/v/75292411?t=90s'
+'long': 'https://twitch.tv/75292411?t=90s'
 'embed': 'https://player.twitch.tv/?video=v75292411?=90s'
 
 > urlParser.create({
     videoInfo: {
       provider: 'twitch',
-      id: 'v75292411',
-      mediaType: 'embed-video'
-    },
-    format: <format>
-  })
-'embed': 'https://player.twitch.tv/?video=v75292411'
-
-> urlParser.create({
-    videoInfo: {
-      provider: 'twitch',
-      channel: 'rains8',
-      id: 'PerfectStingrayFunRun',
+      id: 'SuspiciousImpartialLarkItsBoshyTime',
       mediaType: 'clip'
     },
     format: <format>
   })
-'long': 'https://clips.twitch.tv/rains8/PerfectStingrayFunRun'
-'embed': 'https://clips.twitch.tv/embed?clip=rains8/PerfectStingrayFunRun'
+'long': 'https://clips.twitch.tv/SuspiciousImpartialLarkItsBoshyTime'
+'embed': 'https://clips.twitch.tv/embed?clip=SuspiciousImpartialLarkItsBoshyTime'
 ```
 
 ##Dailymotion
