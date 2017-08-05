@@ -48,35 +48,6 @@ QUnit.test('Twitch Video Urls', function (assert) {
   assertUrlTest(assert, tests);
 });
 
-QUnit.test('Twitch Embed Video Urls', function (assert) {
-  var vi = {
-    provider: 'twitch',
-    id: 'v75292411',
-    mediaType: 'embed-video'
-  };
-  var tests = [{
-    videoInfo: cloneObject(vi),
-    formats: {
-      embed: 'https://player.twitch.tv/?video=v75292411'
-    },
-    urls: [
-      'https://player.twitch.tv/?video=v75292411'
-    ]
-  }, {
-    videoInfo: cloneObject(vi),
-    formats: {
-      embed: 'https://player.twitch.tv/?t=90s&video=v75292411'
-    },
-    urls: [
-      'https://player.twitch.tv/?video=v75292411&t=1m30s'
-    ]
-  }];
-  tests[1].videoInfo.params = {
-    start: 90
-  };
-  assertUrlTest(assert, tests);
-});
-
 QUnit.test('Twitch Clip Urls', function (assert) {
   var vi = {
     provider: 'twitch',
