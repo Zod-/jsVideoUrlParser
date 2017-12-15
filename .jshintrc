@@ -25,7 +25,7 @@
   "multistr":    true,
   "curly":       true,
   "forin":       true,
-  "maxlen":        80,
+  "maxlen":        130,
   "indent":         2,
   "newcap":     false,
   "quotmark": "single"
