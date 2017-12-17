@@ -11,6 +11,7 @@ Currently supports
  - Canal+
  - Youku
  - Coub
+ - Wistia
 
 # grunt
 
@@ -649,4 +650,122 @@ Run `grunt build test --template` to create the parser and test your plugin.
     format: <format>
   })
 'embed': 'http://player.canalplus.fr/embed/?param=cplus&vid=1365175',
+```
+
+## Wistia
+
+#### Supported media types:
+* `'video'`: Regular videos.
+* `'embedvideo'`: Any links that do not include the channel name are embedded links.
+
+#### Supported url formats:
+* `'long'`(default): Regular urls.
+* `'embed'`: Regular embedded urls using iframe.
+* `'embedjsonp'`: jsonp specific embedded urls.
+
+#### Creating urls with different media types:
+
+| mediaType/formats| long | embed | embedjsonp |
+| ------------- | :--: | :--: | :--: |
+| **video**    | ✓  | ✓  | ✓  |
+| **embedvideo** | X  | ✓  | ✓  |
+
+#### Special parameters:
+* `'params.start'`: The number where the video should begin in seconds.
+
+#### Parsing Examples:
+```javascript
+> urlParser.parse('https://appboss.wistia.com/medias/lpu6bgplle');
+{ mediaType: 'video',
+  channel: 'appboss',
+  id: 'lpu6bgplle',
+  provider: 'wistia'
+}
+
+> urlParser.parse('https://fast.wistia.com/embed/iframe/lpu6bgplle');
+> urlParser.parse('https://fast.wistia.com/embed/medias/lpu6bgplle.jsonp');
+> urlParser.parse('https://content.wistia.com/customer-stories/bizzabo?wvideo=lpu6bgplle');
+> urlParser.parse('https://wistia.com/blog/soapbox-videos-for-the-holidays?wvideo=lpu6bgplle');
+> urlParser.parse('https://wistia.com/library/how-to-look-good-on-a-webcam?wvideo=lpu6bgplle');
+> urlParser.parse('https://wistia.com/solutions/sales?wvideo=lpu6bgplle');
+{ mediaType: 'embedvideo',
+  id: 'lpu6bgplle',
+  provider: 'wistia'
+}
+
+> urlParser.parse('https://appboss.wistia.com/medias/lpu6bgplle?wtime=1m30s');
+{ mediaType: 'video',
+  channel: 'appboss',
+  id: 'lpu6bgplle',
+  provider: 'wistia'
+  params: {
+    start: 90
+  }
+}
+
+> urlParser.parse('https://fast.wistia.com/embed/iframe/lpu6bgplle?wtime=30');
+{ mediaType: 'embedvideo',
+  id: 'lpu6bgplle',
+  provider: 'wistia'
+  params: {
+    start: 90
+  }
+}
+```
+
+#### Creation Examples:
+```javascript
+> urlParser.create({
+    videoInfo: {
+      provider: 'wistia',
+      channel: 'appboss',
+      id: 'lpu6bgplle',
+      mediaType: 'video'
+    },
+    format: <format>
+  })
+'long': 'https://appboss.wistia.com/medias/lpu6bgplle'
+'embed': 'https://fast.wistia.com/embed/iframe/lpu6bgplle'
+'embedjsonp': 'https://fast.wistia.com/embed/medias/lpu6bgplle.jsonp'
+
+> urlParser.create({
+    videoInfo: {
+      provider: 'wistia',
+      channel: 'appboss',
+      id: 'lpu6bgplle',
+      mediaType: 'video'
+    },
+    params: {
+      start: 90
+    },
+    format: <format>
+  })
+'long': 'https://appboss.wistia.com/medias/lpu6bgplle?wtime=90'
+'embed': 'https://fast.wistia.com/embed/iframe/lpu6bgplle?wtime=90'
+'embedjsonp': 'https://fast.wistia.com/embed/medias/lpu6bgplle.jsonp'
+
+> urlParser.create({
+    videoInfo: {
+      provider: 'wistia',
+      id: 'lpu6bgplle',
+      mediaType: 'embedvideo'
+    },
+    format: <format>
+  })
+'embed': 'https://fast.wistia.com/embed/iframe/lpu6bgplle'
+'embedjsonp': 'https://fast.wistia.com/embed/medias/lpu6bgplle.jsonp'
+
+> urlParser.create({
+    videoInfo: {
+      provider: 'wistia',
+      id: 'lpu6bgplle',
+      mediaType: 'embedvideo'
+    },
+    params: {
+      start: 90
+    },
+    format: <format>
+  })
+'embed': 'https://fast.wistia.com/embed/iframe/lpu6bgplle?wtime=90'
+'embedjsonp': 'https://fast.wistia.com/embed/medias/lpu6bgplle.jsonp'
 ```
