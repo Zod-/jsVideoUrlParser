@@ -1,4 +1,4 @@
-QUnit.test('Long Urls', function (assert) {
+QUnit.test('Wistia Long Urls', function (assert) {
   var vi = {
     provider: 'wistia',
     id: 'lpu6bgplle',
@@ -33,7 +33,7 @@ QUnit.test('Long Urls', function (assert) {
   assertUrlTest(assert, tests);
 });
 
-QUnit.test('Embed Urls', function (assert) {
+QUnit.test('Wistia Embed Urls', function (assert) {
   var vi = {
     provider: 'wistia',
     id: 'lpu6bgplle',
