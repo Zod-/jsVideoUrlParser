@@ -1,5 +1,5 @@
 {
-  "name": "jsVideoUrlParser",
+  "name": "js-video-url-parser",
   "version": "0.2.4",
   "homepage": "https://github.com/Zod-/jsVideoUrlParser",
   "main": "dist/jsVideoUrlParser.js",
