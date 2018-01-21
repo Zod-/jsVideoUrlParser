@@ -4,7 +4,7 @@ const {testUrls} = require('../testUrls');
 
 function newParser() {
   const parser = new UrlParser();
-  parser.bind(new CanalPlus());
+  parser.register(new CanalPlus());
   return parser;
 }
 

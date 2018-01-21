@@ -4,7 +4,7 @@ const {testUrls} = require('../testUrls');
 
 function newParser() {
   const parser = new UrlParser();
-  parser.bind(new Youku());
+  parser.register(new Youku());
   return parser;
 }
 

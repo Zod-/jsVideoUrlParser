@@ -19,21 +19,21 @@ Foo.prototype.createLongUrl = function(vi, params) {
 
 test('register foo plugin', () => {
   const parser = new UrlParser();
-  parser.bind(new Foo());
+  parser.register(new Foo());
 
   expect(parser.plugins).toHaveProperty('foo');
 });
 
 test('parse invalid url', () => {
   const parser = new UrlParser();
-  parser.bind(new Foo());
+  parser.register(new Foo());
 
   expect(parser.parse('abc.def')).toBeUndefined();
 });
 
 test('parse urls handled by foo plugin', () => {
   const parser = new UrlParser();
-  parser.bind(new Foo());
+  parser.register(new Foo());
 
   expect(parser.parse('http://bar.def').provider).toBe('foo');
   expect(parser.parse('https://abc.foo.def/ghi').provider).toBe('foo');
@@ -42,7 +42,7 @@ test('parse urls handled by foo plugin', () => {
 
 test('create with known provider and format', () => {
   const parser = new UrlParser();
-  parser.bind(new Foo());
+  parser.register(new Foo());
 
   const obj = {
     videoInfo: {
@@ -55,7 +55,7 @@ test('create with known provider and format', () => {
 
 test('create with unknown format', () => {
   const parser = new UrlParser();
-  parser.bind(new Foo());
+  parser.register(new Foo());
 
   const obj = {
     videoInfo: {
@@ -68,7 +68,7 @@ test('create with unknown format', () => {
 
 test('try to create with unknown provider', () => {
   const parser = new UrlParser();
-  parser.bind(new Foo());
+  parser.register(new Foo());
 
   const obj = {
     videoInfo: {
@@ -80,7 +80,7 @@ test('try to create with unknown provider', () => {
 
 test('create with internal params', () => {
   const parser = new UrlParser();
-  parser.bind(new Foo());
+  parser.register(new Foo());
 
   const obj = {
     videoInfo: {
@@ -101,14 +101,14 @@ function NoPc() {
 
 test('plugin with no parse', () => {
   const parser = new UrlParser();
-  parser.bind(new NoPc());
+  parser.register(new NoPc());
 
   expect(parser.parse('http://abc.com')).toBeUndefined();
 });
 
 test('plugin with no create', () => {
   const parser = new UrlParser();
-  parser.bind(new NoPc());
+  parser.register(new NoPc());
 
   const obj = {
     videoInfo: {

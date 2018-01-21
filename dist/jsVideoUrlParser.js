@@ -106,7 +106,7 @@ var util = {
 var getQueryParams$1 = util.getQueryParams;
 
 function UrlParser() {
-  var _arr = ['parseProvider', 'parse', 'bind', 'create'];
+  var _arr = ['parseProvider', 'parse', 'register', 'create'];
 
   for (var _i = 0; _i < _arr.length; _i++) {
     var key = _arr[_i];
@@ -142,12 +142,19 @@ UrlParser.prototype.parse = function (url) {
   return result;
 };
 
-UrlParser.prototype.bind = function (plugin) {
-  this.plugins[plugin.provider] = plugin;
+UrlParser.prototype.register = function () {
+  for (var _len = arguments.length, plugins = new Array(_len), _key = 0; _key < _len; _key++) {
+    plugins[_key] = arguments[_key];
+  }
 
-  if (plugin.alternatives) {
-    for (var i = 0; i < plugin.alternatives.length; i += 1) {
-      this.plugins[plugin.alternatives[i]] = plugin;
+  for (var _i2 = 0; _i2 < plugins.length; _i2++) {
+    var plugin = plugins[_i2];
+    this.plugins[plugin.provider] = plugin;
+
+    if (plugin.alternatives) {
+      for (var i = 0; i < plugin.alternatives.length; i += 1) {
+        this.plugins[plugin.alternatives[i]] = plugin;
+      }
     }
   }
 };
@@ -901,15 +908,7 @@ YouTube.prototype.createLongImageUrl = function (vi, params) {
 };
 
 var parser = new urlParser();
-parser.bind(canalplus);
-parser.bind(coub);
-parser.bind(dailymotion);
-parser.bind(twitch);
-parser.bind(vimeo);
-parser.bind(wistia);
-parser.bind(youku);
-parser.bind(youtube);
-parser.UrlParser = urlParser;
+parser.register(canalplus, coub, dailymotion, twitch, vimeo, wistia, youku, youtube);
 var src = parser;
 
 return src;

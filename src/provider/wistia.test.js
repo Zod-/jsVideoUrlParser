@@ -4,7 +4,7 @@ const {testUrls} = require('../testUrls');
 
 function newParser() {
   const parser = new UrlParser();
-  parser.bind(new Wistia());
+  parser.register(new Wistia());
   return parser;
 }
 

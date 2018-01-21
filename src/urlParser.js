@@ -4,7 +4,7 @@ function UrlParser() {
   for (const key of [
     'parseProvider',
     'parse',
-    'bind',
+    'register',
     'create',
   ]) {
     this[key] = this[key].bind(this);
@@ -38,11 +38,13 @@ UrlParser.prototype.parse = function(url) {
   return result;
 };
 
-UrlParser.prototype.bind = function(plugin) {
-  this.plugins[plugin.provider] = plugin;
-  if (plugin.alternatives) {
-    for (var i = 0; i < plugin.alternatives.length; i += 1) {
-      this.plugins[plugin.alternatives[i]] = plugin;
+UrlParser.prototype.register = function(...plugins) {
+  for (const plugin of plugins) {
+    this.plugins[plugin.provider] = plugin;
+    if (plugin.alternatives) {
+      for (var i = 0; i < plugin.alternatives.length; i += 1) {
+        this.plugins[plugin.alternatives[i]] = plugin;
+      }
     }
   }
 };
