@@ -106,7 +106,7 @@ var util = {
 var getQueryParams$1 = util.getQueryParams;
 
 function UrlParser() {
-  var _arr = ['parseProvider', 'parse', 'register', 'create'];
+  var _arr = ['parseProvider', 'parse', 'bind', 'create'];
 
   for (var _i = 0; _i < _arr.length; _i++) {
     var key = _arr[_i];
@@ -142,19 +142,12 @@ UrlParser.prototype.parse = function (url) {
   return result;
 };
 
-UrlParser.prototype.register = function () {
-  for (var _len = arguments.length, plugins = new Array(_len), _key = 0; _key < _len; _key++) {
-    plugins[_key] = arguments[_key];
-  }
+UrlParser.prototype.bind = function (plugin) {
+  this.plugins[plugin.provider] = plugin;
 
-  for (var _i2 = 0; _i2 < plugins.length; _i2++) {
-    var plugin = plugins[_i2];
-    this.plugins[plugin.provider] = plugin;
-
-    if (plugin.alternatives) {
-      for (var i = 0; i < plugin.alternatives.length; i += 1) {
-        this.plugins[plugin.alternatives[i]] = plugin;
-      }
+  if (plugin.alternatives) {
+    for (var i = 0; i < plugin.alternatives.length; i += 1) {
+      this.plugins[plugin.alternatives[i]] = plugin;
     }
   }
 };
@@ -184,6 +177,9 @@ function removeEmptyParameters(result) {
   return result;
 }
 
+var parser = new urlParser();
+var base = parser;
+
 var combineParams$1 = util.combineParams;
 
 function CanalPlus() {
@@ -196,8 +192,6 @@ function CanalPlus() {
     VIDEO: 'video'
   };
 }
-
-var canalplus = CanalPlus;
 
 CanalPlus.prototype.parseParameters = function (params) {
   delete params.vid;
@@ -229,6 +223,8 @@ CanalPlus.prototype.createEmbedUrl = function (vi, params) {
   return url;
 };
 
+base.bind(new CanalPlus());
+
 var combineParams$2 = util.combineParams;
 
 function Coub() {
@@ -242,8 +238,6 @@ function Coub() {
     VIDEO: 'video'
   };
 }
-
-var coub = Coub;
 
 Coub.prototype.parseUrl = function (url) {
   var match = url.match(/(?:embed|view)\/([a-zA-Z\d]+)/i);
@@ -280,6 +274,8 @@ Coub.prototype.createEmbedUrl = function (vi, params) {
   return this.createUrl('//coub.com/embed/', vi, params);
 };
 
+base.bind(new Coub());
+
 var combineParams$3 = util.combineParams;
 var getTime$1 = util.getTime;
 
@@ -296,8 +292,6 @@ function Dailymotion() {
     VIDEO: 'video'
   };
 }
-
-var dailymotion = Dailymotion;
 
 Dailymotion.prototype.parseParameters = function (params) {
   return this.parseTime(params);
@@ -327,8 +321,8 @@ Dailymotion.prototype.parse = function (url, params) {
   return result.id ? result : undefined;
 };
 
-Dailymotion.prototype.createUrl = function (base, vi, params) {
-  return base + vi.id + combineParams$3({
+Dailymotion.prototype.createUrl = function (base$$2, vi, params) {
+  return base$$2 + vi.id + combineParams$3({
     params: params
   });
 };
@@ -344,6 +338,8 @@ Dailymotion.prototype.createLongUrl = function (vi, params) {
 Dailymotion.prototype.createEmbedUrl = function (vi, params) {
   return this.createUrl('//www.dailymotion.com/embed/video/', vi, params);
 };
+
+base.bind(new Dailymotion());
 
 var combineParams$4 = util.combineParams;
 var getTime$2 = util.getTime;
@@ -361,8 +357,6 @@ function Twitch() {
     CLIP: 'clip'
   };
 }
-
-var twitch = Twitch;
 
 Twitch.prototype.seperateId = function (id) {
   return {
@@ -490,6 +484,8 @@ Twitch.prototype.createEmbedUrl = function (vi, params) {
   return url;
 };
 
+base.bind(new Twitch());
+
 var combineParams$5 = util.combineParams;
 var getTime$3 = util.getTime;
 
@@ -505,8 +501,6 @@ function Vimeo() {
     VIDEO: 'video'
   };
 }
-
-var vimeo = Vimeo;
 
 Vimeo.prototype.parseUrl = function (url) {
   var match = url.match(/(?:\/(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+)\/)?videos?))?\/(\d+)/i);
@@ -558,6 +552,8 @@ Vimeo.prototype.createEmbedUrl = function (vi, params) {
   return this.createUrl('//player.vimeo.com/video/', vi, params);
 };
 
+base.bind(new Vimeo());
+
 var combineParams$6 = util.combineParams;
 var getTime$4 = util.getTime;
 
@@ -575,8 +571,6 @@ function Wistia() {
     EMBEDVIDEO: 'embedvideo'
   };
 }
-
-var wistia = Wistia;
 
 Wistia.prototype.parseUrl = function (url, params) {
   var match = url.match(/(?:(?:medias|iframe)\/|wvideo=)([\w-]+)/);
@@ -666,6 +660,8 @@ Wistia.prototype.createEmbedJsonpUrl = function (vi, params) {
   return 'https://fast.wistia.com/embed/medias/' + vi.id + '.jsonp';
 };
 
+base.bind(new Wistia());
+
 var combineParams$7 = util.combineParams;
 
 function Youku() {
@@ -681,8 +677,6 @@ function Youku() {
     VIDEO: 'video'
   };
 }
-
-var youku = Youku;
 
 Youku.prototype.parseUrl = function (url) {
   var match = url.match(/(?:(?:embed|sid)\/|v_show\/id_|VideoIDS=)([a-zA-Z0-9]+)/);
@@ -741,6 +735,8 @@ Youku.prototype.createFlashUrl = function (vi, params) {
   return url;
 };
 
+base.bind(new Youku());
+
 var combineParams$8 = util.combineParams;
 var getTime$5 = util.getTime;
 
@@ -773,8 +769,6 @@ function YouTube() {
     SHARE: 'share'
   };
 }
-
-var youtube = YouTube;
 
 YouTube.prototype.parseUrl = function (url) {
   var match = url.match(/(?:(?:v|vi|be|videos|embed)\/(?!videoseries)|(?:v|ci)=)([\w-]{11})/i);
@@ -907,10 +901,10 @@ YouTube.prototype.createLongImageUrl = function (vi, params) {
   return this.createImageUrl('https://img.youtube.com/vi/', vi, params);
 };
 
-var parser = new urlParser();
-parser.register(canalplus, coub, dailymotion, twitch, vimeo, wistia, youku, youtube);
-var src = parser;
+base.bind(new YouTube());
 
-return src;
+var lib = base;
+
+return lib;
 
 })));

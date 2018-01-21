@@ -1,6 +1,6 @@
 /*.js
 /*.json
-/src/provider/template.js
+/lib/provider/template.js
 .*
 coverage
 dist

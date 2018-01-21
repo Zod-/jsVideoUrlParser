@@ -24,20 +24,22 @@ bower install js-video-url-parser
 ```
 
 # Usage
-## Node / Webpack
+## ES2015+ / Webpack
 ```
-// Use all plugins
-const urlParser = require('js-video-url-parser');
+// All plugins
+import urlParser from "js-video-url-parser";
 
-// Use specific plugins
-const UrlParser = require('js-video-url-parser/urlParser');
-const parser = new UrlParser();
+// Choose individual plugins
+import urlParser from "js-video-url-parser/lib/base";
+import "js-video-url-parser/lib/provider/canalplus';
+import "js-video-url-parser/lib/provider/coub';
+import "js-video-url-parser/lib/provider/dailymotion';
+import "js-video-url-parser/lib/provider/twitch';
+import "js-video-url-parser/lib/provider/vimeo';
+import "js-video-url-parser/lib/provider/wistia';
+import "js-video-url-parser/lib/provider/youku';
+import "js-video-url-parser/lib/provider/youtube';
 
-parser.register(
-  require('js-video-url-parser/provider/vimeo'),
-  require('js-video-url-parser/provider/wistia'),
-  require('js-video-url-parser/provider/youtube')
-);
 ```
 ## Parsing
 
@@ -113,10 +115,10 @@ If you still want to reuse the generated parameters object you can use the keywo
 
 ## Adding a provider
 
-Add a new file in the `src/provider/` directory with the template found [here](src/provider/template.js) and also add it to [index.js](src/index.js).
+Add a new file in the `lib/provider/` directory with the template found [here](lib/provider/template.js) and also add it to [index.js](lib/index.js).
 <br>
-Add some tests in `tests/src/plugins/provider/` with the template found
-[here](src/provider/template.test.js).
+Add some tests in `lib/provider/` with the template found
+[here](lib/provider/template.test.js).
 
 Run `npm run test` to create the parser and test your plugin.
 

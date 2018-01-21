@@ -5,7 +5,7 @@ import minify from 'rollup-plugin-minify-es';
 
 export default [
   {
-    input: 'src/index.js',
+    input: 'lib/index.js',
     output: {
       name: 'urlParser',
       file: 'dist/jsVideoUrlParser.js',
@@ -15,11 +15,11 @@ export default [
       resolve(),
       commonjs(),
       babel({
-        presets: [["@babel/env", {"modules": false}]]
+        presets: [['@babel/env', {'modules': false}]],
       }),
     ],
   }, {
-    input: 'src/index.js',
+    input: 'lib/index.js',
     output: {
       name: 'urlParser',
       file: 'dist/jsVideoUrlParser.min.js',
@@ -29,9 +29,9 @@ export default [
       resolve(),
       commonjs(),
       babel({
-        presets: [["@babel/env", {"modules": false}]]
+        presets: [['@babel/env', {'modules': false}]],
       }),
       minify(),
     ],
-  }
+  },
 ];
