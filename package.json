@@ -43,8 +43,9 @@
     "rollup-plugin-node-resolve": "^3.0.2"
   },
   "scripts": {
-    "test": "./node_modules/.bin/jest",
+    "test": "./node_modules/.bin/jest --coverage",
     "build": "./node_modules/.bin/rollup -c rollup.config.js",
-    "lint": "./node_modules/.bin/eslint . --fix"
+    "lint": "./node_modules/.bin/eslint . --fix",
+    "lintdryfix": "./node_modules/.bin/eslint . --fix-dry-run"
   }
 }
