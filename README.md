@@ -12,6 +12,7 @@ Currently supports
  - Youku
  - Coub
  - Wistia
+ - SoundCloud
 
 # npm
 ```

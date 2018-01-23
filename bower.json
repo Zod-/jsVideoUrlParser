@@ -16,7 +16,9 @@
     "Twitch",
     "Canal+",
     "CanalPlus",
-    "Youku"
+    "Youku",
+    "Wistia",
+    "SoundCloud"
   ],
   "license": "MIT",
   "ignore": [
