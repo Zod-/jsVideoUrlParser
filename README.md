@@ -14,6 +14,14 @@ Currently supports
  - Wistia
  - SoundCloud
 
+# Building Locally
+```
+npm install
+npm lint
+npm test
+npm build
+```
+
 # npm
 ```
 npm install js-video-url-parser
