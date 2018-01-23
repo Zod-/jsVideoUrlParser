@@ -17,9 +17,9 @@ Currently supports
 # Building Locally
 ```
 npm install
-npm lint
-npm test
-npm build
+npm run lint
+npm run test
+npm run build
 ```
 
 # npm
