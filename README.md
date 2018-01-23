@@ -13,34 +13,33 @@ Currently supports
  - Coub
  - Wistia
 
-# grunt
-
-```shell
-$ grunt
-$ grunt build
-$ grunt test
-$ grunt dist
-
-#build and test specific plugins
-$ grunt --youtube --vimeo
-$ grunt build --youtube --vimeo
-$ grunt test --youtube --vimeo
-$ grunt dist --youtube --vimeo
+# npm
+```
+npm install js-video-url-parser
 ```
 
 # bower
 ```shell
 bower install js-video-url-parser
 ```
-# npm
-```
-npm install js-video-url-parser
-```
 
 # Usage
-## Node
+## ES2015+ / Webpack
 ```
-urlParser = require('js-video-url-parser');
+// All plugins
+import urlParser from "js-video-url-parser";
+
+// Choose individual plugins
+import urlParser from "js-video-url-parser/lib/base";
+import "js-video-url-parser/lib/provider/canalplus';
+import "js-video-url-parser/lib/provider/coub';
+import "js-video-url-parser/lib/provider/dailymotion';
+import "js-video-url-parser/lib/provider/twitch';
+import "js-video-url-parser/lib/provider/vimeo';
+import "js-video-url-parser/lib/provider/wistia';
+import "js-video-url-parser/lib/provider/youku';
+import "js-video-url-parser/lib/provider/youtube';
+
 ```
 ## Parsing
 
@@ -116,12 +115,12 @@ If you still want to reuse the generated parameters object you can use the keywo
 
 ## Adding a provider
 
-Add a new file in the `src/plugins/provider/` directory with the template found [here](src/plugins/provider/Template.js) and also add it in the [Gruntfile](https://github.com/Zod-/jsVideoUrlParser/blob/master/Gruntfile.js#L13).
+Add a new file in the `lib/provider/` directory with the template found [here](lib/provider/template.js) and also add it to [index.js](lib/index.js).
 <br>
-Add some tests in `tests/src/plugins/provider/` with the template found
-[here](tests/src/plugins/provider/Template.js).
+Add some tests in `lib/provider/` with the template found
+[here](lib/provider/template.test.js).
 
-Run `grunt build test --template` to create the parser and test your plugin.
+Run `npm run test` to create the parser and test your plugin.
 
 # Plugins
 

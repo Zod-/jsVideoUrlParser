@@ -1,37 +1,31 @@
-(function () {
-  'use strict';
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.urlParser = factory());
+}(this, (function () { 'use strict';
 
-/*jshint unused:false */
-function cloneObject(obj) {
-  /*jshint unused:true */
-  if (obj === null || typeof obj !== 'object') {
-    return obj;
+function _typeof(obj) {
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function (obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function (obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
   }
 
-  var temp = obj.constructor(); // give temp the original obj's constructor
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      temp[key] = cloneObject(obj[key]);
-    }
-  }
-
-  return temp;
+  return _typeof(obj);
 }
 
-/*jshint unused:false */
-function getQueryParams(qs) {
-  /*jshint unused:true */
+var getQueryParams = function getQueryParams(qs) {
   if (typeof qs !== 'string') {
     return {};
   }
-  qs = qs.split('+').join(' ');
 
+  qs = qs.split('+').join(' ');
   var params = {};
-  var match = qs.match(
-    /*jshint ignore:start */
-    /(?:[\?](?:[^=]+)=(?:[^&#]*)(?:[&](?:[^=]+)=(?:[^&#]*))*(?:[#].*)?)|(?:[#].*)/
-    /*jshint ignore:end */
-  );
+  var match = qs.match(/(?:[?](?:[^=]+)=(?:[^&#]*)(?:[&](?:[^=]+)=(?:[^&#]*))*(?:[#].*)?)|(?:[#].*)/);
   var split;
 
   if (match === null) {
@@ -41,29 +35,27 @@ function getQueryParams(qs) {
   split = match[0].substr(1).split(/[&#=]/);
 
   for (var i = 0; i < split.length; i += 2) {
-    params[decodeURIComponent(split[i])] =
-      decodeURIComponent(split[i + 1] || '');
+    params[decodeURIComponent(split[i])] = decodeURIComponent(split[i + 1] || '');
   }
 
   return params;
-}
+};
 
-/*jshint unused:false */
-function combineParams(op) {
-  /*jshint unused:true */
-  if (typeof op !== 'object') {
+var combineParams = function combineParams(op) {
+  if (_typeof(op) !== 'object') {
     return '';
   }
+
   op.params = op.params || {};
   var combined = '',
-    i = 0,
-    keys = Object.keys(op.params);
+      i = 0,
+      keys = Object.keys(op.params);
 
   if (keys.length === 0) {
     return '';
-  }
+  } //always have parameters in the same order
 
-  //always have parameters in the same order
+
   keys.sort();
 
   if (!op.hasParams) {
@@ -74,13 +66,12 @@ function combineParams(op) {
   for (; i < keys.length; i += 1) {
     combined += '&' + keys[i] + '=' + op.params[keys[i]];
   }
-  return combined;
-}
 
-//parses strings like 1h30m20s to seconds
-/*jshint unused:false */
-function getTime(timeString) {
-  /*jshint unused:true */
+  return combined;
+}; //parses strings like 1h30m20s to seconds
+
+
+var getTime = function getTime(timeString) {
   var totalSeconds = 0;
   var timeValues = {
     's': 1,
@@ -89,60 +80,71 @@ function getTime(timeString) {
     'd': 1 * 60 * 60 * 24,
     'w': 1 * 60 * 60 * 24 * 7
   };
-  var timePairs;
-  //is the format 1h30m20s etc
+  var timePairs; //is the format 1h30m20s etc
+
   if (!timeString.match(/^(\d+[smhdw]?)+$/)) {
     return 0;
-  }
-  //expand to "1 h 30 m 20 s" and split
+  } //expand to "1 h 30 m 20 s" and split
+
+
   timeString = timeString.replace(/([smhdw])/g, ' $1 ').trim();
   timePairs = timeString.split(' ');
 
   for (var i = 0; i < timePairs.length; i += 2) {
-    totalSeconds += parseInt(timePairs[i], 10) *
-      timeValues[timePairs[i + 1] || 's'];
+    totalSeconds += parseInt(timePairs[i], 10) * timeValues[timePairs[i + 1] || 's'];
   }
+
   return totalSeconds;
-}
+};
+
+var util = {
+  getQueryParams: getQueryParams,
+  combineParams: combineParams,
+  getTime: getTime
+};
+
+var getQueryParams$1 = util.getQueryParams;
 
 function UrlParser() {
+  var _arr = ['parseProvider', 'parse', 'bind', 'create'];
+
+  for (var _i = 0; _i < _arr.length; _i++) {
+    var key = _arr[_i];
+    this[key] = this[key].bind(this);
+  }
+
   this.plugins = {};
 }
 
+var urlParser = UrlParser;
+
 UrlParser.prototype.parseProvider = function (url) {
-  var match = url.match(
-    /(?:(?:https?:)?\/\/)?(?:[^\.]+\.)?(\w+)\./i
-  );
+  var match = url.match(/(?:(?:https?:)?\/\/)?(?:[^.]+\.)?(\w+)\./i);
   return match ? match[1] : undefined;
 };
 
-UrlParser.prototype.removeEmptyParameters = function (result) {
-  if (result.params && Object.keys(result.params).length === 0) {
-    delete result.params;
-  }
-  return result;
-};
-
 UrlParser.prototype.parse = function (url) {
-  var _this = this;
-  var provider = _this.parseProvider(url);
+  var provider = this.parseProvider(url);
   var result;
-  var plugin = _this.plugins[provider];
+  var plugin = this.plugins[provider];
+
   if (!provider || !plugin || !plugin.parse) {
     return undefined;
   }
-  result = plugin.parse.apply(
-    plugin, [url, getQueryParams(url)]
-  );
+
+  result = plugin.parse.call(plugin, url, getQueryParams$1(url));
+
   if (result) {
-    result = _this.removeEmptyParameters(result);
+    result = removeEmptyParameters(result);
     result.provider = plugin.provider;
   }
+
   return result;
 };
 
 UrlParser.prototype.bind = function (plugin) {
   this.plugins[plugin.provider] = plugin;
+
   if (plugin.alternatives) {
     for (var i = 0; i < plugin.alternatives.length; i += 1) {
       this.plugins[plugin.alternatives[i]] = plugin;
@@ -154,18 +156,31 @@ UrlParser.prototype.create = function (op) {
   var vi = op.videoInfo;
   var params = op.params;
   var plugin = this.plugins[vi.provider];
-
-  params = (params === 'internal') ? vi.params : params || {};
+  params = params === 'internal' ? vi.params : params || {};
 
   if (plugin) {
     op.format = op.format || plugin.defaultFormat;
+
     if (plugin.formats.hasOwnProperty(op.format)) {
-      return plugin.formats[op.format].apply(plugin, [vi, cloneObject(params)]);
+      return plugin.formats[op.format].apply(plugin, [vi, Object.assign({}, params)]);
     }
   }
+
   return undefined;
 };
-var urlParser = new UrlParser();
+
+function removeEmptyParameters(result) {
+  if (result.params && Object.keys(result.params).length === 0) {
+    delete result.params;
+  }
+
+  return result;
+}
+
+var parser = new urlParser();
+var base = parser;
+
+var combineParams$1 = util.combineParams;
 
 function CanalPlus() {
   this.provider = 'canalplus';
@@ -185,6 +200,7 @@ CanalPlus.prototype.parseParameters = function (params) {
 
 CanalPlus.prototype.parse = function (url, params) {
   var _this = this;
+
   var result = {
     mediaType: this.mediaTypes.VIDEO,
     id: params.vid
@@ -194,20 +210,22 @@ CanalPlus.prototype.parse = function (url, params) {
   if (!result.id) {
     return undefined;
   }
+
   return result;
 };
 
 CanalPlus.prototype.createEmbedUrl = function (vi, params) {
   var url = 'http://player.canalplus.fr/embed/';
   params.vid = vi.id;
-
-  url += combineParams({
+  url += combineParams$1({
     params: params
   });
   return url;
 };
 
-urlParser.bind(new CanalPlus());
+base.bind(new CanalPlus());
+
+var combineParams$2 = util.combineParams;
 
 function Coub() {
   this.provider = 'coub';
@@ -222,9 +240,7 @@ function Coub() {
 }
 
 Coub.prototype.parseUrl = function (url) {
-  var match = url.match(
-    /(?:embed|view)\/([a-zA-Z\d]+)/i
-  );
+  var match = url.match(/(?:embed|view)\/([a-zA-Z\d]+)/i);
   return match ? match[1] : undefined;
 };
 
@@ -238,12 +254,13 @@ Coub.prototype.parse = function (url, params) {
   if (!result.id) {
     return undefined;
   }
+
   return result;
 };
 
 Coub.prototype.createUrl = function (baseUrl, vi, params) {
   var url = baseUrl + vi.id;
-  url += combineParams({
+  url += combineParams$2({
     params: params
   });
   return url;
@@ -257,7 +274,10 @@ Coub.prototype.createEmbedUrl = function (vi, params) {
   return this.createUrl('//coub.com/embed/', vi, params);
 };
 
-urlParser.bind(new Coub());
+base.bind(new Coub());
+
+var combineParams$3 = util.combineParams;
+var getTime$1 = util.getTime;
 
 function Dailymotion() {
   this.provider = 'dailymotion';
@@ -279,8 +299,9 @@ Dailymotion.prototype.parseParameters = function (params) {
 
 Dailymotion.prototype.parseTime = function (params) {
   if (params.start) {
-    params.start = getTime(params.start);
+    params.start = getTime$1(params.start);
   }
+
   return params;
 };
 
@@ -291,6 +312,7 @@ Dailymotion.prototype.parseUrl = function (url) {
 
 Dailymotion.prototype.parse = function (url, params) {
   var _this = this;
+
   var result = {
     mediaType: this.mediaTypes.VIDEO,
     params: _this.parseParameters(params),
@@ -299,11 +321,10 @@ Dailymotion.prototype.parse = function (url, params) {
   return result.id ? result : undefined;
 };
 
-Dailymotion.prototype.createUrl = function (base, vi, params) {
-  return base + vi.id +
-    combineParams({
-      params: params
-    });
+Dailymotion.prototype.createUrl = function (base$$2, vi, params) {
+  return base$$2 + vi.id + combineParams$3({
+    params: params
+  });
 };
 
 Dailymotion.prototype.createShortUrl = function (vi) {
@@ -318,7 +339,10 @@ Dailymotion.prototype.createEmbedUrl = function (vi, params) {
   return this.createUrl('//www.dailymotion.com/embed/video/', vi, params);
 };
 
-urlParser.bind(new Dailymotion());
+base.bind(new Dailymotion());
+
+var combineParams$4 = util.combineParams;
+var getTime$2 = util.getTime;
 
 function Twitch() {
   this.provider = 'twitch';
@@ -330,7 +354,7 @@ function Twitch() {
   this.mediaTypes = {
     VIDEO: 'video',
     STREAM: 'stream',
-    CLIP: 'clip',
+    CLIP: 'clip'
   };
 }
 
@@ -342,64 +366,70 @@ Twitch.prototype.seperateId = function (id) {
 };
 
 Twitch.prototype.parseChannel = function (result, params) {
-  /*jshint camelcase:false */
   var channel = params.channel || params.utm_content || result.channel;
   delete params.utm_content;
-  /*jshint camelcase:true */
   delete params.channel;
   return channel;
 };
 
 Twitch.prototype.parseUrl = function (url, result, params) {
   var match;
-  match = url.match(
-    /(clips\.)?twitch\.tv\/(?:(?:videos\/(\d+))|(\w+))?/i
-  );
+  match = url.match(/(clips\.)?twitch\.tv\/(?:(?:videos\/(\d+))|(\w+))?/i);
 
-  if (match && match[2]) { //video
+  if (match && match[2]) {
+    //video
     result.id = 'v' + match[2];
-  } else if (params.video) { //video embed
+  } else if (params.video) {
+    //video embed
     result.id = params.video;
     delete params.video;
-  }  else if (params.clip) { //clips embed
+  } else if (params.clip) {
+    //clips embed
     result.id = params.clip;
     result.isClip = true;
     delete params.clip;
-  } else if (match && match[1] && match[3]) { //clips
+  } else if (match && match[1] && match[3]) {
+    //clips
     result.id = match[3];
     result.isClip = true;
-  } else if (match && match[3]){
+  } else if (match && match[3]) {
     result.channel = match[3];
   }
+
   return result;
 };
 
 Twitch.prototype.parseMediaType = function (result) {
   var mediaType;
+
   if (result.channel) {
-      mediaType = this.mediaTypes.STREAM;
+    mediaType = this.mediaTypes.STREAM;
   } else if (result.id) {
-    if (result.isClip){
+    if (result.isClip) {
       mediaType = this.mediaTypes.CLIP;
       delete result.isClip;
     } else {
       mediaType = this.mediaTypes.VIDEO;
     }
+
     delete result.channel;
   }
+
   return mediaType;
 };
 
 Twitch.prototype.parseParameters = function (params) {
   if (params.t) {
-    params.start = getTime(params.t);
+    params.start = getTime$2(params.t);
     delete params.t;
   }
+
   return params;
 };
 
 Twitch.prototype.parse = function (url, params) {
   var _this = this;
+
   var result = {};
   result = _this.parseUrl(url, result, params);
   result.channel = _this.parseChannel(result, params);
@@ -416,6 +446,7 @@ Twitch.prototype.createLongUrl = function (vi, params) {
   } else if (vi.mediaType === this.mediaTypes.VIDEO) {
     var sep = this.seperateId(vi.id);
     url = 'https://twitch.tv/videos/' + sep.id;
+
     if (params.start) {
       params.t = params.start + 's';
       delete params.start;
@@ -423,10 +454,10 @@ Twitch.prototype.createLongUrl = function (vi, params) {
   } else if (vi.mediaType === this.mediaTypes.CLIP) {
     url = 'https://clips.twitch.tv/' + vi.id;
   }
-  url += combineParams({
+
+  url += combineParams$4({
     params: params
   });
-
   return url;
 };
 
@@ -437,6 +468,7 @@ Twitch.prototype.createEmbedUrl = function (vi, params) {
     params.channel = vi.channel;
   } else if (vi.mediaType === this.mediaTypes.VIDEO) {
     params.video = vi.id;
+
     if (params.start) {
       params.t = params.start + 's';
       delete params.start;
@@ -446,14 +478,16 @@ Twitch.prototype.createEmbedUrl = function (vi, params) {
     params.clip = vi.id;
   }
 
-  url += combineParams({
+  url += combineParams$4({
     params: params
   });
-
   return url;
 };
 
-urlParser.bind(new Twitch());
+base.bind(new Twitch());
+
+var combineParams$5 = util.combineParams;
+var getTime$3 = util.getTime;
 
 function Vimeo() {
   this.provider = 'vimeo';
@@ -469,11 +503,7 @@ function Vimeo() {
 }
 
 Vimeo.prototype.parseUrl = function (url) {
-  var match = url.match(
-    /*jshint ignore:start */
-    /(?:\/(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+)\/)?videos?))?\/(\d+)/i
-    /*jshint ignore:end */
-  );
+  var match = url.match(/(?:\/(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+)\/)?videos?))?\/(\d+)/i);
   return match ? match[1] : undefined;
 };
 
@@ -483,9 +513,10 @@ Vimeo.prototype.parseParameters = function (params) {
 
 Vimeo.prototype.parseTime = function (params) {
   if (params.t) {
-    params.start = getTime(params.t);
+    params.start = getTime$3(params.t);
     delete params.t;
   }
+
   return params;
 };
 
@@ -502,14 +533,14 @@ Vimeo.prototype.createUrl = function (baseUrl, vi, params) {
   var url = baseUrl + vi.id;
   var startTime = params.start;
   delete params.start;
-
-  url += combineParams({
+  url += combineParams$5({
     params: params
   });
 
   if (startTime) {
     url += '#t=' + startTime;
   }
+
   return url;
 };
 
@@ -521,7 +552,193 @@ Vimeo.prototype.createEmbedUrl = function (vi, params) {
   return this.createUrl('//player.vimeo.com/video/', vi, params);
 };
 
-urlParser.bind(new Vimeo());
+base.bind(new Vimeo());
+
+var combineParams$6 = util.combineParams;
+var getTime$4 = util.getTime;
+
+function Wistia() {
+  this.provider = 'wistia';
+  this.alternatives = [];
+  this.defaultFormat = 'long';
+  this.formats = {
+    long: this.createLongUrl,
+    embed: this.createEmbedUrl,
+    embedjsonp: this.createEmbedJsonpUrl
+  };
+  this.mediaTypes = {
+    VIDEO: 'video',
+    EMBEDVIDEO: 'embedvideo'
+  };
+}
+
+Wistia.prototype.parseUrl = function (url, params) {
+  var match = url.match(/(?:(?:medias|iframe)\/|wvideo=)([\w-]+)/);
+  return match ? match[1] : undefined;
+};
+
+Wistia.prototype.parseChannel = function (url, params) {
+  var match = url.match(/(?:(?:https?:)?\/\/)?([^.]*)\.wistia\./);
+  var channel = match ? match[1] : undefined;
+
+  if (channel === 'fast' || channel === 'content') {
+    return undefined;
+  }
+
+  return channel;
+};
+
+Wistia.prototype.parseParameters = function (params, result) {
+  if (params.wtime) {
+    params.start = getTime$4(params.wtime);
+    delete params.wtime;
+  }
+
+  if (params.wvideo === result.id) {
+    delete params.wvideo;
+  }
+
+  return params;
+};
+
+Wistia.prototype.parseMediaType = function (result) {
+  if (result.id && result.channel) {
+    return this.mediaTypes.VIDEO;
+  } else if (result.id) {
+    delete result.channel;
+    return this.mediaTypes.EMBEDVIDEO;
+  } else {
+    return undefined;
+  }
+};
+
+Wistia.prototype.parse = function (url, params) {
+  var _this = this;
+
+  var result = {
+    params: params,
+    id: _this.parseUrl(url),
+    channel: _this.parseChannel(url)
+  };
+  result.params = _this.parseParameters(params, result);
+  result.mediaType = _this.parseMediaType(result);
+
+  if (!result.id) {
+    return undefined;
+  }
+
+  return result;
+};
+
+Wistia.prototype.createUrl = function (vi, params, url) {
+  if (params.start) {
+    params.wtime = params.start;
+    delete params.start;
+  }
+
+  url += combineParams$6({
+    params: params
+  });
+  return url;
+};
+
+Wistia.prototype.createLongUrl = function (vi, params) {
+  if (vi.mediaType !== this.mediaTypes.VIDEO) {
+    return;
+  }
+
+  var url = 'https://' + vi.channel + '.wistia.com/medias/' + vi.id;
+  return this.createUrl(vi, params, url);
+};
+
+Wistia.prototype.createEmbedUrl = function (vi, params) {
+  var url = 'https://fast.wistia.com/embed/iframe/' + vi.id;
+  return this.createUrl(vi, params, url);
+};
+
+Wistia.prototype.createEmbedJsonpUrl = function (vi, params) {
+  return 'https://fast.wistia.com/embed/medias/' + vi.id + '.jsonp';
+};
+
+base.bind(new Wistia());
+
+var combineParams$7 = util.combineParams;
+
+function Youku() {
+  this.provider = 'youku';
+  this.defaultFormat = 'long';
+  this.formats = {
+    embed: this.createEmbedUrl,
+    long: this.createLongUrl,
+    flash: this.createFlashUrl,
+    static: this.createStaticUrl
+  };
+  this.mediaTypes = {
+    VIDEO: 'video'
+  };
+}
+
+Youku.prototype.parseUrl = function (url) {
+  var match = url.match(/(?:(?:embed|sid)\/|v_show\/id_|VideoIDS=)([a-zA-Z0-9]+)/);
+  return match ? match[1] : undefined;
+};
+
+Youku.prototype.parseParameters = function (params) {
+  if (params.VideoIDS) {
+    delete params.VideoIDS;
+  }
+
+  return params;
+};
+
+Youku.prototype.parse = function (url, params) {
+  var _this = this;
+
+  var result = {
+    mediaType: this.mediaTypes.VIDEO,
+    id: _this.parseUrl(url),
+    params: _this.parseParameters(params)
+  };
+
+  if (!result.id) {
+    return undefined;
+  }
+
+  return result;
+};
+
+Youku.prototype.createUrl = function (baseUrl, vi, params) {
+  var url = baseUrl + vi.id;
+  url += combineParams$7({
+    params: params
+  });
+  return url;
+};
+
+Youku.prototype.createEmbedUrl = function (vi, params) {
+  return this.createUrl('http://player.youku.com/embed/', vi, params);
+};
+
+Youku.prototype.createLongUrl = function (vi, params) {
+  return this.createUrl('http://v.youku.com/v_show/id_', vi, params);
+};
+
+Youku.prototype.createStaticUrl = function (vi, params) {
+  return this.createUrl('http://static.youku.com/v1.0.0638/v/swf/loader.swf?VideoIDS=', vi, params);
+};
+
+Youku.prototype.createFlashUrl = function (vi, params) {
+  var url = 'http://player.youku.com/player.php/sid/' + vi.id + '/v.swf';
+  url += combineParams$7({
+    params: params
+  });
+  return url;
+};
+
+base.bind(new Youku());
+
+var combineParams$8 = util.combineParams;
+var getTime$5 = util.getTime;
 
 function YouTube() {
   this.provider = 'youtube';
@@ -543,7 +760,7 @@ function YouTube() {
     HQDEFAULT: 'hqdefault',
     SDDEFAULT: 'sddefault',
     MQDEFAULT: 'mqdefault',
-    MAXRESDEFAULT: 'maxresdefault',
+    MAXRESDEFAULT: 'maxresdefault'
   };
   this.defaultImageQuality = this.imageQualities.HQDEFAULT;
   this.mediaTypes = {
@@ -554,20 +771,20 @@ function YouTube() {
 }
 
 YouTube.prototype.parseUrl = function (url) {
-  var match = url.match(
-    /(?:(?:v|vi|be|videos|embed)\/(?!videoseries)|(?:v|ci)=)([\w\-]{11})/i
-  );
+  var match = url.match(/(?:(?:v|vi|be|videos|embed)\/(?!videoseries)|(?:v|ci)=)([\w-]{11})/i);
   return match ? match[1] : undefined;
 };
 
 YouTube.prototype.parseParameters = function (params, result) {
   if (params.start || params.t) {
-    params.start = getTime(params.start || params.t);
+    params.start = getTime$5(params.start || params.t);
     delete params.t;
   }
+
   if (params.v === result.id) {
     delete params.v;
   }
+
   if (params.list === result.id) {
     delete params.list;
   }
@@ -580,6 +797,7 @@ YouTube.prototype.parseMediaType = function (result) {
     result.list = result.params.list;
     delete result.params.list;
   }
+
   if (result.id && !result.params.ci) {
     result.mediaType = this.mediaTypes.VIDEO;
   } else if (result.list) {
@@ -591,25 +809,27 @@ YouTube.prototype.parseMediaType = function (result) {
   } else {
     return undefined;
   }
+
   return result;
 };
 
 YouTube.prototype.parse = function (url, params) {
-  var _this = this;
   var result = {
     params: params,
-    id: _this.parseUrl(url)
+    id: this.parseUrl(url)
   };
-  result.params = _this.parseParameters(params, result);
-  result = _this.parseMediaType(result);
+  result.params = this.parseParameters(params, result);
+  result = this.parseMediaType(result);
   return result;
 };
 
 YouTube.prototype.createShortUrl = function (vi, params) {
   var url = 'https://youtu.be/' + vi.id;
+
   if (params.start) {
     url += '#t=' + params.start;
   }
+
   return url;
 };
 
@@ -633,13 +853,14 @@ YouTube.prototype.createLongUrl = function (vi, params) {
     params.list = vi.list;
   }
 
-  url += combineParams({
+  url += combineParams$8({
     params: params
   });
 
   if (vi.mediaType !== this.mediaTypes.PLAYLIST && startTime) {
     url += '#t=' + startTime;
   }
+
   return url;
 };
 
@@ -649,8 +870,8 @@ YouTube.prototype.createEmbedUrl = function (vi, params) {
   if (vi.mediaType === this.mediaTypes.PLAYLIST) {
     params.listType = 'playlist';
   } else {
-    url += '/' + vi.id;
-    //loop hack
+    url += '/' + vi.id; //loop hack
+
     if (params.loop === '1') {
       params.playlist = vi.id;
     }
@@ -660,17 +881,15 @@ YouTube.prototype.createEmbedUrl = function (vi, params) {
     params.list = vi.list;
   }
 
-  url += combineParams({
+  url += combineParams$8({
     params: params
   });
-
   return url;
 };
 
 YouTube.prototype.createImageUrl = function (baseUrl, vi, params) {
   var url = baseUrl + vi.id + '/';
   var quality = params.imageQuality || this.defaultImageQuality;
-
   return url + quality + '.jpg';
 };
 
@@ -682,90 +901,10 @@ YouTube.prototype.createLongImageUrl = function (vi, params) {
   return this.createImageUrl('https://img.youtube.com/vi/', vi, params);
 };
 
-urlParser.bind(new YouTube());
+base.bind(new YouTube());
 
-function Youku() {
-  this.provider = 'youku';
-  this.defaultFormat = 'long';
-  this.formats = {
-    embed: this.createEmbedUrl,
-    long: this.createLongUrl,
-    flash: this.createFlashUrl,
-    static: this.createStaticUrl
-  };
-  this.mediaTypes = {
-    VIDEO: 'video'
-  };
-}
+var lib = base;
 
-Youku.prototype.parseUrl = function (url) {
-  var match = url.match(
-    /(?:(?:embed|sid)\/|v_show\/id_|VideoIDS=)([a-zA-Z0-9]+)/
-  );
-  return match ? match[1] : undefined;
-};
+return lib;
 
-Youku.prototype.parseParameters = function (params) {
-  if (params.VideoIDS) {
-    delete params.VideoIDS;
-  }
-  return params;
-};
-
-Youku.prototype.parse = function (url, params) {
-  var _this = this;
-  var result = {
-    mediaType: this.mediaTypes.VIDEO,
-    id: _this.parseUrl(url),
-    params: _this.parseParameters(params)
-  };
-
-  if (!result.id) {
-    return undefined;
-  }
-  return result;
-};
-
-Youku.prototype.createUrl = function (baseUrl, vi, params) {
-  var url = baseUrl + vi.id;
-
-  url += combineParams({
-    params: params
-  });
-  return url;
-};
-
-
-Youku.prototype.createEmbedUrl = function (vi, params) {
-  return this.createUrl('http://player.youku.com/embed/', vi, params);
-};
-
-Youku.prototype.createLongUrl = function (vi, params) {
-  return this.createUrl('http://v.youku.com/v_show/id_', vi, params);
-};
-
-Youku.prototype.createStaticUrl = function (vi, params) {
-  return this.createUrl(
-    'http://static.youku.com/v1.0.0638/v/swf/loader.swf?VideoIDS=',
-    vi, params
-  );
-};
-
-Youku.prototype.createFlashUrl = function (vi, params) {
-  var url = 'http://player.youku.com/player.php/sid/' + vi.id + '/v.swf';
-
-  url += combineParams({
-    params: params
-  });
-  return url;
-};
-
-urlParser.bind(new Youku());
-
-if (typeof window !== 'undefined') {
-  window.urlParser = urlParser;
-}
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-  module.exports = urlParser;
-}
-})();
+})));

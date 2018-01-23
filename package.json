@@ -2,7 +2,7 @@
   "name": "js-video-url-parser",
   "version": "0.2.4",
   "description": "A parser to extract provider, video id, starttime and others from YouTube, Vimeo, ... urls",
-  "main": "dist/jsVideoUrlParser.js",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/Zod-/jsVideoUrlParser.git"
@@ -26,19 +26,23 @@
     "url": "https://github.com/Zod-/jsVideoUrlParser/issues"
   },
   "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-contrib-jshint": "~0.11.0",
-    "grunt-contrib-qunit": "~0.5.2",
-    "grunt-contrib-concat": "~0.5.1",
-    "grunt-contrib-uglify": "~0.8.0"
+    "@babel/core": "^7.0.0-beta.38",
+    "@babel/preset-env": "^7.0.0-beta.38",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^8.2.1",
+    "babel-preset-minify": "^0.2.0",
+    "eslint": "^4.16.0",
+    "eslint-plugin-jest": "^21.7.0",
+    "jest": "^22.1.4",
+    "rollup": "^0.54.1",
+    "rollup-plugin-babel": "^4.0.0-beta.0",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-minify-es": "^1.1.1",
+    "rollup-plugin-node-resolve": "^3.0.2"
   },
   "scripts": {
-    "test": "grunt test"
-  },
-  "files": [
-    "dist/",
-    "tests/",
-    "README.md",
-    "LICENSE"
-  ]
+    "test": "./node_modules/.bin/jest",
+    "build": "./node_modules/.bin/rollup -c rollup.config.js",
+    "lint": "./node_modules/.bin/eslint . --fix"
+  }
 }

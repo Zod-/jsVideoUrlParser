@@ -1,0 +1,7 @@
+/*.js
+/*.json
+/lib/provider/template.js
+.*
+coverage
+dist
+*.test.js

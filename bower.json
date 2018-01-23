@@ -1,8 +1,8 @@
 {
-  "name": "jsVideoUrlParser",
+  "name": "js-video-url-parser",
   "version": "0.2.4",
   "homepage": "https://github.com/Zod-/jsVideoUrlParser",
-  "main": "./dist/jsVideoUrlParser.min.js",
+  "main": "dist/jsVideoUrlParser.js",
   "authors": [{
     "name": "Julian Hangstörfer",
     "email": "jhangstoerfer@gmail.com"
@@ -20,10 +20,9 @@
   ],
   "license": "MIT",
   "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "*",
+    "!dist/*",
+    "!README.md",
+    "!LICENSE"
   ]
 }
