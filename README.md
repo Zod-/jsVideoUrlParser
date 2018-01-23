@@ -768,3 +768,117 @@ Run `npm run test` to create the parser and test your plugin.
 'embed': 'https://fast.wistia.com/embed/iframe/lpu6bgplle?wtime=90'
 'embedjsonp': 'https://fast.wistia.com/embed/medias/lpu6bgplle.jsonp'
 ```
+
+## SoundCloud
+
+#### Supported media types:
+* `'track'`: Regular tracks.
+* `'playlist'`: Lists of tracks, including albums, singles, EPs, playlists.
+* `'embedtrack'`: Embed track is a seperate media type because SoundCloud uses different ids to embed.
+* `'embedplaylist'`: Same reason as embedtrack.
+
+#### Supported url formats:
+* `'long'`(default): Regular urls.
+* `'embed'`: Embedded urls using iframe.
+
+#### Creating urls with different media types:
+
+| mediaType/formats| long | embed |
+| ------------- | :--: | :--: | :--: |
+| **track**    | ✓  | X  |
+| **playlist**    | ✓  | X  |
+| **embedtrack** | ✓  | ✓  |
+| **embedplaylist** | ✓  | ✓  |
+
+#### Special parameters:
+* `'list'`: On playlist types the list property will be set with the list id.
+* `'channel'`: The channel containing the track or playlist. Will not be set with embed types.
+* `'params.start'`: The number where the video should begin in seconds.
+
+#### Parsing Examples:
+```javascript
+> urlParser.parse('https://soundcloud.com/julian-hangst-rfer/odsf0dif92w3j_adfw-edf-1-asdf-1');
+{ mediaType: 'track',
+  channel: 'julian-hangst-rfer',
+  id: 'odsf0dif92w3j_adfw-edf-1-asdf-1',
+  provider: 'soundcloud'
+}
+
+> urlParser.parse('https://soundcloud.com/julian-hangst-rfer/sets/dif92w-e_e');
+{ mediaType: 'playlist',
+  channel: 'julian-hangst-rfer',
+  list: 'dif92w-e_e',
+  provider: 'soundcloud'
+}
+
+> urlParser.parse('https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/388050272');
+> urlParser.parse('https://api.soundcloud.com/tracks/388050272');
+{ mediaType: 'embedtrack',
+  id: '388050272',
+  provider: 'soundcloud'
+}
+
+> urlParser.parse('https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/430366544');
+> urlParser.parse('https://api.soundcloud.com/playlists/430366544');
+{ mediaType: 'embedplaylist',
+  list: '430366544',
+  provider: 'soundcloud'
+}
+
+> urlParser.parse('https://soundcloud.com/julian-hangst-rfer/odsf0dif92w3j_adfw-edf-1-asdf-1#t=0:30');
+{ mediaType: 'track',
+  channel: 'julian-hangst-rfer',
+  id: 'odsf0dif92w3j_adfw-edf-1-asdf-1',
+  provider: 'soundcloud',
+  params: {
+    start: 30
+  }
+}
+```
+
+#### Creation Examples:
+```javascript
+> urlParser.create({
+    videoInfo: {
+      provider: 'soundcloud',
+      channel: 'julian-hangst-rfer',
+      id: 'odsf0dif92w3j_adfw-edf-1-asdf-1',
+      mediaType: 'track'
+    },
+    format: <format>
+  })
+'long': 'https://soundcloud.com/julian-hangst-rfer/odsf0dif92w3j_adfw-edf-1-asdf-1'
+
+> urlParser.create({
+    videoInfo: {
+      provider: 'soundcloud',
+      channel: 'julian-hangst-rfer',
+      list: 'dif92w-e_e',
+      mediaType: 'playlist'
+    },
+    format: <format>
+  })
+'long': 'https://soundcloud.com/julian-hangst-rfer/sets/dif92w-e_e'
+
+> urlParser.create({
+    videoInfo: {
+      provider: 'soundcloud',
+      id: '388050272',
+      mediaType: 'embedtrack'
+    },
+    format: <format>
+  })
+'long': 'https://api.soundcloud.com/tracks/388050272'
+'embed': 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/388050272'
+
+> urlParser.create({
+    videoInfo: {
+      provider: 'soundcloud',
+      list: '430366544',
+      mediaType: 'embedplaylist'
+    },
+    format: <format>
+  })
+'long': 'https://api.soundcloud.com/playlist/430366544'
+'embed': 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlist/430366544'
+```
