@@ -15,7 +15,9 @@
     "Twitch",
     "CanalPlus",
     "Youku",
-    "Coub"
+    "Coub",
+    "Wistia",
+    "SoundCloud"
   ],
   "author": {
     "name": "Julian Hangstörfer",
