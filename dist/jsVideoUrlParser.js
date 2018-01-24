@@ -71,7 +71,7 @@ var combineParams = function combineParams(op) {
 }; //parses strings like 1h30m20s to seconds
 
 
-var getTime = function getTime(timeString) {
+function getLetterTime(timeString) {
   var totalSeconds = 0;
   var timeValues = {
     's': 1,
@@ -80,12 +80,7 @@ var getTime = function getTime(timeString) {
     'd': 1 * 60 * 60 * 24,
     'w': 1 * 60 * 60 * 24 * 7
   };
-  var timePairs; //is the format 1h30m20s etc
-
-  if (!timeString.match(/^(\d+[smhdw]?)+$/)) {
-    return 0;
-  } //expand to "1 h 30 m 20 s" and split
-
+  var timePairs; //expand to "1 h 30 m 20 s" and split
 
   timeString = timeString.replace(/([smhdw])/g, ' $1 ').trim();
   timePairs = timeString.split(' ');
@@ -95,6 +90,35 @@ var getTime = function getTime(timeString) {
   }
 
   return totalSeconds;
+} //parses strings like 1:30:20 to seconds
+
+
+function getColonTime(timeString) {
+  var totalSeconds = 0;
+  var timeValues = [1, 1 * 60, 1 * 60 * 60, 1 * 60 * 60 * 24, 1 * 60 * 60 * 24 * 7];
+  var timePairs = timeString.split(':');
+
+  for (var i = 0; i < timePairs.length; i++) {
+    totalSeconds += parseInt(timePairs[i], 10) * timeValues[timePairs.length - i - 1];
+  }
+
+  return totalSeconds;
+}
+
+var getTime = function getTime(timeString) {
+  if (typeof timeString === 'undefined') {
+    return 0;
+  }
+
+  if (timeString.match(/^(\d+[smhdw]?)+$/)) {
+    return getLetterTime(timeString);
+  }
+
+  if (timeString.match(/^(\d+:?)+$/)) {
+    return getColonTime(timeString);
+  }
+
+  return 0;
 };
 
 var util = {
@@ -124,6 +148,10 @@ UrlParser.prototype.parseProvider = function (url) {
 };
 
 UrlParser.prototype.parse = function (url) {
+  if (typeof url === 'undefined') {
+    return undefined;
+  }
+
   var provider = this.parseProvider(url);
   var result;
   var plugin = this.plugins[provider];
@@ -443,7 +471,9 @@ Twitch.prototype.createLongUrl = function (vi, params) {
 
   if (vi.mediaType === this.mediaTypes.STREAM) {
     url = 'https://twitch.tv/' + vi.channel;
-  } else if (vi.mediaType === this.mediaTypes.VIDEO) {
+  }
+
+  if (vi.mediaType === this.mediaTypes.VIDEO) {
     var sep = this.seperateId(vi.id);
     url = 'https://twitch.tv/videos/' + sep.id;
 
@@ -451,7 +481,9 @@ Twitch.prototype.createLongUrl = function (vi, params) {
       params.t = params.start + 's';
       delete params.start;
     }
-  } else if (vi.mediaType === this.mediaTypes.CLIP) {
+  }
+
+  if (vi.mediaType === this.mediaTypes.CLIP) {
     url = 'https://clips.twitch.tv/' + vi.id;
   }
 
@@ -466,14 +498,18 @@ Twitch.prototype.createEmbedUrl = function (vi, params) {
 
   if (vi.mediaType === this.mediaTypes.STREAM) {
     params.channel = vi.channel;
-  } else if (vi.mediaType === this.mediaTypes.VIDEO) {
+  }
+
+  if (vi.mediaType === this.mediaTypes.VIDEO) {
     params.video = vi.id;
 
     if (params.start) {
       params.t = params.start + 's';
       delete params.start;
     }
-  } else if (vi.mediaType === this.mediaTypes.CLIP) {
+  }
+
+  if (vi.mediaType === this.mediaTypes.CLIP) {
     url = 'https://clips.twitch.tv/embed';
     params.clip = vi.id;
   }
@@ -572,12 +608,12 @@ function Wistia() {
   };
 }
 
-Wistia.prototype.parseUrl = function (url, params) {
+Wistia.prototype.parseUrl = function (url) {
   var match = url.match(/(?:(?:medias|iframe)\/|wvideo=)([\w-]+)/);
   return match ? match[1] : undefined;
 };
 
-Wistia.prototype.parseChannel = function (url, params) {
+Wistia.prototype.parseChannel = function (url) {
   var match = url.match(/(?:(?:https?:)?\/\/)?([^.]*)\.wistia\./);
   var channel = match ? match[1] : undefined;
 
@@ -613,15 +649,12 @@ Wistia.prototype.parseMediaType = function (result) {
 };
 
 Wistia.prototype.parse = function (url, params) {
-  var _this = this;
-
   var result = {
-    params: params,
-    id: _this.parseUrl(url),
-    channel: _this.parseChannel(url)
+    id: this.parseUrl(url),
+    channel: this.parseChannel(url)
   };
-  result.params = _this.parseParameters(params, result);
-  result.mediaType = _this.parseMediaType(result);
+  result.params = this.parseParameters(params, result);
+  result.mediaType = this.parseMediaType(result);
 
   if (!result.id) {
     return undefined;
@@ -644,7 +677,7 @@ Wistia.prototype.createUrl = function (vi, params, url) {
 
 Wistia.prototype.createLongUrl = function (vi, params) {
   if (vi.mediaType !== this.mediaTypes.VIDEO) {
-    return;
+    return '';
   }
 
   var url = 'https://' + vi.channel + '.wistia.com/medias/' + vi.id;
@@ -656,7 +689,7 @@ Wistia.prototype.createEmbedUrl = function (vi, params) {
   return this.createUrl(vi, params, url);
 };
 
-Wistia.prototype.createEmbedJsonpUrl = function (vi, params) {
+Wistia.prototype.createEmbedJsonpUrl = function (vi) {
   return 'https://fast.wistia.com/embed/medias/' + vi.id + '.jsonp';
 };
 
@@ -841,10 +874,14 @@ YouTube.prototype.createLongUrl = function (vi, params) {
   if (vi.mediaType === this.mediaTypes.PLAYLIST) {
     params.feature = 'share';
     url += 'https://youtube.com/playlist';
-  } else if (vi.mediaType === this.mediaTypes.VIDEO) {
+  }
+
+  if (vi.mediaType === this.mediaTypes.VIDEO) {
     params.v = vi.id;
     url += 'https://youtube.com/watch';
-  } else if (vi.mediaType === this.mediaTypes.SHARE) {
+  }
+
+  if (vi.mediaType === this.mediaTypes.SHARE) {
     params.ci = vi.id;
     url += 'https://www.youtube.com/shared';
   }
