@@ -793,9 +793,9 @@ Run `npm run test` to create the parser and test your plugin.
 #### Creating urls with different media types:
 
 | mediaType/formats| long | embed |
-| ------------- | :--: | :--: | :--: |
+| ------------- | :--: | :--: |
 | **track**    | ✓  | X  |
-| **playlist**    | ✓  | X  |
+| **playlist**   | ✓  | X  |
 | **embedtrack** | ✓  | ✓  |
 | **embedplaylist** | ✓  | ✓  |
 
