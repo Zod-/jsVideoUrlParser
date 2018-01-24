@@ -783,8 +783,8 @@ Run `npm run test` to create the parser and test your plugin.
 #### Supported media types:
 * `'track'`: Regular tracks.
 * `'playlist'`: Lists of tracks, including albums, singles, EPs, playlists.
-* `'embedtrack'`: Embed track is a seperate media type because SoundCloud uses different ids to embed.
-* `'embedplaylist'`: Same reason as embedtrack.
+* `'apitrack'`: SoundCloud uses integer based ids for their api. Track can be resolved to apitrack using their `/resolve` endpoint
+* `'apiplaylist'`: Same reason as apitrack.
 
 #### Supported url formats:
 * `'long'`(default): Regular urls.
@@ -796,12 +796,12 @@ Run `npm run test` to create the parser and test your plugin.
 | ------------- | :--: | :--: | :--: |
 | **track**    | ✓  | X  |
 | **playlist**    | ✓  | X  |
-| **embedtrack** | ✓  | ✓  |
-| **embedplaylist** | ✓  | ✓  |
+| **apitrack** | ✓  | ✓  |
+| **apiplaylist** | ✓  | ✓  |
 
 #### Special parameters:
 * `'list'`: On playlist types the list property will be set with the list id.
-* `'channel'`: The channel containing the track or playlist. Will not be set with embed types.
+* `'channel'`: The channel containing the track or playlist. Will not be set with api types.
 * `'params.start'`: The number where the video should begin in seconds.
 
 #### Parsing Examples:
@@ -822,14 +822,14 @@ Run `npm run test` to create the parser and test your plugin.
 
 > urlParser.parse('https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/388050272');
 > urlParser.parse('https://api.soundcloud.com/tracks/388050272');
-{ mediaType: 'embedtrack',
+{ mediaType: 'apitrack',
   id: '388050272',
   provider: 'soundcloud'
 }
 
 > urlParser.parse('https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/430366544');
 > urlParser.parse('https://api.soundcloud.com/playlists/430366544');
-{ mediaType: 'embedplaylist',
+{ mediaType: 'apiplaylist',
   list: '430366544',
   provider: 'soundcloud'
 }
@@ -873,7 +873,7 @@ Run `npm run test` to create the parser and test your plugin.
     videoInfo: {
       provider: 'soundcloud',
       id: '388050272',
-      mediaType: 'embedtrack'
+      mediaType: 'apitrack'
     },
     format: <format>
   })
@@ -884,7 +884,7 @@ Run `npm run test` to create the parser and test your plugin.
     videoInfo: {
       provider: 'soundcloud',
       list: '430366544',
-      mediaType: 'embedplaylist'
+      mediaType: 'apiplaylist'
     },
     format: <format>
   })
