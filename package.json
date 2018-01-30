@@ -3,6 +3,7 @@
   "version": "0.2.6",
   "description": "A parser to extract provider, video id, starttime and others from YouTube, Vimeo, ... urls",
   "main": "lib/index.js",
+  "files": ["dist"],
   "repository": {
     "type": "git",
     "url": "https://github.com/Zod-/jsVideoUrlParser.git"
