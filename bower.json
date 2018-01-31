@@ -1,6 +1,6 @@
 {
   "name": "js-video-url-parser",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "homepage": "https://github.com/Zod-/jsVideoUrlParser",
   "main": "dist/jsVideoUrlParser.js",
   "authors": [{
