@@ -84,6 +84,12 @@ different descriptions for the providers.
 }
 ```
 
+Parsing an incorrect url will return undefined
+```javascript
+> urlParser.parse('https://www.youuutube.com/watch?v=97276391')
+undefined
+```
+
 ## Url Creation
 
 The videoInfo objects can be turned back into urls with the `.create` function.
