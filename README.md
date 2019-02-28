@@ -145,6 +145,7 @@ Run `npm run test` to create the parser and test your plugin.
 * `'video'`: Regular videos which can also be livestreams.
 * `'playlist'`: YouTube playlist.
 * `'share'`: Shared YouTube videos that link to a special website and are not actual videos themselves.
+* `'channel'`: YouTube channels, which are the same as users.
 
 #### Supported url formats:
 * `'short'`: Shortened urls.
@@ -160,8 +161,10 @@ Run `npm run test` to create the parser and test your plugin.
 | **video**    | ✓  | ✓  | ✓  | ✓  | ✓  |
 | **playlist** | X  | ✓  | ✓  | X  | X  |
 | **share**    | X  | ✓  | X  | X  | X  |
+| **channel**    | X  | ✓  | X  | X  | X  |
 
 #### Special parameters:
+* `'name'`: Sometimes you get the name of a channel instead of the `'id'`.
 * `'params.start'`: The number where the video should begin in seconds.
 * `'params.imageQuality'`: Custom parameter for generating different qualities of thumbnail urls.
   * `'0', '1', '2', '3', 'default', 'hqdefault'(default), 'mqdefault', 'sddefault', 'maxresdefault'`
@@ -199,6 +202,19 @@ Run `npm run test` to create the parser and test your plugin.
   params: {
     start: 100
   }
+}
+
+> urlParser.parse('https://www.youtube.com/channel/UCzQUP1qoWDoEbmsQxvdjxgQ');
+{ mediaType: 'channel',
+  id: 'UCzQUP1qoWDoEbmsQxvdjxgQ',
+  provider: 'youtube'
+}
+
+> urlParser.parse('https://www.youtube.com/user/PowerfulJRE');
+> urlParser.parse('https://www.youtube.com/c/PowerfulJRE');
+{ mediaType: 'channel',
+  name: 'PowerfulJRE',
+  provider: 'youtube'
 }
 ```
 
@@ -255,6 +271,26 @@ Run `npm run test` to create the parser and test your plugin.
   })
 'long': 'https://youtube.com/playlist?feature=share&list=PL46F0A159EC02DF82'
 'embed': '//youtube.com/embed?list=PL46F0A159EC02DF82&listType=playlist'
+
+> urlParser.create({
+    videoInfo:  {
+      provider: 'youtube',
+      id: 'UCzQUP1qoWDoEbmsQxvdjxgQ',
+      mediaType: 'channel'
+    },
+    format: 'long'
+  })
+'long': 'https://www.youtube.com/channel/UCzQUP1qoWDoEbmsQxvdjxgQ'
+
+> urlParser.create({
+    videoInfo:  {
+      provider: 'youtube',
+      name: 'PowerfulJRE',
+      mediaType: 'channel'
+    },
+    format: 'long'
+  })
+'long': 'https://www.youtube.com/c/PowerfulJRE'
 
 > urlParser.create({
     videoInfo:  {
