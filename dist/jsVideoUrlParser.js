@@ -799,13 +799,37 @@ function YouTube() {
   this.mediaTypes = {
     VIDEO: 'video',
     PLAYLIST: 'playlist',
-    SHARE: 'share'
+    SHARE: 'share',
+    CHANNEL: 'channel'
   };
 }
 
-YouTube.prototype.parseUrl = function (url) {
+YouTube.prototype.parseVideoUrl = function (url) {
   var match = url.match(/(?:(?:v|vi|be|videos|embed)\/(?!videoseries)|(?:v|ci)=)([\w-]{11})/i);
   return match ? match[1] : undefined;
+};
+
+YouTube.prototype.parseChannelUrl = function (url) {
+  // Match an opaque channel ID
+  var match = url.match(/\/channel\/([\w-]+)/);
+
+  if (match) {
+    return {
+      id: match[1],
+      mediaType: this.mediaTypes.CHANNEL
+    };
+  } // Match a vanity channel name or a user name. User urls are deprecated and
+  // currently redirect to the channel of that same name.
+
+
+  match = url.match(/\/(?:c|user)\/([\w-]+)/);
+
+  if (match) {
+    return {
+      name: match[1],
+      mediaType: this.mediaTypes.CHANNEL
+    };
+  }
 };
 
 YouTube.prototype.parseParameters = function (params, result) {
@@ -847,13 +871,19 @@ YouTube.prototype.parseMediaType = function (result) {
 };
 
 YouTube.prototype.parse = function (url, params) {
-  var result = {
-    params: params,
-    id: this.parseUrl(url)
-  };
-  result.params = this.parseParameters(params, result);
-  result = this.parseMediaType(result);
-  return result;
+  var channelResult = this.parseChannelUrl(url);
+
+  if (channelResult) {
+    return channelResult;
+  } else {
+    var result = {
+      params: params,
+      id: this.parseVideoUrl(url)
+    };
+    result.params = this.parseParameters(params, result);
+    result = this.parseMediaType(result);
+    return result;
+  }
 };
 
 YouTube.prototype.createShortUrl = function (vi, params) {
@@ -870,6 +900,14 @@ YouTube.prototype.createLongUrl = function (vi, params) {
   var url = '';
   var startTime = params.start;
   delete params.start;
+
+  if (vi.mediaType === this.mediaTypes.CHANNEL) {
+    if (vi.id) {
+      url += 'https://www.youtube.com/channel/' + vi.id;
+    } else if (vi.name) {
+      url += 'https://www.youtube.com/c/' + vi.name;
+    }
+  }
 
   if (vi.mediaType === this.mediaTypes.PLAYLIST) {
     params.feature = 'share';
