@@ -119,13 +119,13 @@ If you still want to reuse the generated parameters object you can use the keywo
 > urlParser.create({
   videoInfo: urlParser.parse('https://youtube.com/watch?foo=bar&v=HRb7B9fPhfA')
 })
-'https://youtube.com/watch?v=HRb7B9fPhfA'
+'https://www.youtube.com/watch?v=HRb7B9fPhfA'
 
 > urlParser.create({
   videoInfo: urlParser.parse('https://youtube.com/watch?foo=bar&v=HRb7B9fPhfA'),
   params: 'internal'
 })
-'https://youtube.com/watch?foo=bar&v=HRb7B9fPhfA'
+'https://www.youtube.com/watch?foo=bar&v=HRb7B9fPhfA'
 ```
 
 ## Adding a provider
@@ -230,7 +230,7 @@ Run `npm run test` to create the parser and test your plugin.
   })
 'long': 'https://www.youtube.com/watch?v=HRb7B9fPhfA'
 'short': 'https://youtu.be/HRb7B9fPhfA'
-'embed': '//youtube.com/embed/HRb7B9fPhfA'
+'embed': 'https://www.youtube.com/embed/HRb7B9fPhfA'
 'shortImage': 'https://i.ytimg.com/vi/HRb7B9fPhfA/hqdefault.jpg'
 'longImage': 'https://img.youtube.com/vi/HRb7B9fPhfA/hqdefault.jpg'
 
@@ -245,9 +245,9 @@ Run `npm run test` to create the parser and test your plugin.
     },
     format: <format>
   })
-'long': 'https://youtube.com/watch?v=HRb7B9fPhfA#t=90'
+'long': 'https://www.youtube.com/watch?v=HRb7B9fPhfA#t=90'
 'short': 'https://youtu.be/HRb7B9fPhfA#t=90'
-'embed': '//youtube.com/embed/HRb7B9fPhfA?start=90'
+'embed': 'https://www.youtube.com/embed/HRb7B9fPhfA?start=90'
 
 > urlParser.create({
     videoInfo: {
@@ -258,8 +258,8 @@ Run `npm run test` to create the parser and test your plugin.
     },
     format: <format>
   })
-'long': 'https://youtube.com/watch?list=PL46F0A159EC02DF82&v=HRb7B9fPhfA'
-'embed': '//youtube.com/embed/HRb7B9fPhfA?list=PL46F0A159EC02DF82'
+'long': 'https://www.youtube.com/watch?list=PL46F0A159EC02DF82&v=HRb7B9fPhfA'
+'embed': 'https://www.youtube.com/embed/HRb7B9fPhfA?list=PL46F0A159EC02DF82'
 
 > urlParser.create({
     videoInfo: {
@@ -269,8 +269,8 @@ Run `npm run test` to create the parser and test your plugin.
     },
     format: <format>
   })
-'long': 'https://youtube.com/playlist?feature=share&list=PL46F0A159EC02DF82'
-'embed': '//youtube.com/embed?list=PL46F0A159EC02DF82&listType=playlist'
+'long': 'https://www.youtube.com/playlist?feature=share&list=PL46F0A159EC02DF82'
+'embed': 'https://www.youtube.com/embed?list=PL46F0A159EC02DF82&listType=playlist'
 
 > urlParser.create({
     videoInfo:  {
