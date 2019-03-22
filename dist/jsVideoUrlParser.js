@@ -911,12 +911,12 @@ YouTube.prototype.createLongUrl = function (vi, params) {
 
   if (vi.mediaType === this.mediaTypes.PLAYLIST) {
     params.feature = 'share';
-    url += 'https://youtube.com/playlist';
+    url += 'https://www.youtube.com/playlist';
   }
 
   if (vi.mediaType === this.mediaTypes.VIDEO) {
     params.v = vi.id;
-    url += 'https://youtube.com/watch';
+    url += 'https://www.youtube.com/watch';
   }
 
   if (vi.mediaType === this.mediaTypes.SHARE) {
@@ -940,7 +940,7 @@ YouTube.prototype.createLongUrl = function (vi, params) {
 };
 
 YouTube.prototype.createEmbedUrl = function (vi, params) {
-  var url = '//youtube.com/embed';
+  var url = 'https://www.youtube.com/embed';
 
   if (vi.mediaType === this.mediaTypes.PLAYLIST) {
     params.listType = 'playlist';
