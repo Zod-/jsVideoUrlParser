@@ -341,20 +341,25 @@ Run `npm run test` to create the parser and test your plugin.
 #### Supported url formats:
 * `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
+* `'image'`: Image urls.
 
 #### Creating urls with different media types:
 
-| mediaType/formats| long | embed |
-| ------------- | :--: | :--: |
-| **video**    | ✓  | ✓  |
+| mediaType/formats| long | embed | image |
+| ------------- | :--: | :--: | :--: |
+| **video**    | ✓  | ✓  | ✓  |
 
 #### Special parameters:
 * `'params.start'`: The number where the video should begin in seconds.
+* `'params.imageWidth'`: For `'image'` format urls. Vimeo will produce a scaled image based on the width. The default image size when no width is specified depends on the video source.
+* `'params.imageHeight'`: For `'image'` format urls. Can only be set in combination with `'imageWidth'`. Vimeo will produce a cropped image with the 2 parameters. 
+* `'params.imageExtension'`: For `'image'` format urls. Contains the extension e.g. `'.png'`, `'.jpg'`, `'.webp'`. Vimeo uses `'.webp'` by default which will be used when no format is specified. It can also be set to an empty string to generate urls with no extension.
 
 #### Parsing Examples:
 ```javascript
 > urlParser.parse('https://vimeo.com/97276391');
 > urlParser.parse('https://vimeo.com/channels/staffpicks/97276391');
+> urlParser.parse('https://i.vimeocdn.com/video/97276391');
 { id: '97276391',
   mediaType: 'video',
   provider: 'vimeo' }
@@ -382,6 +387,21 @@ Run `npm run test` to create the parser and test your plugin.
     start: 90
   }
 }
+
+> urlParser.parse('https://i.vimeocdn.com/video/97276391_500x123.webp');
+{ id: '97276391',
+  mediaType: 'video',
+  provider: 'vimeo',
+  imageWidth: 500,
+  imageHeight: 123,
+  imageExtension: '.webp' }
+
+> urlParser.parse('https://i.vimeocdn.com/video/97276391_500.png');
+{ id: '97276391',
+  mediaType: 'video',
+  provider: 'vimeo',
+  imageWidth: 500,
+  imageExtension: '.png' }
 ```
 
 #### Creation Examples:
@@ -396,6 +416,7 @@ Run `npm run test` to create the parser and test your plugin.
   })
 'long': 'https://vimeo.com/97276391'
 'embed': '//player.vimeo.com/video/97276391'
+'image': 'https://i.vimeocdn.com/video/97276391.webp'
 
 > urlParser.create({
     videoInfo: {
@@ -410,6 +431,60 @@ Run `npm run test` to create the parser and test your plugin.
   })
 'long': 'https://vimeo.com/97276391#t=90'
 'embed': '//player.vimeo.com/video/97276391#t=90'
+'image': 'https://i.vimeocdn.com/video/97276391.webp'
+
+> urlParser.create({
+    videoInfo: {
+      provider: 'vimeo',
+      id: '97276391',
+      mediaType: 'video',
+      imageWidth: 500,
+      imageHeight: 123,
+    },
+    format: <format>
+  })
+'long': 'https://vimeo.com/97276391'
+'embed': '//player.vimeo.com/video/97276391'
+'image': 'https://i.vimeocdn.com/video/97276391_500x123.webp'
+
+> urlParser.create({
+    videoInfo: {
+      provider: 'vimeo',
+      id: '97276391',
+      mediaType: 'video',
+      imageWidth: 500
+    },
+    format: <format>
+  })
+'long': 'https://vimeo.com/97276391'
+'embed': '//player.vimeo.com/video/97276391'
+'image': 'https://i.vimeocdn.com/video/97276391_500.webp'
+
+> urlParser.create({
+    videoInfo: {
+      provider: 'vimeo',
+      id: '97276391',
+      mediaType: 'video',
+      imageExtension: '.png'
+    },
+    format: <format>
+  })
+'long': 'https://vimeo.com/97276391'
+'embed': '//player.vimeo.com/video/97276391'
+'image': 'https://i.vimeocdn.com/video/97276391.png'
+
+> urlParser.create({
+    videoInfo: {
+      provider: 'vimeo',
+      id: '97276391',
+      mediaType: 'video',
+      imageExtension: ''
+    },
+    format: <format>
+  })
+'long': 'https://vimeo.com/97276391'
+'embed': '//player.vimeo.com/video/97276391'
+'image': 'https://i.vimeocdn.com/video/97276391'
 ```
 
 ## Twitch
