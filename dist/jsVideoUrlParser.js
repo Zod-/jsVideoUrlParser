@@ -402,7 +402,7 @@ Twitch.prototype.parseChannel = function (result, params) {
 
 Twitch.prototype.parseUrl = function (url, result, params) {
   var match;
-  match = url.match(/(clips\.)?twitch\.tv\/(?:(?:videos\/(\d+))|(\w+))?/i);
+  match = url.match(/(clips\.)?twitch\.tv\/(?:(?:videos\/(\d+))|(\w+)(?:\/clip\/(\w+))?)/i);
 
   if (match && match[2]) {
     //video
@@ -417,8 +417,13 @@ Twitch.prototype.parseUrl = function (url, result, params) {
     result.isClip = true;
     delete params.clip;
   } else if (match && match[1] && match[3]) {
-    //clips
+    //clips.twitch.tv/id
     result.id = match[3];
+    result.isClip = true;
+  } else if (match && match[3] && match[4]) {
+    //twitch.tv/channel/clip/id
+    result.channel = match[3];
+    result.id = match[4];
     result.isClip = true;
   } else if (match && match[3]) {
     result.channel = match[3];
@@ -430,17 +435,15 @@ Twitch.prototype.parseUrl = function (url, result, params) {
 Twitch.prototype.parseMediaType = function (result) {
   var mediaType;
 
-  if (result.channel) {
-    mediaType = this.mediaTypes.STREAM;
-  } else if (result.id) {
+  if (result.id) {
     if (result.isClip) {
       mediaType = this.mediaTypes.CLIP;
       delete result.isClip;
     } else {
       mediaType = this.mediaTypes.VIDEO;
     }
-
-    delete result.channel;
+  } else if (result.channel) {
+    mediaType = this.mediaTypes.STREAM;
   }
 
   return mediaType;
@@ -484,7 +487,11 @@ Twitch.prototype.createLongUrl = function (vi, params) {
   }
 
   if (vi.mediaType === this.mediaTypes.CLIP) {
-    url = 'https://clips.twitch.tv/' + vi.id;
+    if (vi.channel) {
+      url = 'https://www.twitch.tv/' + vi.channel + '/clip/' + vi.id;
+    } else {
+      url = 'https://clips.twitch.tv/' + vi.id;
+    }
   }
 
   url += combineParams$4({
@@ -527,20 +534,41 @@ var getTime$3 = util.getTime;
 
 function Vimeo() {
   this.provider = 'vimeo';
-  this.alternatives = ['vimeopro'];
+  this.alternatives = ['vimeopro', 'vimeocdn'];
   this.defaultFormat = 'long';
   this.formats = {
     long: this.createLongUrl,
-    embed: this.createEmbedUrl
+    embed: this.createEmbedUrl,
+    image: this.createImageUrl
   };
   this.mediaTypes = {
     VIDEO: 'video'
   };
 }
 
-Vimeo.prototype.parseUrl = function (url) {
-  var match = url.match(/(?:\/(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+)\/)?videos?))?\/(\d+)/i);
-  return match ? match[1] : undefined;
+Vimeo.prototype.parseUrl = function (url, result) {
+  var match = url.match(/(vimeo(?:cdn|pro)?)\.com\/(?:(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+|staff\/frame)\/)?videos?)\/)?(\d+)(?:_(\d+)(?:x(\d+))?)?(\.\w+)?/i);
+
+  if (!match) {
+    return result;
+  }
+
+  result.id = match[2];
+
+  if (match[1] === 'vimeocdn') {
+    if (match[3]) {
+      result.imageWidth = parseInt(match[3]);
+
+      if (match[4]) {
+        //height can only be set when width is also set
+        result.imageHeight = parseInt(match[4]);
+      }
+    }
+
+    result.imageExtension = match[5];
+  }
+
+  return result;
 };
 
 Vimeo.prototype.parseParameters = function (params) {
@@ -559,9 +587,9 @@ Vimeo.prototype.parseTime = function (params) {
 Vimeo.prototype.parse = function (url, params) {
   var result = {
     mediaType: this.mediaTypes.VIDEO,
-    params: this.parseParameters(params),
-    id: this.parseUrl(url)
+    params: this.parseParameters(params)
   };
+  result = this.parseUrl(url, result);
   return result.id ? result : undefined;
 };
 
@@ -586,6 +614,27 @@ Vimeo.prototype.createLongUrl = function (vi, params) {
 
 Vimeo.prototype.createEmbedUrl = function (vi, params) {
   return this.createUrl('//player.vimeo.com/video/', vi, params);
+};
+
+Vimeo.prototype.createImageUrl = function (vi, params) {
+  var url = 'https://i.vimeocdn.com/video/' + vi.id;
+
+  if (vi.imageWidth && vi.imageHeight) {
+    url += '_' + vi.imageWidth + 'x' + vi.imageHeight;
+  } else if (vi.imageWidth) {
+    url += '_' + vi.imageWidth;
+  }
+
+  if (vi.imageExtension === undefined) {
+    vi.imageExtension = '.webp';
+  }
+
+  url += vi.imageExtension;
+  delete vi.imageExtension;
+  url += combineParams$5({
+    params: params
+  });
+  return url;
 };
 
 base.bind(new Vimeo());
