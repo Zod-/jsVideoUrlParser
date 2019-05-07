@@ -461,6 +461,12 @@ Run `npm run test` to create the parser and test your plugin.
 { mediaType: 'clip',
   id: 'SuspiciousImpartialLarkItsBoshyTime',
   provider: 'twitch' }
+
+> urlParser.parse('https://www.twitch.tv/rains8/clip/SuspiciousImpartialLarkItsBoshyTime');
+{ mediaType: 'clip',
+  channel: 'rains8',
+  id: 'SuspiciousImpartialLarkItsBoshyTime',
+  provider: 'twitch' }
 ```
 
 #### Creation Examples:
@@ -510,6 +516,18 @@ Run `npm run test` to create the parser and test your plugin.
     format: <format>
   })
 'long': 'https://clips.twitch.tv/SuspiciousImpartialLarkItsBoshyTime'
+'embed': 'https://clips.twitch.tv/embed?clip=SuspiciousImpartialLarkItsBoshyTime'
+
+> urlParser.create({
+    videoInfo: {
+      provider: 'twitch',
+      channel: 'rains8',
+      id: 'SuspiciousImpartialLarkItsBoshyTime',
+      mediaType: 'clip'
+    },
+    format: <format>
+  })
+'long': 'https://www.twitch.tv/rains8/clip/SuspiciousImpartialLarkItsBoshyTime'
 'embed': 'https://clips.twitch.tv/embed?clip=SuspiciousImpartialLarkItsBoshyTime'
 ```
 
