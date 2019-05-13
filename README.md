@@ -341,7 +341,7 @@ Run `npm run test` to create the parser and test your plugin.
 #### Supported url formats:
 * `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
-* `'image'`: Image urls.
+* `'image'`: Thumbnail image urls.
 
 #### Creating urls with different media types:
 
@@ -615,12 +615,13 @@ Run `npm run test` to create the parser and test your plugin.
 * `'short'`: Shortened urls.
 * `'long'`(default): Regular urls.
 * `'embed'`: Embedded urls.
+* `'image'`: Thumbnail image urls.
 
 #### Creating urls with different media types:
 
-| mediaType/formats| short | long | embed |
-| ------------- | :--: | :--: | :--: |
-| **video** | ✓  | ✓  | ✓ |
+| mediaType/formats| short | long | embed | image |
+| ------------- | :--: | :--: | :--: | :--: |
+| **video** | ✓  | ✓  | ✓ | ✓ |
 
 #### Special parameters:
 * `'params.start'`: The number where the video should begin in seconds.
@@ -630,7 +631,8 @@ Run `npm run test` to create the parser and test your plugin.
 > urlParser.parse('http://www.dailymotion.com/video/x1e2b95_bruce-lee-nin-kayip-kedisi_animals');
 > urlParser.parse('http://www.dailymotion.com/video/x1e2b95');
 > urlParser.parse('http://dai.ly/x1e2b95');
-> urlParser.parse('http://www.dailymotion.com/embed/video/x1e2b95');
+> urlParser.parse('https://www.dailymotion.com/embed/video/x1e2b95');
+> urlParser.parse('https://www.dailymotion.com/thumbnail/video/x1e2b95');
 { mediaType: 'video',
   id: 'x1e2b95',
   provider: 'dailymotion' }
@@ -659,7 +661,8 @@ Run `npm run test` to create the parser and test your plugin.
   })
 'long': 'https://www.dailymotion.com/video/x1e2b95'
 'short': 'https://dai.ly/x1e2b95'
-'embed': '//www.dailymotion.com/embed/video/x1e2b95'
+'embed': 'https://www.dailymotion.com/embed/video/x1e2b95'
+'image': 'https://www.dailymotion.com/thumbnail/video/x1e2b95'
 
 > urlParser.create({
     videoInfo: {
@@ -674,7 +677,8 @@ Run `npm run test` to create the parser and test your plugin.
   })
 'long': 'https://www.dailymotion.com/video/x1e2b95?start=10'
 'short': 'https://dai.ly/x1e2b95?start=10'
-'embed': '//www.dailymotion.com/embed/video/x1e2b95?start=10'
+'embed': 'https://www.dailymotion.com/embed/video/x1e2b95?start=10'
+'image': 'https://www.dailymotion.com/thumbnail/video/x1e2b95'
 ```
 
 ## Coub
