@@ -314,7 +314,8 @@ function Dailymotion() {
   this.formats = {
     short: this.createShortUrl,
     long: this.createLongUrl,
-    embed: this.createEmbedUrl
+    embed: this.createEmbedUrl,
+    image: this.createImageUrl
   };
   this.mediaTypes = {
     VIDEO: 'video'
@@ -355,8 +356,8 @@ Dailymotion.prototype.createUrl = function (base$$2, vi, params) {
   });
 };
 
-Dailymotion.prototype.createShortUrl = function (vi) {
-  return this.createUrl('https://dai.ly/', vi, {});
+Dailymotion.prototype.createShortUrl = function (vi, params) {
+  return this.createUrl('https://dai.ly/', vi, params);
 };
 
 Dailymotion.prototype.createLongUrl = function (vi, params) {
@@ -364,7 +365,12 @@ Dailymotion.prototype.createLongUrl = function (vi, params) {
 };
 
 Dailymotion.prototype.createEmbedUrl = function (vi, params) {
-  return this.createUrl('//www.dailymotion.com/embed/video/', vi, params);
+  return this.createUrl('https://www.dailymotion.com/embed/video/', vi, params);
+};
+
+Dailymotion.prototype.createImageUrl = function (vi, params) {
+  delete params.start;
+  return this.createUrl('https://www.dailymotion.com/thumbnail/video/', vi, params);
 };
 
 base.bind(new Dailymotion());
