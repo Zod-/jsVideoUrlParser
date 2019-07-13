@@ -41,15 +41,14 @@ var getQueryParams = function getQueryParams(qs) {
   return params;
 };
 
-var combineParams = function combineParams(op) {
-  if (_typeof(op) !== 'object') {
+var combineParams = function combineParams(params, hasParams) {
+  if (_typeof(params) !== 'object') {
     return '';
   }
 
-  op.params = op.params || {};
-  var combined = '',
-      i = 0,
-      keys = Object.keys(op.params);
+  var combined = '';
+  var i = 0;
+  var keys = Object.keys(params);
 
   if (keys.length === 0) {
     return '';
@@ -58,13 +57,13 @@ var combineParams = function combineParams(op) {
 
   keys.sort();
 
-  if (!op.hasParams) {
-    combined += '?' + keys[0] + '=' + op.params[keys[0]];
+  if (!hasParams) {
+    combined += '?' + keys[0] + '=' + params[keys[0]];
     i += 1;
   }
 
   for (; i < keys.length; i += 1) {
-    combined += '&' + keys[i] + '=' + op.params[keys[i]];
+    combined += '&' + keys[i] + '=' + params[keys[i]];
   }
 
   return combined;
@@ -181,6 +180,10 @@ UrlParser.prototype.bind = function (plugin) {
 };
 
 UrlParser.prototype.create = function (op) {
+  if (_typeof(op) !== 'object' || _typeof(op.videoInfo) !== 'object') {
+    return undefined;
+  }
+
   var vi = op.videoInfo;
   var params = op.params;
   var plugin = this.plugins[vi.provider];
@@ -243,11 +246,13 @@ CanalPlus.prototype.parse = function (url, params) {
 };
 
 CanalPlus.prototype.createEmbedUrl = function (vi, params) {
+  if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
+    return undefined;
+  }
+
   var url = 'http://player.canalplus.fr/embed/';
   params.vid = vi.id;
-  url += combineParams$1({
-    params: params
-  });
+  url += combineParams$1(params);
   return url;
 };
 
@@ -287,10 +292,12 @@ Coub.prototype.parse = function (url, params) {
 };
 
 Coub.prototype.createUrl = function (baseUrl, vi, params) {
+  if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
+    return undefined;
+  }
+
   var url = baseUrl + vi.id;
-  url += combineParams$2({
-    params: params
-  });
+  url += combineParams$2(params);
   return url;
 };
 
@@ -351,9 +358,11 @@ Dailymotion.prototype.parse = function (url, params) {
 };
 
 Dailymotion.prototype.createUrl = function (base$$2, vi, params) {
-  return base$$2 + vi.id + combineParams$3({
-    params: params
-  });
+  if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
+    return undefined;
+  }
+
+  return base$$2 + vi.id + combineParams$3(params);
 };
 
 Dailymotion.prototype.createShortUrl = function (vi, params) {
@@ -478,11 +487,9 @@ Twitch.prototype.parse = function (url, params) {
 Twitch.prototype.createLongUrl = function (vi, params) {
   var url = '';
 
-  if (vi.mediaType === this.mediaTypes.STREAM) {
+  if (vi.mediaType === this.mediaTypes.STREAM && vi.channel) {
     url = 'https://twitch.tv/' + vi.channel;
-  }
-
-  if (vi.mediaType === this.mediaTypes.VIDEO) {
+  } else if (vi.mediaType === this.mediaTypes.VIDEO && vi.id) {
     var sep = this.seperateId(vi.id);
     url = 'https://twitch.tv/videos/' + sep.id;
 
@@ -490,46 +497,40 @@ Twitch.prototype.createLongUrl = function (vi, params) {
       params.t = params.start + 's';
       delete params.start;
     }
-  }
-
-  if (vi.mediaType === this.mediaTypes.CLIP) {
+  } else if (vi.mediaType === this.mediaTypes.CLIP && vi.id) {
     if (vi.channel) {
       url = 'https://www.twitch.tv/' + vi.channel + '/clip/' + vi.id;
     } else {
       url = 'https://clips.twitch.tv/' + vi.id;
     }
+  } else {
+    return undefined;
   }
 
-  url += combineParams$4({
-    params: params
-  });
+  url += combineParams$4(params);
   return url;
 };
 
 Twitch.prototype.createEmbedUrl = function (vi, params) {
   var url = 'https://player.twitch.tv/';
 
-  if (vi.mediaType === this.mediaTypes.STREAM) {
+  if (vi.mediaType === this.mediaTypes.STREAM && vi.channel) {
     params.channel = vi.channel;
-  }
-
-  if (vi.mediaType === this.mediaTypes.VIDEO) {
+  } else if (vi.mediaType === this.mediaTypes.VIDEO && vi.id) {
     params.video = vi.id;
 
     if (params.start) {
       params.t = params.start + 's';
       delete params.start;
     }
-  }
-
-  if (vi.mediaType === this.mediaTypes.CLIP) {
+  } else if (vi.mediaType === this.mediaTypes.CLIP && vi.id) {
     url = 'https://clips.twitch.tv/embed';
     params.clip = vi.id;
+  } else {
+    return undefined;
   }
 
-  url += combineParams$4({
-    params: params
-  });
+  url += combineParams$4(params);
   return url;
 };
 
@@ -600,12 +601,14 @@ Vimeo.prototype.parse = function (url, params) {
 };
 
 Vimeo.prototype.createUrl = function (baseUrl, vi, params) {
+  if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
+    return undefined;
+  }
+
   var url = baseUrl + vi.id;
   var startTime = params.start;
   delete params.start;
-  url += combineParams$5({
-    params: params
-  });
+  url += combineParams$5(params);
 
   if (startTime) {
     url += '#t=' + startTime;
@@ -623,6 +626,10 @@ Vimeo.prototype.createEmbedUrl = function (vi, params) {
 };
 
 Vimeo.prototype.createImageUrl = function (vi, params) {
+  if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
+    return undefined;
+  }
+
   var url = 'https://i.vimeocdn.com/video/' + vi.id;
 
   if (vi.imageWidth && vi.imageHeight) {
@@ -637,9 +644,7 @@ Vimeo.prototype.createImageUrl = function (vi, params) {
 
   url += vi.imageExtension;
   delete vi.imageExtension;
-  url += combineParams$5({
-    params: params
-  });
+  url += combineParams$5(params);
   return url;
 };
 
@@ -724,15 +729,13 @@ Wistia.prototype.createUrl = function (vi, params, url) {
     delete params.start;
   }
 
-  url += combineParams$6({
-    params: params
-  });
+  url += combineParams$6(params);
   return url;
 };
 
 Wistia.prototype.createLongUrl = function (vi, params) {
-  if (vi.mediaType !== this.mediaTypes.VIDEO) {
-    return '';
+  if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
+    return undefined;
   }
 
   var url = 'https://' + vi.channel + '.wistia.com/medias/' + vi.id;
@@ -740,11 +743,19 @@ Wistia.prototype.createLongUrl = function (vi, params) {
 };
 
 Wistia.prototype.createEmbedUrl = function (vi, params) {
+  if (!vi.id || !(vi.mediaType === this.mediaTypes.VIDEO || vi.mediaType === this.mediaTypes.EMBEDVIDEO)) {
+    return undefined;
+  }
+
   var url = 'https://fast.wistia.com/embed/iframe/' + vi.id;
   return this.createUrl(vi, params, url);
 };
 
 Wistia.prototype.createEmbedJsonpUrl = function (vi) {
+  if (!vi.id || !(vi.mediaType === this.mediaTypes.VIDEO || vi.mediaType === this.mediaTypes.EMBEDVIDEO)) {
+    return undefined;
+  }
+
   return 'https://fast.wistia.com/embed/medias/' + vi.id + '.jsonp';
 };
 
@@ -796,10 +807,12 @@ Youku.prototype.parse = function (url, params) {
 };
 
 Youku.prototype.createUrl = function (baseUrl, vi, params) {
+  if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
+    return undefined;
+  }
+
   var url = baseUrl + vi.id;
-  url += combineParams$7({
-    params: params
-  });
+  url += combineParams$7(params);
   return url;
 };
 
@@ -816,10 +829,12 @@ Youku.prototype.createStaticUrl = function (vi, params) {
 };
 
 Youku.prototype.createFlashUrl = function (vi, params) {
+  if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
+    return undefined;
+  }
+
   var url = 'http://player.youku.com/player.php/sid/' + vi.id + '/v.swf';
-  url += combineParams$7({
-    params: params
-  });
+  url += combineParams$7(params);
   return url;
 };
 
@@ -942,6 +957,10 @@ YouTube.prototype.parse = function (url, params) {
 };
 
 YouTube.prototype.createShortUrl = function (vi, params) {
+  if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
+    return undefined;
+  }
+
   var url = 'https://youtu.be/' + vi.id;
 
   if (params.start) {
@@ -961,31 +980,27 @@ YouTube.prototype.createLongUrl = function (vi, params) {
       url += 'https://www.youtube.com/channel/' + vi.id;
     } else if (vi.name) {
       url += 'https://www.youtube.com/c/' + vi.name;
+    } else {
+      return undefined;
     }
-  }
-
-  if (vi.mediaType === this.mediaTypes.PLAYLIST) {
+  } else if (vi.mediaType === this.mediaTypes.PLAYLIST && vi.list) {
     params.feature = 'share';
     url += 'https://www.youtube.com/playlist';
-  }
-
-  if (vi.mediaType === this.mediaTypes.VIDEO) {
+  } else if (vi.mediaType === this.mediaTypes.VIDEO && vi.id) {
     params.v = vi.id;
     url += 'https://www.youtube.com/watch';
-  }
-
-  if (vi.mediaType === this.mediaTypes.SHARE) {
+  } else if (vi.mediaType === this.mediaTypes.SHARE && vi.id) {
     params.ci = vi.id;
     url += 'https://www.youtube.com/shared';
+  } else {
+    return undefined;
   }
 
   if (vi.list) {
     params.list = vi.list;
   }
 
-  url += combineParams$8({
-    params: params
-  });
+  url += combineParams$8(params);
 
   if (vi.mediaType !== this.mediaTypes.PLAYLIST && startTime) {
     url += '#t=' + startTime;
@@ -997,27 +1012,31 @@ YouTube.prototype.createLongUrl = function (vi, params) {
 YouTube.prototype.createEmbedUrl = function (vi, params) {
   var url = 'https://www.youtube.com/embed';
 
-  if (vi.mediaType === this.mediaTypes.PLAYLIST) {
+  if (vi.mediaType === this.mediaTypes.PLAYLIST && vi.list) {
     params.listType = 'playlist';
-  } else {
+  } else if (vi.mediaType === this.mediaTypes.VIDEO && vi.id) {
     url += '/' + vi.id; //loop hack
 
     if (params.loop === '1') {
       params.playlist = vi.id;
     }
+  } else {
+    return undefined;
   }
 
   if (vi.list) {
     params.list = vi.list;
   }
 
-  url += combineParams$8({
-    params: params
-  });
+  url += combineParams$8(params);
   return url;
 };
 
 YouTube.prototype.createImageUrl = function (baseUrl, vi, params) {
+  if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
+    return undefined;
+  }
+
   var url = baseUrl + vi.id + '/';
   var quality = params.imageQuality || this.defaultImageQuality;
   return url + quality + '.jpg';
@@ -1122,25 +1141,19 @@ SoundCloud.prototype.createLongUrl = function (vi, params) {
   var startTime = params.start;
   delete params.start;
 
-  if (vi.mediaType === this.mediaTypes.TRACK) {
+  if (vi.mediaType === this.mediaTypes.TRACK && vi.id && vi.channel) {
     url = 'https://soundcloud.com/' + vi.channel + '/' + vi.id;
-  }
-
-  if (vi.mediaType === this.mediaTypes.PLAYLIST) {
+  } else if (vi.mediaType === this.mediaTypes.PLAYLIST && vi.list && vi.channel) {
     url = 'https://soundcloud.com/' + vi.channel + '/sets/' + vi.list;
-  }
-
-  if (vi.mediaType === this.mediaTypes.APITRACK) {
+  } else if (vi.mediaType === this.mediaTypes.APITRACK && vi.id) {
     url = 'https://api.soundcloud.com/tracks/' + vi.id;
-  }
-
-  if (vi.mediaType === this.mediaTypes.APIPLAYLIST) {
+  } else if (vi.mediaType === this.mediaTypes.APIPLAYLIST && vi.list) {
     url = 'https://api.soundcloud.com/playlists/' + vi.list;
+  } else {
+    return undefined;
   }
 
-  url += combineParams$9({
-    params: params
-  });
+  url += combineParams$9(params);
 
   if (startTime) {
     url += '#t=' + startTime;
@@ -1153,21 +1166,127 @@ SoundCloud.prototype.createEmbedUrl = function (vi, params) {
   var url = 'https://w.soundcloud.com/player/';
   delete params.start;
 
-  if (vi.mediaType === this.mediaTypes.APITRACK) {
+  if (vi.mediaType === this.mediaTypes.APITRACK && vi.id) {
     params.url = 'https%3A//api.soundcloud.com/tracks/' + vi.id;
-  }
-
-  if (vi.mediaType === this.mediaTypes.APIPLAYLIST) {
+  } else if (vi.mediaType === this.mediaTypes.APIPLAYLIST && vi.list) {
     params.url = 'https%3A//api.soundcloud.com/playlists/' + vi.list;
+  } else {
+    return undefined;
   }
 
-  url += combineParams$9({
-    params: params
-  });
+  url += combineParams$9(params);
   return url;
 };
 
 base.bind(new SoundCloud());
+
+var combineParams$10 = util.combineParams;
+
+function TeacherTube() {
+  this.provider = 'teachertube';
+  this.alternatives = [];
+  this.defaultFormat = 'long';
+  this.formats = {
+    long: this.createLongUrl,
+    embed: this.createEmbedUrl
+  };
+  this.mediaTypes = {
+    VIDEO: 'video',
+    AUDIO: 'audio',
+    DOCUMENT: 'document',
+    CHANNEL: 'channel',
+    COLLECTION: 'collection',
+    GROUP: 'group'
+  };
+}
+
+TeacherTube.prototype.parse = function (url, params) {
+  var result = {};
+  result.list = this.parsePlaylist(params);
+  result.params = params;
+  var match = url.match(/\/(audio|video|document|user\/channel|collection|group)\/(?:[\w-]+-)?(\w+)/);
+
+  if (!match) {
+    return undefined;
+  }
+
+  result.mediaType = this.parseMediaType(match[1]);
+  result.id = match[2];
+  return result;
+};
+
+TeacherTube.prototype.parsePlaylist = function (params) {
+  if (params['playlist-id']) {
+    var list = params['playlist-id'];
+    delete params['playlist-id'];
+    return list;
+  }
+
+  return undefined;
+};
+
+TeacherTube.prototype.parseMediaType = function (mediaTypeMatch) {
+  switch (mediaTypeMatch) {
+    case 'audio':
+      return this.mediaTypes.AUDIO;
+
+    case 'video':
+      return this.mediaTypes.VIDEO;
+
+    case 'document':
+      return this.mediaTypes.DOCUMENT;
+
+    case 'user/channel':
+      return this.mediaTypes.CHANNEL;
+
+    case 'collection':
+      return this.mediaTypes.COLLECTION;
+
+    case 'group':
+      return this.mediaTypes.GROUP;
+  }
+};
+
+TeacherTube.prototype.createLongUrl = function (vi, params) {
+  if (!vi.id) {
+    return undefined;
+  }
+
+  var url = 'https://www.teachertube.com/';
+
+  if (vi.list) {
+    params['playlist-id'] = vi.list;
+  }
+
+  if (vi.mediaType === this.mediaTypes.CHANNEL) {
+    url += 'user/channel/';
+  } else {
+    url += vi.mediaType + '/';
+  }
+
+  url += vi.id;
+  url += combineParams$10(params);
+  return url;
+};
+
+TeacherTube.prototype.createEmbedUrl = function (vi, params) {
+  if (!vi.id) {
+    return undefined;
+  }
+
+  var url = 'https://www.teachertube.com/embed/';
+
+  if (vi.mediaType === this.mediaTypes.VIDEO || vi.mediaType === this.mediaTypes.AUDIO) {
+    url += vi.mediaType + '/' + vi.id;
+  } else {
+    return undefined;
+  }
+
+  url += combineParams$10(params);
+  return url;
+};
+
+base.bind(new TeacherTube());
 
 var lib = base;
 
