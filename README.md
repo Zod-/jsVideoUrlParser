@@ -56,14 +56,18 @@ Parsing a url will return a videoInfo object with all the information
 
 ```javascript
 > urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA')
-{ mediaType: 'video',
+{ 
+  mediaType: 'video',
   id: 'HRb7B9fPhfA',
-  provider: 'youtube' }
+  provider: 'youtube' 
+}
 
 > urlParser.parse('https://vimeo.com/97276391')
-{ mediaType: 'video',
+{ 
+  mediaType: 'video',
   id: '97276391',
-  provider: 'vimeo' }
+  provider: 'vimeo' 
+}
 ```
 
 Any url parameters expect for ids will be saved in the params object. Some
