@@ -90,9 +90,10 @@ different descriptions for the providers.
 }
 ```
 
-Parsing an incorrect url will return undefined
+Parsing an incorrect url or trying to create one with an invalid object will return undefined
 ```javascript
 > urlParser.parse('https://www.youuutube.com/watch?v=97276391')
+> urlParser.create({ videoInfo: { provider: 'youtube' })
 undefined
 ```
 
