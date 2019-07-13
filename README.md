@@ -13,6 +13,7 @@ A javascript parser to extract informations like provider, id, channel, start ti
  - [Coub](https://coub.com/)
  - [Wistia](https://wistia.com/)
  - [SoundCloud](https://soundcloud.com/)
+ - [TeacherTube](https://www.teachertube.com)
 
 # Building Locally
 ```
@@ -48,6 +49,7 @@ import "js-video-url-parser/lib/provider/vimeo';
 import "js-video-url-parser/lib/provider/wistia';
 import "js-video-url-parser/lib/provider/youku';
 import "js-video-url-parser/lib/provider/youtube';
+import "js-video-url-parser/lib/provider/teachertube';
 
 ```
 ## Parsing
@@ -151,6 +153,7 @@ Run `npm run test` to create the parser and test your plugin.
  - [Coub](https://github.com/Zod-/jsVideoUrlParser/wiki/Coub)
  - [Wistia](https://github.com/Zod-/jsVideoUrlParser/wiki/Wistia)
  - [SoundCloud](https://github.com/Zod-/jsVideoUrlParser/wiki/SoundCloud)
+ - [TeacherTube](https://github.com/Zod-/jsVideoUrlParser/wiki/TeacherTube)
 
 # License
 
