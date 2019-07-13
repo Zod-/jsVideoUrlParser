@@ -141,7 +141,7 @@ Add some tests in `lib/provider/` with the template found
 
 Run `npm run test` to create the parser and test your plugin.
 
-## Provider Examples
+## Provider information and examples
  - [YouTube](https://github.com/Zod-/jsVideoUrlParser/wiki/YouTube)
  - [Vimeo](https://github.com/Zod-/jsVideoUrlParser/wiki/Vimeo)
  - [Twitch](https://github.com/Zod-/jsVideoUrlParser/wiki/Twitch)
