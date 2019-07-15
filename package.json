@@ -48,6 +48,6 @@
     "build": "./node_modules/.bin/rollup -c rollup.config.js",
     "lint": "./node_modules/.bin/eslint . --fix",
     "lintdryfix": "./node_modules/.bin/eslint . --fix-dry-run",
-    "all": "npm run test && npm run lint && npm run build"
+    "all": "npm audit && npm run test && npm run lint && npm run build"
   }
 }
