@@ -41,15 +41,15 @@ import urlParser from "js-video-url-parser";
 
 // Choose individual plugins
 import urlParser from "js-video-url-parser/lib/base";
-import "js-video-url-parser/lib/provider/canalplus';
-import "js-video-url-parser/lib/provider/coub';
-import "js-video-url-parser/lib/provider/dailymotion';
-import "js-video-url-parser/lib/provider/twitch';
-import "js-video-url-parser/lib/provider/vimeo';
-import "js-video-url-parser/lib/provider/wistia';
-import "js-video-url-parser/lib/provider/youku';
-import "js-video-url-parser/lib/provider/youtube';
-import "js-video-url-parser/lib/provider/teachertube';
+import "js-video-url-parser/lib/provider/canalplus";
+import "js-video-url-parser/lib/provider/coub";
+import "js-video-url-parser/lib/provider/dailymotion";
+import "js-video-url-parser/lib/provider/twitch";
+import "js-video-url-parser/lib/provider/vimeo";
+import "js-video-url-parser/lib/provider/wistia";
+import "js-video-url-parser/lib/provider/youku";
+import "js-video-url-parser/lib/provider/youtube";
+import "js-video-url-parser/lib/provider/teachertube";
 
 ```
 ## Parsing
