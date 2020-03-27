@@ -1071,7 +1071,7 @@ function SoundCloud() {
 }
 
 SoundCloud.prototype.parseUrl = function (url, result) {
-  var match = url.match(/(?:m\.)?soundcloud\.com\/(?:([\w-]+)\/(sets\/)?)([\w-]+)/i);
+  var match = url.match(/soundcloud\.com\/(?:([\w-]+)\/(sets\/)?)([\w-]+)/i);
 
   if (!match) {
     return result;
