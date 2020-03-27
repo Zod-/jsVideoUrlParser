@@ -29,19 +29,18 @@
     "url": "https://github.com/Zod-/jsVideoUrlParser/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^8.2.3",
-    "babel-preset-minify": "^0.2.0",
-    "eslint": "^4.19.1",
-    "eslint-plugin-jest": "^21.15.1",
-    "jest": "^24.1.0",
-    "rollup": "^0.54.1",
-    "rollup-plugin-babel": "^4.3.2",
-    "rollup-plugin-commonjs": "^8.4.1",
-    "rollup-plugin-minify-es": "^1.1.1",
-    "rollup-plugin-node-resolve": "^3.3.0"
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "babel-eslint": "^10.1.0",
+    "babel-preset-minify": "^0.5.1",
+    "eslint": "^6.8.0",
+    "eslint-plugin-jest": "^23.8.2",
+    "jest": "^25.2.3",
+    "rollup": "^2.2.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "rollup-plugin-terser": "^5.3.0"
   },
   "scripts": {
     "test": "./node_modules/.bin/jest --coverage --config jestconfig.js",
