@@ -13,6 +13,8 @@ export interface YouTubeVideoInfo extends VideoInfo<YouTubeUrlParameters, YouTub
     list?: string;
 }
 
+export type YouTubeParseResult = YouTubeVideoInfo | undefined;
+
 export default class YouTube extends Provider<'short' | 'long' | 'embed' | 'shortImage' | 'longImage', YouTubeMediaTypes, YouTubeUrlParameters> {
     imageQualities: Record<string, string>;
     defaultImageQuality: string;

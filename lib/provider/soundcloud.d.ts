@@ -14,6 +14,8 @@ export interface SoundCloudVideoInfo extends VideoInfo<SoundCloudUrlParameters, 
     channel?: string;
 }
 
+export type SoundCloudParseResult = SoundCloudVideoInfo | undefined;
+
 export default class SoundCloud extends Provider<'long' | 'embed', SoundCloudMediaTypes, SoundCloudUrlParameters> {
     parseUrl(url: string, result: SoundCloudVideoInfo): SoundCloudVideoInfo;
     parseParameters(params: Record<string, any>): SoundCloudUrlParameters;

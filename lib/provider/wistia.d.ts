@@ -13,6 +13,8 @@ export interface WistiaVideoInfo extends VideoInfo<WistiaUrlParameters, WistiaMe
     channel?: string;
 }
 
+export type WistiaParseResult = WistiaVideoInfo | undefined;
+
 export default class Wistia extends Provider<'long' | 'embed' | 'embedjsonp', WistiaMediaTypes, WistiaUrlParameters> {
     parseUrl(url: string): string | undefined;
     parseChannel(url: string): string | undefined;

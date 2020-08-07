@@ -12,6 +12,8 @@ export interface DailymotionVideoInfo extends VideoInfo<DailymotionUrlParameters
     provider: 'dailymotion';
 }
 
+export type DailymotionParseResult = DailymotionVideoInfo | undefined;
+
 export default class Dailymotion extends Provider<'short' | 'long' | 'embed' | 'image', DailymotionMediaTypes, DailymotionUrlParameters> {
     parseParameters(params: Record<string, any>): DailymotionUrlParameters;
     parseTime(params: Record<string, any>): DailymotionUrlParameters;

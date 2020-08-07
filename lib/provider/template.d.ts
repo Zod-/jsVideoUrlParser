@@ -12,6 +12,8 @@ export interface TemplateVideoInfo extends VideoInfo<TemplateUrlParameters, Temp
     provider: 'template';
 }
 
+export type TemplateParseResult = TemplateVideoInfo | undefined;
+
 export default class Template extends Provider<'short' | 'long', TemplateMediaTypes, TemplateUrlParameters> {
     createLongUrl: FormatHandler<TemplateUrlParameters>;
     createShortUrl: FormatHandler<TemplateUrlParameters>;

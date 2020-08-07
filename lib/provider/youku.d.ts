@@ -11,6 +11,8 @@ export interface YoukuVideoInfo extends VideoInfo<YoukuUrlParameters, YoukuMedia
     provider: 'youku';
 }
 
+export type YoukuParseResult = YoukuVideoInfo | undefined;
+
 export default class Youku extends Provider<'long' | 'static' | 'embed' | 'flash', YoukuMediaTypes, YoukuUrlParameters> {
     parseUrl(url: string): string | undefined;
     parseParameters(params: Record<string, any>, result: YoukuVideoInfo): YoukuVideoInfo;

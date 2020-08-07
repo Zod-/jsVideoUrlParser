@@ -13,6 +13,8 @@ export interface TwitchVideoInfo extends VideoInfo<TwitchUrlParameters, TwitchMe
     channel?: string;
 }
 
+export type TwitchParseResult = TwitchVideoInfo | undefined;
+
 export interface IdParts {
     pre: string;
     id: string;

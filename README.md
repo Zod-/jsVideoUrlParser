@@ -140,13 +140,16 @@ If you still want to reuse the generated parameters object you can use the keywo
 ```typescript
 // All plugins
 import urlParser, { YouTubeVideoInfo } from 'js-video-url-parser';
-const info = urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA') as YouTubeVideoInfo;
+const info = urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA') as YouTubeParseResult;
 
 // Choose individual plugins
 import urlParser from 'js-video-url-parser/lib/base';
 import { YouTubeVideoInfo } from 'js-video-url-parser/lib/provider/youtube';
 
-const info = urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA') as YouTubeVideoInfo;
+const info = urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA') as YouTubeParseResult;
+
+// Parse results can be undefined
+const id = info?.id;
 ```
 
 ## Adding a provider

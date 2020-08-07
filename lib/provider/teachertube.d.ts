@@ -12,6 +12,8 @@ export interface TeacherTubeVideoInfo extends VideoInfo<TeacherTubeUrlParameters
     list?: string;
 }
 
+export type TeacherTubeParseResult = TeacherTubeVideoInfo | undefined;
+
 export default class TeacherTube extends Provider<'long' | 'embed', TeacherTubeMediaTypes, TeacherTubeUrlParameters> {
     parseMediaType(result: string): TeacherTubeMediaTypes;
     parsePlaylist(params: Record<string, any>): string | undefined;

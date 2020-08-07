@@ -16,6 +16,8 @@ export interface VimeoVideoInfo extends VideoInfo<VimeoUrlParameters, VimeoMedia
     channel?: string;
 }
 
+export type VimeoParseResult = VimeoVideoInfo | undefined;
+
 export default class Vimeo extends Provider<'long' | 'embed' | 'image', VimeoMediaTypes, VimeoUrlParameters> {
     parseUrl(url: string, result: VimeoVideoInfo): VimeoVideoInfo;
     parseParameters(params: Record<string, any>): VimeoUrlParameters;

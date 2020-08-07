@@ -11,6 +11,8 @@ export interface CoubVideoInfo extends VideoInfo<CoubUrlParameters, CoubMediaTyp
     provider: 'coub';
 }
 
+export type CoubParseResult = CoubVideoInfo | undefined;
+
 export default class Coub extends Provider<'long' | 'embed', CoubMediaTypes, CoubUrlParameters> {
     parseUrl(url: string): string | undefined;
     createUrl(baseUrl: string, vi: CoubVideoInfo, params: Record<string, any>): string | undefined;
