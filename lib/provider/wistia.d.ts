@@ -1,4 +1,3 @@
-import Provider, { FormatHandler } from './base-provider';
 import { VideoInfo } from '../urlParser';
 
 export interface WistiaUrlParameters {
@@ -14,15 +13,3 @@ export interface WistiaVideoInfo extends VideoInfo<WistiaUrlParameters, WistiaMe
 }
 
 export type WistiaParseResult = WistiaVideoInfo | undefined;
-
-export default class Wistia extends Provider<'long' | 'embed' | 'embedjsonp', WistiaMediaTypes, WistiaUrlParameters> {
-    parseUrl(url: string): string | undefined;
-    parseChannel(url: string): string | undefined;
-    parseParameters(params: Record<string, any>, result: WistiaVideoInfo): WistiaUrlParameters;
-    parseMediaType(result: WistiaUrlParameters): WistiaMediaTypes;
-    createUrl(vi: WistiaVideoInfo, params: Record<string, any>, url: string): string | undefined;
-
-    createLongUrl: FormatHandler<WistiaUrlParameters>;
-    createEmbedUrl: FormatHandler<WistiaUrlParameters>;
-    createEmbedJsonpUrl: FormatHandler<WistiaUrlParameters>;
-}

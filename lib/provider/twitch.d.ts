@@ -1,4 +1,3 @@
-import Provider, { FormatHandler } from './base-provider';
 import { VideoInfo } from '../urlParser';
 
 export interface TwitchUrlParameters {
@@ -14,19 +13,3 @@ export interface TwitchVideoInfo extends VideoInfo<TwitchUrlParameters, TwitchMe
 }
 
 export type TwitchParseResult = TwitchVideoInfo | undefined;
-
-export interface IdParts {
-    pre: string;
-    id: string;
-}
-
-export default class Twitch extends Provider<'long' | 'embed', TwitchMediaTypes, TwitchUrlParameters> {
-    seperateId(id: string): IdParts;
-    parseChannel: FormatHandler<TwitchUrlParameters>;
-    parseUrl(url: string, result: TwitchVideoInfo, params: TwitchUrlParameters): TwitchVideoInfo;
-    parseMediaType(result: TwitchVideoInfo): TwitchMediaTypes;
-    parseParameters(params: Record<string, any>): TwitchUrlParameters;
-
-    createLongUrl: FormatHandler<TwitchUrlParameters>;
-    createEmbedUrl: FormatHandler<TwitchUrlParameters>;
-}

@@ -1,4 +1,3 @@
-import Provider, { FormatHandler } from './base-provider';
 import { VideoInfo } from '../urlParser';
 
 export interface CoubUrlParameters {
@@ -12,11 +11,3 @@ export interface CoubVideoInfo extends VideoInfo<CoubUrlParameters, CoubMediaTyp
 }
 
 export type CoubParseResult = CoubVideoInfo | undefined;
-
-export default class Coub extends Provider<'long' | 'embed', CoubMediaTypes, CoubUrlParameters> {
-    parseUrl(url: string): string | undefined;
-    createUrl(baseUrl: string, vi: CoubVideoInfo, params: Record<string, any>): string | undefined;
-
-    createLongUrl: FormatHandler<CoubUrlParameters>;
-    createEmbedUrl: FormatHandler<CoubUrlParameters>;
-}

@@ -1,4 +1,3 @@
-import Provider, { FormatHandler } from './base-provider';
 import { VideoInfo } from '../urlParser';
 
 export interface TeacherTubeUrlParameters {
@@ -13,11 +12,3 @@ export interface TeacherTubeVideoInfo extends VideoInfo<TeacherTubeUrlParameters
 }
 
 export type TeacherTubeParseResult = TeacherTubeVideoInfo | undefined;
-
-export default class TeacherTube extends Provider<'long' | 'embed', TeacherTubeMediaTypes, TeacherTubeUrlParameters> {
-    parseMediaType(result: string): TeacherTubeMediaTypes;
-    parsePlaylist(params: Record<string, any>): string | undefined;
-
-    createLongUrl: FormatHandler<TeacherTubeUrlParameters>;
-    createEmbedUrl: FormatHandler<TeacherTubeUrlParameters>;
-}

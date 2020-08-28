@@ -1,4 +1,3 @@
-import Provider, { FormatHandler } from './base-provider';
 import { VideoInfo } from '../urlParser';
 
 export interface SoundCloudUrlParameters {
@@ -15,12 +14,3 @@ export interface SoundCloudVideoInfo extends VideoInfo<SoundCloudUrlParameters, 
 }
 
 export type SoundCloudParseResult = SoundCloudVideoInfo | undefined;
-
-export default class SoundCloud extends Provider<'long' | 'embed', SoundCloudMediaTypes, SoundCloudUrlParameters> {
-    parseUrl(url: string, result: SoundCloudVideoInfo): SoundCloudVideoInfo;
-    parseParameters(params: Record<string, any>): SoundCloudUrlParameters;
-    parseMediaType(result: SoundCloudVideoInfo): SoundCloudVideoInfo;
-
-    createLongUrl: FormatHandler<SoundCloudUrlParameters>;
-    createEmbedUrl: FormatHandler<SoundCloudUrlParameters>;
-}

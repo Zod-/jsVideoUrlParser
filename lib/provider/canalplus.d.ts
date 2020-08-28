@@ -1,4 +1,3 @@
-import Provider, { FormatHandler } from './base-provider';
 import { VideoInfo } from '../urlParser';
 
 export interface CanalPlusUrlParameters {
@@ -12,9 +11,3 @@ export interface CanalPlusVideoInfo extends VideoInfo<CanalPlusUrlParameters, Ca
 }
 
 export type CanalPlusParseResult = CanalPlusVideoInfo | undefined;
-
-export default class CanalPlus extends Provider<'embed', CanalPlusMediaTypes, CanalPlusUrlParameters> {
-    parseParameters(params: Record<string, any>): CanalPlusUrlParameters;
-
-    createEmbedUrl: FormatHandler<CanalPlusUrlParameters>;
-}
