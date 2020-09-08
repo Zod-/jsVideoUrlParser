@@ -3,18 +3,19 @@
 A javascript parser to extract informations like provider, id, channel, start time from media urls.
 
 # Supported providers
+ - [YouTube](https://www.youtube.com/)
+ - [Vimeo](https://vimeo.com/)
+ - [Twitch](https://www.twitch.tv/)
+ - [Dailymotion](https://www.dailymotion.com)
+ - [Canal+](https://www.mycanal.fr/)
+ - [Youku](https://www.youku.com/)
+ - [Coub](https://coub.com/)
+ - [Wistia](https://wistia.com/)
+ - [SoundCloud](https://soundcloud.com/)
+ - [TeacherTube](https://www.teachertube.com)
+ - [Ted](https://www.ted.com)
+ - [Tiktok](https://www.tiktok.com)
 
-- [YouTube](https://www.youtube.com/)
-- [Vimeo](https://vimeo.com/)
-- [Twitch](https://www.twitch.tv/)
-- [Dailymotion](https://www.dailymotion.com)
-- [Canal+](https://www.mycanal.fr/)
-- [Youku](https://www.youku.com/)
-- [Coub](https://coub.com/)
-- [Wistia](https://wistia.com/)
-- [SoundCloud](https://soundcloud.com/)
-- [TeacherTube](https://www.teachertube.com)
-- [Tiktok](https://www.tiktok.com)
 
 # Building Locally
 
@@ -57,6 +58,7 @@ import "js-video-url-parser/lib/provider/youku";
 import "js-video-url-parser/lib/provider/youtube";
 import "js-video-url-parser/lib/provider/teachertube";
 import "js-video-url-parser/lib/provider/tiktok";
+import "js-video-url-parser/lib/provider/ted";
 ```
 
 ## Parsing
