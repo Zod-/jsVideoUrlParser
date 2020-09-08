@@ -147,6 +147,23 @@ If you still want to reuse the generated parameters object you can use the keywo
 'https://www.youtube.com/watch?foo=bar&v=HRb7B9fPhfA'
 ```
 
+## Typescript
+
+```typescript
+// All plugins
+import urlParser, { YouTubeParseResult } from 'js-video-url-parser';
+const info = urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA') as YouTubeParseResult;
+
+// Choose individual plugins
+import urlParser from 'js-video-url-parser/lib/base';
+import { YouTubeParseResult } from 'js-video-url-parser/lib/provider/youtube';
+
+const info = urlParser.parse('http://www.youtube.com/watch?v=HRb7B9fPhfA') as YouTubeParseResult;
+
+// Parse results can be undefined
+const id = info?.id;
+```
+
 ## Adding a provider
 
 Add a new file in the `lib/provider/` directory with the template found [here](lib/provider/template.js) and also add it to [index.js](lib/index.js).
