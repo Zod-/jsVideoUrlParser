@@ -14,6 +14,7 @@ A javascript parser to extract informations like provider, id, channel, start ti
  - [Wistia](https://wistia.com/)
  - [SoundCloud](https://soundcloud.com/)
  - [TeacherTube](https://www.teachertube.com)
+ - [Ted](https://www.ted.com)
 
 # Building Locally
 ```
@@ -50,6 +51,7 @@ import "js-video-url-parser/lib/provider/wistia";
 import "js-video-url-parser/lib/provider/youku";
 import "js-video-url-parser/lib/provider/youtube";
 import "js-video-url-parser/lib/provider/teachertube";
+import "js-video-url-parser/lib/provider/ted";
 
 ```
 ## Parsing
