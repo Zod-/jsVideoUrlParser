@@ -12,3 +12,4 @@ export * from './provider/vimeo';
 export * from './provider/wistia';
 export * from './provider/youku';
 export * from './provider/youtube';
+export * from './provider/ted';
