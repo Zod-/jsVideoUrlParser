@@ -48,6 +48,7 @@ module.exports = {
 		"space-unary-ops": ["error", {
 			nonwords: false,
 			words: true,
-		}]
+		}],
+		"jest/expect-expect": "off"
 	},
 }
