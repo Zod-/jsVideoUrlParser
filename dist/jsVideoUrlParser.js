@@ -541,41 +541,20 @@
 
   function Vimeo() {
     this.provider = 'vimeo';
-    this.alternatives = ['vimeopro', 'vimeocdn'];
+    this.alternatives = ['vimeopro'];
     this.defaultFormat = 'long';
     this.formats = {
       "long": this.createLongUrl,
-      embed: this.createEmbedUrl,
-      image: this.createImageUrl
+      embed: this.createEmbedUrl
     };
     this.mediaTypes = {
       VIDEO: 'video'
     };
   }
 
-  Vimeo.prototype.parseUrl = function (url, result) {
-    var match = url.match(/(vimeo(?:cdn|pro)?)\.com\/(?:(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+|staff\/frame)\/)?videos?)\/)?(\d+)(?:_(\d+)(?:x(\d+))?)?(\.\w+)?/i);
-
-    if (!match) {
-      return result;
-    }
-
-    result.id = match[2];
-
-    if (match[1] === 'vimeocdn') {
-      if (match[3]) {
-        result.imageWidth = parseInt(match[3]);
-
-        if (match[4]) {
-          //height can only be set when width is also set
-          result.imageHeight = parseInt(match[4]);
-        }
-      }
-
-      result.imageExtension = match[5];
-    }
-
-    return result;
+  Vimeo.prototype.parseUrl = function (url) {
+    var match = url.match(/(?:\/(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+)\/)?videos?))?\/(\d+)/i);
+    return match ? match[1] : undefined;
   };
 
   Vimeo.prototype.parseParameters = function (params) {
@@ -594,9 +573,9 @@
   Vimeo.prototype.parse = function (url, params) {
     var result = {
       mediaType: this.mediaTypes.VIDEO,
-      params: this.parseParameters(params)
+      params: this.parseParameters(params),
+      id: this.parseUrl(url)
     };
-    result = this.parseUrl(url, result);
     return result.id ? result : undefined;
   };
 
@@ -623,29 +602,6 @@
 
   Vimeo.prototype.createEmbedUrl = function (vi, params) {
     return this.createUrl('//player.vimeo.com/video/', vi, params);
-  };
-
-  Vimeo.prototype.createImageUrl = function (vi, params) {
-    if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
-      return undefined;
-    }
-
-    var url = 'https://i.vimeocdn.com/video/' + vi.id;
-
-    if (vi.imageWidth && vi.imageHeight) {
-      url += '_' + vi.imageWidth + 'x' + vi.imageHeight;
-    } else if (vi.imageWidth) {
-      url += '_' + vi.imageWidth;
-    }
-
-    if (vi.imageExtension === undefined) {
-      vi.imageExtension = '.webp';
-    }
-
-    url += vi.imageExtension;
-    delete vi.imageExtension;
-    url += combineParams$5(params);
-    return url;
   };
 
   base.bind(new Vimeo());
@@ -1291,7 +1247,6 @@
   var combineParams$b = util.combineParams;
 
   function TikTok() {
-    //Main urls that the provider users
     this.provider = 'tiktok';
     this.defaultFormat = 'long';
     this.formats = {
@@ -1307,29 +1262,14 @@
       params: params,
       mediaType: this.mediaTypes.VIDEO
     };
+    var match = url.match(/@([^/]+)\/video\/(\d{19})/);
 
-    if (url.startsWith('http://wwww.tiktok.com/') || url.startsWith('http://tiktok.com/') || url.startsWith('https://www.tiktok.com/') || url.startsWith('https://tiktok.com/') || url.startsWith('www.tiktok.com/') || url.startsWith('tiktok.com/')) {
-      var split = url.split('tiktok.com/');
-      var res = split[1] ? split[1].split('/video/') : undefined;
-
-      if (!res) {
-        return undefined;
-      }
-
-      result.channel = res[0].replace('@', '');
-      result.id = res[1].substring(0, 19);
-    } else {
-      return undefined;
+    if (!match) {
+      return;
     }
 
-    if (!result.id) {
-      return undefined;
-    }
-
-    if (!result.channel) {
-      return undefined;
-    }
-
+    result.channel = match[1];
+    result.id = match[2];
     return result;
   };
 
