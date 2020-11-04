@@ -1,4 +1,4 @@
-import { VideoInfo } from 'urlParser';
+import { VideoInfo } from '../urlParser';
 
 export interface TemplateUrlParameters {
     start?: number;
