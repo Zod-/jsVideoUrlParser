@@ -6,7 +6,6 @@ export * from './provider/coub';
 export * from './provider/dailymotion';
 export * from './provider/soundcloud';
 export * from './provider/teachertube';
-export * from './provider/template';
 export * from './provider/twitch';
 export * from './provider/vimeo';
 export * from './provider/wistia';
