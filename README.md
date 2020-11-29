@@ -15,7 +15,7 @@ A javascript parser to extract informations like provider, id, channel, start ti
  - [TeacherTube](https://www.teachertube.com)
  - [Ted](https://www.ted.com)
  - [Tiktok](https://www.tiktok.com)
-
+ - [Facebook](https://www.facebook.com)
 
 # Building Locally
 
@@ -59,6 +59,7 @@ import "js-video-url-parser/lib/provider/youtube";
 import "js-video-url-parser/lib/provider/teachertube";
 import "js-video-url-parser/lib/provider/tiktok";
 import "js-video-url-parser/lib/provider/ted";
+import "js-video-url-parser/lib/provider/facebook";
 ```
 
 ## Parsing
