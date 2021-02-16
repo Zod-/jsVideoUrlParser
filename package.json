@@ -13,6 +13,7 @@
     "parser",
     "YouTube",
     "Vimeo",
+    "Facebook",
     "Dailymotion",
     "Twitch",
     "CanalPlus",
@@ -21,7 +22,8 @@
     "Wistia",
     "SoundCloud",
     "Ted",
-    "Tiktok"
+    "Tiktok",
+    "Facebook"
   ],
   "author": {
     "name": "Julian Hangstörfer",
