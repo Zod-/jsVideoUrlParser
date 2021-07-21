@@ -15,6 +15,7 @@ A javascript parser to extract informations like provider, id, channel, start ti
  - [TeacherTube](https://www.teachertube.com)
  - [Ted](https://www.ted.com)
  - [Tiktok](https://www.tiktok.com)
+ - [Facebook](https://www.facebook.com/)
 
 
 # Building Locally
