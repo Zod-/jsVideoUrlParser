@@ -9,6 +9,7 @@ export type FacebookMediaTypes = 'video';
 
 export interface FacebookVideoInfo extends VideoInfo<FacebookUrlParameters, FacebookMediaTypes> {
     provider: 'facebook';
+    pageId?: string;
 }
 
 export type FacebookParseResult = FacebookVideoInfo | undefined;

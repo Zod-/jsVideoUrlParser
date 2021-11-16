@@ -12,6 +12,7 @@
   "keywords": [
     "parser",
     "YouTube",
+    "Facebook",
     "Vimeo",
     "Dailymotion",
     "Twitch",
@@ -21,7 +22,8 @@
     "Wistia",
     "SoundCloud",
     "Ted",
-    "Tiktok"
+    "Tiktok",
+    "Loom"
   ],
   "author": {
     "name": "Julian Hangstörfer",
@@ -32,27 +34,26 @@
     "url": "https://github.com/Zod-/jsVideoUrlParser/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
+    "@babel/core": "^7.16.0",
+    "@babel/eslint-parser": "^7.16.3",
     "@babel/preset-env": "^7.9.0",
+    "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
-    "babel-eslint": "^10.1.0",
     "babel-preset-minify": "^0.5.1",
-    "dtslint": "^3.6.14",
-    "eslint": "^6.8.0",
+    "eslint": "^8.2.0",
     "eslint-plugin-jest": "^23.8.2",
-    "jest": "^25.2.3",
+    "jest": "^26.6.3",
+    "jest-expect-message": "^1.0.2",
     "rollup": "^2.2.0",
-    "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-terser": "^7.0.2",
     "typescript": "^3.9.7"
   },
   "scripts": {
-    "test": "./node_modules/.bin/jest --coverage --config jestconfig.js",
-    "build": "./node_modules/.bin/rollup -c rollup.config.js",
-    "lint": "./node_modules/.bin/eslint . --fix",
-    "lintdryfix": "./node_modules/.bin/eslint . --fix-dry-run",
-    "all": "npm audit && npm run test && npm run lint && npm run dtslint && npm run build",
-    "dtslint": "dtslint lib"
+    "test": "jest --coverage --config jestconfig.js",
+    "build": "rollup -c rollup.config.js",
+    "lint": "eslint . --fix",
+    "lintdryfix": "eslint . --fix-dry-run",
+    "all": "npm audit && npm run test && npm run lint && npm run build"
   }
 }
