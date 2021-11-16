@@ -1,7 +1,6 @@
 import { VideoInfo } from '../urlParser';
 
 export interface FacebookUrlParameters {
-    t?: number;
     [key: string]: any;
 }
 
