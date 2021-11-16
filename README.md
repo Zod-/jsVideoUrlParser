@@ -60,6 +60,7 @@ import "js-video-url-parser/lib/provider/teachertube";
 import "js-video-url-parser/lib/provider/ted";
 import "js-video-url-parser/lib/provider/tiktok";
 import "js-video-url-parser/lib/provider/loom";
+import "js-video-url-parser/lib/provider/facebook";
 ```
 
 ## Parsing
