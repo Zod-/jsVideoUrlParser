@@ -384,7 +384,55 @@
 
   base.bind(new Dailymotion());
 
-  var combineParams$4 = util.combineParams,
+  var combineParams$4 = util.combineParams;
+
+  function Loom() {
+    this.provider = 'loom';
+    this.defaultFormat = 'long';
+    this.formats = {
+      "long": this.createLongUrl,
+      embed: this.createEmbedUrl
+    };
+    this.mediaTypes = {
+      VIDEO: 'video'
+    };
+  }
+
+  Loom.prototype.parseUrl = function (url) {
+    var match = url.match(/(?:share|embed)\/([a-zA-Z\d]+)/i);
+    return match ? match[1] : undefined;
+  };
+
+  Loom.prototype.parse = function (url, params) {
+    var result = {
+      mediaType: this.mediaTypes.VIDEO,
+      params: params,
+      id: this.parseUrl(url)
+    };
+    return result.id ? result : undefined;
+  };
+
+  Loom.prototype.createUrl = function (baseUrl, vi, params) {
+    if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
+      return undefined;
+    }
+
+    var url = baseUrl + vi.id;
+    url += combineParams$4(params);
+    return url;
+  };
+
+  Loom.prototype.createLongUrl = function (vi, params) {
+    return this.createUrl('https://loom.com/share/', vi, params);
+  };
+
+  Loom.prototype.createEmbedUrl = function (vi, params) {
+    return this.createUrl('//loom.com/embed/', vi, params);
+  };
+
+  base.bind(new Loom());
+
+  var combineParams$5 = util.combineParams,
       getTime$2 = util.getTime;
 
   function Twitch() {
@@ -417,7 +465,7 @@
 
   Twitch.prototype.parseUrl = function (url, result, params) {
     var match;
-    match = url.match(/(clips\.)?twitch\.tv\/(?:(?:videos\/(\d+))|(\w+)(?:\/clip\/(\w+))?)/i);
+    match = url.match(/(clips\.)?twitch\.tv\/(?:(?:videos\/(\d+))|(\w+(?:-[\w\d-]+)?)(?:\/clip\/(\w+))?)/i);
 
     if (match && match[2]) {
       //video
@@ -507,7 +555,7 @@
       return undefined;
     }
 
-    url += combineParams$4(params);
+    url += combineParams$5(params);
     return url;
   };
 
@@ -530,13 +578,13 @@
       return undefined;
     }
 
-    url += combineParams$4(params);
+    url += combineParams$5(params);
     return url;
   };
 
   base.bind(new Twitch());
 
-  var combineParams$5 = util.combineParams,
+  var combineParams$6 = util.combineParams,
       getTime$3 = util.getTime;
 
   function Vimeo() {
@@ -553,18 +601,24 @@
   }
 
   Vimeo.prototype.parseUrl = function (url) {
-    var match = url.match(/(?:\/(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+)\/)?videos?))?\/(\d+)/i);
+    var match = url.match(/(?:\/showcase\/\d+)?(?:\/(?:channels\/[\w]+|(?:(?:album\/\d+|groups\/[\w]+)\/)?videos?))?\/(\d+)/i);
+    return match ? match[1] : undefined;
+  };
+
+  Vimeo.prototype.parseHash = function (url) {
+    var match = url.match(/\/\d+\/(\w+)$/i);
     return match ? match[1] : undefined;
   };
 
   Vimeo.prototype.parseParameters = function (params) {
-    return this.parseTime(params);
-  };
-
-  Vimeo.prototype.parseTime = function (params) {
     if (params.t) {
       params.start = getTime$3(params.t);
       delete params.t;
+    }
+
+    if (params.h) {
+      params.hash = params.h;
+      delete params.h;
     }
 
     return params;
@@ -576,10 +630,16 @@
       params: this.parseParameters(params),
       id: this.parseUrl(url)
     };
+    var hash = this.parseHash(url, params);
+
+    if (hash) {
+      result.params.hash = hash;
+    }
+
     return result.id ? result : undefined;
   };
 
-  Vimeo.prototype.createUrl = function (baseUrl, vi, params) {
+  Vimeo.prototype.createUrl = function (baseUrl, vi, params, type) {
     if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
       return undefined;
     }
@@ -587,7 +647,18 @@
     var url = baseUrl + vi.id;
     var startTime = params.start;
     delete params.start;
-    url += combineParams$5(params);
+
+    if (params.hash) {
+      if (type === 'embed') {
+        params.h = params.hash;
+      } else if (type === 'long') {
+        url += '/' + params.hash;
+      }
+
+      delete params.hash;
+    }
+
+    url += combineParams$6(params);
 
     if (startTime) {
       url += '#t=' + startTime;
@@ -597,16 +668,16 @@
   };
 
   Vimeo.prototype.createLongUrl = function (vi, params) {
-    return this.createUrl('https://vimeo.com/', vi, params);
+    return this.createUrl('https://vimeo.com/', vi, params, 'long');
   };
 
   Vimeo.prototype.createEmbedUrl = function (vi, params) {
-    return this.createUrl('//player.vimeo.com/video/', vi, params);
+    return this.createUrl('//player.vimeo.com/video/', vi, params, 'embed');
   };
 
   base.bind(new Vimeo());
 
-  var combineParams$6 = util.combineParams,
+  var combineParams$7 = util.combineParams,
       getTime$4 = util.getTime;
 
   function Wistia() {
@@ -685,7 +756,7 @@
       delete params.start;
     }
 
-    url += combineParams$6(params);
+    url += combineParams$7(params);
     return url;
   };
 
@@ -717,7 +788,7 @@
 
   base.bind(new Wistia());
 
-  var combineParams$7 = util.combineParams;
+  var combineParams$8 = util.combineParams;
 
   function Youku() {
     this.provider = 'youku';
@@ -768,7 +839,7 @@
     }
 
     var url = baseUrl + vi.id;
-    url += combineParams$7(params);
+    url += combineParams$8(params);
     return url;
   };
 
@@ -790,13 +861,13 @@
     }
 
     var url = 'http://player.youku.com/player.php/sid/' + vi.id + '/v.swf';
-    url += combineParams$7(params);
+    url += combineParams$8(params);
     return url;
   };
 
   base.bind(new Youku());
 
-  var combineParams$8 = util.combineParams,
+  var combineParams$9 = util.combineParams,
       getTime$5 = util.getTime;
 
   function YouTube() {
@@ -956,7 +1027,7 @@
       params.list = vi.list;
     }
 
-    url += combineParams$8(params);
+    url += combineParams$9(params);
 
     if (vi.mediaType !== this.mediaTypes.PLAYLIST && startTime) {
       url += '#t=' + startTime;
@@ -984,7 +1055,7 @@
       params.list = vi.list;
     }
 
-    url += combineParams$8(params);
+    url += combineParams$9(params);
     return url;
   };
 
@@ -1008,7 +1079,7 @@
 
   base.bind(new YouTube());
 
-  var combineParams$9 = util.combineParams,
+  var combineParams$a = util.combineParams,
       getTime$6 = util.getTime;
 
   function SoundCloud() {
@@ -1109,7 +1180,7 @@
       return undefined;
     }
 
-    url += combineParams$9(params);
+    url += combineParams$a(params);
 
     if (startTime) {
       url += '#t=' + startTime;
@@ -1130,13 +1201,13 @@
       return undefined;
     }
 
-    url += combineParams$9(params);
+    url += combineParams$a(params);
     return url;
   };
 
   base.bind(new SoundCloud());
 
-  var combineParams$a = util.combineParams;
+  var combineParams$b = util.combineParams;
 
   function TeacherTube() {
     this.provider = 'teachertube';
@@ -1221,7 +1292,7 @@
     }
 
     url += vi.id;
-    url += combineParams$a(params);
+    url += combineParams$b(params);
     return url;
   };
 
@@ -1238,13 +1309,13 @@
       return undefined;
     }
 
-    url += combineParams$a(params);
+    url += combineParams$b(params);
     return url;
   };
 
   base.bind(new TeacherTube());
 
-  var combineParams$b = util.combineParams;
+  var combineParams$c = util.combineParams;
 
   function TikTok() {
     this.provider = 'tiktok';
@@ -1282,13 +1353,13 @@
       return undefined;
     }
 
-    url += combineParams$b(params);
+    url += combineParams$c(params);
     return url;
   };
 
   base.bind(new TikTok());
 
-  var combineParams$c = util.combineParams;
+  var combineParams$d = util.combineParams;
 
   function Ted() {
     this.provider = 'ted';
@@ -1359,7 +1430,7 @@
       return undefined;
     }
 
-    url += combineParams$c(params);
+    url += combineParams$d(params);
     return url;
   };
 
@@ -1374,11 +1445,89 @@
       return undefined;
     }
 
-    url += combineParams$c(params);
+    url += combineParams$d(params);
     return url;
   };
 
   base.bind(new Ted());
+
+  var combineParams$e = util.combineParams;
+
+  function Facebook() {
+    this.provider = 'facebook';
+    this.alternatives = [];
+    this.defaultFormat = 'long';
+    this.formats = {
+      "long": this.createLongUrl,
+      watch: this.createWatchUrl
+    };
+    this.mediaTypes = {
+      VIDEO: 'video'
+    };
+  }
+
+  Facebook.prototype.parse = function (url, params) {
+    var result = {
+      params: params,
+      mediaType: this.mediaTypes.VIDEO
+    };
+    var match = url.match(/(?:\/(\d+))?\/videos(?:\/.*?)?\/(\d+)/);
+
+    if (match) {
+      if (match[1]) {
+        result.pageId = match[1];
+      }
+
+      result.id = match[2];
+    }
+
+    if (params.v && !result.id) {
+      result.id = params.v;
+      delete params.v;
+      result.params = params;
+    }
+
+    if (!result.id) {
+      return undefined;
+    }
+
+    return result;
+  };
+
+  Facebook.prototype.createWatchUrl = function (vi, params) {
+    var url = 'https://facebook.com/watch/';
+
+    if (vi.mediaType !== this.mediaTypes.VIDEO || !vi.id) {
+      return undefined;
+    }
+
+    params = {
+      v: vi.id
+    };
+    url += combineParams$e(params);
+    return url;
+  };
+
+  Facebook.prototype.createLongUrl = function (vi, params) {
+    var url = 'https://facebook.com/';
+
+    if (vi.pageId) {
+      url += vi.pageId;
+    } else {
+      return undefined;
+    }
+
+    if (vi.mediaType === this.mediaTypes.VIDEO && vi.id) {
+      url += '/videos/' + vi.id;
+    } else {
+      return undefined;
+    }
+
+    url += combineParams$e(params);
+    return url;
+  };
+
+  base.bind(new Facebook());
 
   var lib = base;
 
