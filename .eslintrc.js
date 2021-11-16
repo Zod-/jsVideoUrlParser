@@ -50,5 +50,6 @@ module.exports = {
       words: true,
     }],
     'jest/expect-expect': 'off',
+    'jest/valid-expect': 'off',
   },
 };
