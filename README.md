@@ -13,6 +13,7 @@ A javascript parser to extract information like provider, id, channel, start tim
  - [TeacherTube](https://www.teachertube.com)
  - [Ted](https://www.ted.com)
  - [Tiktok](https://www.tiktok.com)
+ - [Loom](https://www.loom.com/)
 
 
 # Building Locally
@@ -55,8 +56,9 @@ import "js-video-url-parser/lib/provider/wistia";
 import "js-video-url-parser/lib/provider/youku";
 import "js-video-url-parser/lib/provider/youtube";
 import "js-video-url-parser/lib/provider/teachertube";
-import "js-video-url-parser/lib/provider/tiktok";
 import "js-video-url-parser/lib/provider/ted";
+import "js-video-url-parser/lib/provider/tiktok";
+import "js-video-url-parser/lib/provider/loom";
 ```
 
 ## Parsing
