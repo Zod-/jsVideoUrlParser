@@ -1,7 +1,5 @@
 /*.js
 /*.json
-/lib/provider/template.js
-/lib/provider/template.d.ts
 .*
 coverage
 *.test.js
