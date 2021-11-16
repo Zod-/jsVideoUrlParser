@@ -1,6 +1,4 @@
-# jsVideoUrlParser [![Build Status](https://travis-ci.org/Zod-/jsVideoUrlParser.svg)](https://travis-ci.org/Zod-/jsVideoUrlParser) [![Gitter](https://badges.gitter.im/Zod-/jsVideoUrlParser.svg)](https://gitter.im/Zod-/jsVideoUrlParser?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
-A javascript parser to extract informations like provider, id, channel, start time from media urls.
+A javascript parser to extract information like provider, id, channel, start time from media urls.
 
 # Supported providers
  - [YouTube](https://www.youtube.com/)
@@ -16,6 +14,7 @@ A javascript parser to extract informations like provider, id, channel, start ti
  - [Ted](https://www.ted.com)
  - [Tiktok](https://www.tiktok.com)
  - [Facebook](https://www.facebook.com/)
+ - [Loom](https://www.loom.com/)
 
 
 # Building Locally
@@ -58,8 +57,9 @@ import "js-video-url-parser/lib/provider/wistia";
 import "js-video-url-parser/lib/provider/youku";
 import "js-video-url-parser/lib/provider/youtube";
 import "js-video-url-parser/lib/provider/teachertube";
-import "js-video-url-parser/lib/provider/tiktok";
 import "js-video-url-parser/lib/provider/ted";
+import "js-video-url-parser/lib/provider/tiktok";
+import "js-video-url-parser/lib/provider/loom";
 ```
 
 ## Parsing
