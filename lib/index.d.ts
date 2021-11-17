@@ -1,6 +1,7 @@
 // Minimum TypeScript Version: 3.1
 
 export { default } from './base';
+export * from './provider/allocine';
 export * from './provider/canalplus';
 export * from './provider/coub';
 export * from './provider/dailymotion';
