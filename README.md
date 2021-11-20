@@ -15,6 +15,7 @@ A javascript parser to extract information like provider, id, channel, start tim
  - [Tiktok](https://www.tiktok.com)
  - [Facebook](https://www.facebook.com/)
  - [Loom](https://www.loom.com/)
+ - [Allociné](https://allocine.fr/)
 
 
 # Building Locally
@@ -61,6 +62,7 @@ import "js-video-url-parser/lib/provider/ted";
 import "js-video-url-parser/lib/provider/tiktok";
 import "js-video-url-parser/lib/provider/loom";
 import "js-video-url-parser/lib/provider/facebook";
+import "js-video-url-parser/lib/provider/allocine";
 ```
 
 ## Parsing
