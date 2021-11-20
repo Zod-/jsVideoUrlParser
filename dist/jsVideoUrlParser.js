@@ -211,6 +211,41 @@
   var parser = new urlParser();
   var base = parser;
 
+  function Allocine() {
+    this.provider = 'allocine';
+    this.alternatives = [];
+    this.defaultFormat = 'embed';
+    this.formats = {
+      embed: this.createEmbedUrl
+    };
+    this.mediaTypes = {
+      VIDEO: 'video'
+    };
+  }
+
+  Allocine.prototype.parseUrl = function (url) {
+    var match = url.match(/(?:\/video\/player_gen_cmedia=)([A-Za-z0-9]+)/i);
+    return match ? match[1] : undefined;
+  };
+
+  Allocine.prototype.parse = function (url) {
+    var result = {
+      mediaType: this.mediaTypes.VIDEO,
+      id: this.parseUrl(url)
+    };
+    return result.id ? result : undefined;
+  };
+
+  Allocine.prototype.createEmbedUrl = function (vi) {
+    if (!vi.id || vi.mediaType !== this.mediaTypes.VIDEO) {
+      return undefined;
+    }
+
+    return 'https://player.allocine.fr/' + vi.id + '.html';
+  };
+
+  base.bind(new Allocine());
+
   var combineParams$1 = util.combineParams;
 
   function CanalPlus() {
@@ -1374,7 +1409,7 @@
   }
 
   Ted.prototype.parseUrl = function (url, result) {
-    var match = url.match(/\/(talks|playlists\/(\d+))\/([\w-]+)/);
+    var match = url.match(/\/(talks|playlists\/(\d+))\/([\w-]+)/i);
     var channel = match ? match[1] : undefined;
 
     if (!channel) {
@@ -1471,7 +1506,7 @@
       params: params,
       mediaType: this.mediaTypes.VIDEO
     };
-    var match = url.match(/(?:\/(\d+))?\/videos(?:\/.*?)?\/(\d+)/);
+    var match = url.match(/(?:\/(\d+))?\/videos(?:\/.*?)?\/(\d+)/i);
 
     if (match) {
       if (match[1]) {
