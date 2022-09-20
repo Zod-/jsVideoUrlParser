@@ -937,7 +937,7 @@
   }
 
   YouTube.prototype.parseVideoUrl = function (url) {
-    var match = url.match(/(?:(?:v|vi|be|videos|embed)\/(?!videoseries)|(?:v|ci)=)([\w-]{11})/i);
+    var match = url.match(/(?:(?:v|vi|be|videos|embed|shorts)\/(?!videoseries)|(?:v|ci)=)([\w-]{11})/i);
     return match ? match[1] : undefined;
   };
 
