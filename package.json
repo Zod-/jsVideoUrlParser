@@ -25,6 +25,10 @@
     "Tiktok",
     "Loom"
   ],
+  "engines": {
+    "node": ">=16.20.0",
+    "npm": ">=8.19.0"
+  },
   "author": {
     "name": "Julian Hangstörfer",
     "email": "jhangstoerfer@gmail.com"
