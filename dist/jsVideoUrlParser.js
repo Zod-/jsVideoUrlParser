@@ -641,7 +641,7 @@
   };
 
   Vimeo.prototype.parseHash = function (url) {
-    var match = url.match(/\/\d+\/(\w+)$/i);
+    var match = url.match(/\/\d+\/(\w+)(?:\?|$)/i);
     return match ? match[1] : undefined;
   };
 
