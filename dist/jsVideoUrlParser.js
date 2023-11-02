@@ -717,7 +717,7 @@
 
   function Wistia() {
     this.provider = 'wistia';
-    this.alternatives = [];
+    this.alternatives = ['wi'];
     this.defaultFormat = 'long';
     this.formats = {
       "long": this.createLongUrl,
@@ -736,7 +736,7 @@
   };
 
   Wistia.prototype.parseChannel = function (url) {
-    var match = url.match(/(?:(?:https?:)?\/\/)?([^.]*)\.wistia\./);
+    var match = url.match(/(?:(?:https?:)?\/\/)?([^.]*)\.(?:wistia\.com|wi\.st)/);
     var channel = match ? match[1] : undefined;
 
     if (channel === 'fast' || channel === 'content') {
